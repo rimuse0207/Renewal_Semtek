@@ -17,7 +17,7 @@ const OvertimeWorkingNavigationMainPage = ({ AnnualLeaveNavState, currentPageOn,
     return (
         <AnnualLeaveNavigationMainPageMainDivBox>
          <div className="PersonalNavigation_Box">
-                    <div className="PersonalNavigation_ApplyPage" onClick={()=>handleClickMenu('ApplyAnnualLeave')}>
+                    <div className="PersonalNavigation_ApplyPage" onClick={()=>handleClickMenu('OvertimeApply')}>
                         <div>연장근무신청</div>
                     </div>
             </div>
@@ -44,7 +44,7 @@ const OvertimeWorkingNavigationMainPage = ({ AnnualLeaveNavState, currentPageOn,
                                     </span>
                                     <span>연장근무</span>
                                 </li>
-                                <li id={currentPageOn === 'AnnualLeaveSelect' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''} onClick={()=>handleClickMenu('AnnualLeaveSelect')}>
+                                <li id={currentPageOn === 'OvertimeHistory' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''} onClick={()=>handleClickMenu('OvertimeHistory')}>
                                     <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
                                         <FaCalendarAlt></FaCalendarAlt>
                                     </span>

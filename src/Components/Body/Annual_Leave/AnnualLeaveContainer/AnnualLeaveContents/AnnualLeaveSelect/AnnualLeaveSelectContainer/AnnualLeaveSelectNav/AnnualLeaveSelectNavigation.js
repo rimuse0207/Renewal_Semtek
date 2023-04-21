@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const AnnualLeaveSelectNavigationMainDivBox = styled.div`
+export const AnnualLeaveSelectNavigationMainDivBox = styled.div`
 width: 100%;
     border-bottom: 2px solid lightgray;
     margin-top: 20px;

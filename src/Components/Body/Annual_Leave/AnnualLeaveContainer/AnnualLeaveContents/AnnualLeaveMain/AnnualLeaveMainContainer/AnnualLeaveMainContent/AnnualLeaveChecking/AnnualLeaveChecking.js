@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { AiFillCalendar } from "react-icons/ai";
 import { RiTimeFill } from "react-icons/ri";
-const AnnualLeaveCheckingMainDivBox = styled.div`
+export const AnnualLeaveCheckingMainDivBox = styled.div`
     margin-top:20px;
     .Checking_Container{
         margin-top:20px;
