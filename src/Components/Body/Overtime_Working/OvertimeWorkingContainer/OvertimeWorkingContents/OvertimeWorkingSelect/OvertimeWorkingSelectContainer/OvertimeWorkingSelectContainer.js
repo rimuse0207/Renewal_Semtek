@@ -6,8 +6,9 @@ const OvertimeWorkingSelectContainer = () => {
     const [StaticsNaviButton, setStaticsNaviButton] = useState('History');
     return (
         <div>
-            <OvertimeWorkingSelectNavigation  NaviSelected={StaticsNaviButton} setStaticsNaviButton={setStaticsNaviButton}></OvertimeWorkingSelectNavigation>
-            <OvertimeWorkingSelectContent></OvertimeWorkingSelectContent>
+            <OvertimeWorkingSelectNavigation NaviSelected={StaticsNaviButton} setStaticsNaviButton={setStaticsNaviButton}></OvertimeWorkingSelectNavigation>
+            <OvertimeWorkingSelectContent StaticsNaviButton={StaticsNaviButton}></OvertimeWorkingSelectContent>
+            
         </div>
     )
 }

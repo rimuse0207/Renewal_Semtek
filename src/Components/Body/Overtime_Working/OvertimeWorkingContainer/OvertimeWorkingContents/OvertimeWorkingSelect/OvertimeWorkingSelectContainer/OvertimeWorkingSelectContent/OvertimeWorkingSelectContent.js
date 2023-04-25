@@ -1,10 +1,13 @@
 import React from "react";
 import OvertimeWorkingCalendarContent from "./OvertimeWorkingCalendarContent/OvertimeWorkingCalendarContent";
+import OvertimeWorkingHistoryContent from "./OvertimeWorkingHistoryContent/OvertimeWorkingHistoryContent";
 
-const OvertimeWorkingSelectContent = () =>{
+const OvertimeWorkingSelectContent = ({StaticsNaviButton}) =>{
     return (
         <div>
-            <OvertimeWorkingCalendarContent></OvertimeWorkingCalendarContent>
+            {StaticsNaviButton === "History" ? <OvertimeWorkingHistoryContent></OvertimeWorkingHistoryContent> : <></>}
+            { StaticsNaviButton === "Calendar" ? <OvertimeWorkingCalendarContent></OvertimeWorkingCalendarContent>:<></>}
+            
         </div>
     )
 }

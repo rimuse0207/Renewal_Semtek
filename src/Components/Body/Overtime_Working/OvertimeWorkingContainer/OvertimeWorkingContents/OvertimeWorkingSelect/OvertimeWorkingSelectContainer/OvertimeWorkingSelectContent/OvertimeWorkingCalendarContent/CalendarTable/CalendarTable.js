@@ -1,59 +1,10 @@
-import React,{useState} from "react";
-import styled from "styled-components";
-import moment from 'moment';
-import 'moment/locale/ko';
+import React,{useState} from 'react';
+import { AnnualLeaveCalendarTableMainDivBox } from '../../../../../../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveSelect/AnnualLeaveSelectContainer/AnnualLeaveSelectContent/AnnualLeaveCalendarContent/AnnualLeaveCalendarTable/AnnualLeaveCalendarTable';
+import moment from "moment";
 
-export const AnnualLeaveCalendarTableMainDivBox = styled.div`
-    
-    table{width: 100%;
-    border-top: 1px solid lightgray;
-    border-collapse: collapse;
-    th {
-        background: #eff4fc;
-        font-weight: 500;
-        font-size: 0.9em;
-        height: 40px !important;
-    }
-    th,
-    td {
-        border-bottom: 1px solid lightgray;
-        border-left: 1px solid lightgray;
-    }
-    .row {
-        height: 140px;
-    }
-    th:first-child,
-    td:first-child {
-        border-left: none;
-    }
-    .Telecommuting_Table_nextMonth {
-        .Telecommuting_Table_dayNumber {
-            color: #c9c9c9 !important;
-        }
 
-        background-color: #efefef;
-    }
-    .Telecommuting_Table_nowMonth,
-    .Telecommuting_Table_nextMonth,
-    .Telecommuting_table_today {
-        width: 14%;
-        position: relative;
-        .Telecommuting_Table_dayNumber {
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-size: 0.9em;
-            color: #5b5a5a;
-        }
-    }
-    .Telecommuting_table_today {
-        /* border: 1.2px solid #619bf9; */
-        background-color:skyblue;
-        z-index: 100;
-    }}
-`
-const AnnualLeaveCalendarTable = () => {
-     const [date, setdate] = useState(() => moment());
+const CalnedarTable = () => {
+    const [date, setdate] = useState(() => moment());
     const [getMoment, setGetMoment] = useState(moment());
 
     // chalandar generate logic
@@ -109,8 +60,9 @@ const AnnualLeaveCalendarTable = () => {
         return result;
     };
     return (
-        <AnnualLeaveCalendarTableMainDivBox>
-            <table>
+        <div>
+            <AnnualLeaveCalendarTableMainDivBox>
+                  <table>
                   <thead>
                 <tr>
                     {['일', '월', '화', '수', '목', '금', '토'].map(el => (
@@ -121,10 +73,11 @@ const AnnualLeaveCalendarTable = () => {
                 </tr>
             </thead>
             <tbody>{calendar()}</tbody>
-            </table>
-            <div style={{ marginTop: "50px", marginBottom:"50px"}}></div>
-        </AnnualLeaveCalendarTableMainDivBox>
+                </table>
+                <div style={{ marginTop: "50px", marginBottom:"50px"}}></div>
+            </AnnualLeaveCalendarTableMainDivBox>
+        </div>
     )
 }
 
-export default AnnualLeaveCalendarTable;
+export default CalnedarTable;

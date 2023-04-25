@@ -1,49 +1,14 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import { AnnualLeaveHistoryTableMainDivBox } from '../../../../../../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveSelect/AnnualLeaveSelectContainer/AnnualLeaveSelectContent/AnnualLeaveHistoryContent/AnnualLeaveHistoryTable/AnnualLeaveHistoryTable';
 
-export const AnnualLeaveHistoryTableMainDivBox = styled.div`
- .PersonStatusHistoryCreateTableTextFlexBox {
-        margin-top: 20px;
-        display: flex;
-        margin-bottom: 20px;
-        h4 {
-            margin-right: 10px;
-        }
-        .SubTextDesc {
-            border: 0.2px solid lightgray;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-    }
-    .Create_History_Table{
-            width: 100%;
-            border-top: 1px solid lightgray;
-            border-collapse: collapse;
-            th {
-                background: #eff4fc;
-                font-weight: 500;
-            }
-            th,
-            td {
-                border-bottom: 1px solid lightgray;
-                border-left: 1px solid lightgray;
-                padding: 10px;
-                text-align: center;
-            }
-            th:first-child,
-            td:first-child {
-                border-left: none;
-            }
-    }
-`
-
-const AnnualLeaveHistoryTable = ({DateData}) => {
+const HistoryTable = ({DateData}) => {
     return (
-        <AnnualLeaveHistoryTableMainDivBox>
+        <div>
+             <AnnualLeaveHistoryTableMainDivBox>
             <div className="PersonStatusHistoryCreateTableTextFlexBox">
-                <h4>휴가 생성 내역 </h4>
+                <h4>연장근무 생성 내역 </h4>
                 <div>
-                    {DateData}-01-01 ~ {DateData}-12-31
+                    {DateData}
                 </div>
             </div>
             <div>
@@ -70,15 +35,14 @@ const AnnualLeaveHistoryTable = ({DateData}) => {
                 </table>
             </div>
             <div className="PersonStatusHistoryCreateTableTextFlexBox">
-                <h4>휴가 현황</h4>
-                <div>총 휴가: 0일</div>
+                <h4>연장근무 현황</h4>
+                <div>총 연장근무 일수: 0일</div>
                 <div className="SubTextDesc"> </div>
-                <div>사용: 0일</div>
-                <div className="SubTextDesc"></div>
-                <div>잔여: 0일</div>
+                <div>총 연장근무 시간: 0시간</div>
+                
             </div>
             <div>
-                <h4 style={{ marginTop: '30px', marginBottom: '20px' }}>휴가 신청 내역</h4>
+                <h4 style={{ marginTop: '30px', marginBottom: '20px' }}>연장근무 신청 내역</h4>
                 <table className="Create_History_Table">
                     <thead>
                         <tr>
@@ -101,7 +65,7 @@ const AnnualLeaveHistoryTable = ({DateData}) => {
                 </table>
             </div>
         </AnnualLeaveHistoryTableMainDivBox>
+        </div>
     )
 }
-
-export default AnnualLeaveHistoryTable;
+export default HistoryTable;

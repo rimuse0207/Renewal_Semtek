@@ -60,12 +60,12 @@ const AnnualLeaveSelectNavigation = ({ NaviSelected, setStaticsNaviButton }) => 
                         {NaviSelected === 'Calendar' ? (
                             <>
                                 <div className="LineText" style={{ color: '#2985db', fontWeight: 'bold' }}>
-                                    전사휴가캘린더
+                                    휴가캘린더
                                 </div>
                                 <div className="LineActions"></div>
                             </>
                         ) : (
-                            <div className="LineText">전사휴가캘린더</div>
+                            <div className="LineText">휴가캘린더</div>
                         )}
                     </li>
                 </ul>

@@ -1,80 +1,9 @@
-import React,{ useState } from "react";
-import styled from "styled-components";
-import { BsPlusCircle } from 'react-icons/bs';
-import UserModal from "./UserModal/UserModal";
+import React,{useState} from 'react';
+import { ApplyPaymentMainDivBox } from '../../../../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveApply/AnnualLeaveApplyContainer/AnnualLeaveApplyContent/ApplyPayment/ApplyPayment';
+import { BsPlusCircle } from "react-icons/bs";
 
-export const ApplyPaymentMainDivBox = styled.div`
-    .PersonalApplyBodyConent_ApplyContents_Sign {
-        table {
-            border-collapse: collapse;
-            width: 1000px;
-            text-align: left;
-            min-width: 700px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            tbody {
-                th {
-                    background: #eff4fc;
-                    text-align: center;
-                    width: 170px;
-                    padding: 15px;
-                    border: 1px solid lightgray;
-                    font-weight: 500;
-                    height: 45px;
-                }
-                td {
-                    border: 1px solid lightgray;
-
-                    height: 45px;
-                    border-top: none;
-                    border-bottom: 0.5px solid lightgray;
-                    text-align: center;
-                }
-            }
-            .PersonalApplyBodyCotent_ApplyContentsTable {
-                td {
-                    height: 100px;
-                }
-            }
-            .ClicksButtonMainTh {
-                position: relative;
-            }
-            .ClicksButtonMainIcon {
-                position: absolute;
-                top: 3px;
-                right: 3px;
-                color: gray;
-                width: 30px;
-                height: 30px;
-                line-height: 30px;
-                border-radius: 50%;
-                :hover {
-                    cursor: pointer;
-                    background: lightgray;
-                }
-            }
-        }
-        .PayMentFlexDivBox {
-            h4 {
-                margin-right: 30px;
-                display: inline;
-            }
-            div {
-                display: inline;
-                button {
-                    border: none;
-                    background: none;
-                    color: blue;
-                    :hover {
-                        cursor: pointer;
-                    }
-                }
-            }
-        }
-    }
-`
 const ApplyPayment = () => {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [ApplyMainModalOpen, setApplyMainModalOpen] = useState(false);
     const [ApplyModalOpen, setApplyModalOpen] = useState(false);
     const [AcceptModalOpen, setAcceptModalOpen] = useState(false);
@@ -164,7 +93,8 @@ const ApplyPayment = () => {
     };
 
     return (
-        <ApplyPaymentMainDivBox>
+        <div>
+            <ApplyPaymentMainDivBox>
                <div className="PersonalApplyBodyConent_ApplyContents_Sign">
                 <div>
                     <div>
@@ -247,13 +177,56 @@ const ApplyPayment = () => {
                                 </tr>
                             </tbody>
                         </table>
-
-                       
                     </div>
                 </div>
             </div>
-          <UserModal modalIsOpen={modalIsOpen} setModalIsOpen={data=>setModalIsOpen(data)}></UserModal>
+            {/* <Modal isOpen={modalIsOpen} style={customStyles}>
+                <div>
+                    {ApplyMainModalOpen ? <PersonApplyContentSignModal></PersonApplyContentSignModal> : <div></div>}
+                    {ApplyModalOpen ? (
+                        <PersonApplyContentApplyModal
+                            setSelectApplyNames={data => setSelectApplyNames(data)}
+                            SelectApplyNames={SelectApplyNames}
+                            handleDeleteNames={data => handleDeleteNames(data)}
+                        ></PersonApplyContentApplyModal>
+                    ) : (
+                        <div></div>
+                    )}
+                    {AcceptModalOpen ? (
+                        <PersonApplyContentAcceptModal
+                            setSelectApplyNames={data => setSelectAcceptNames(data)}
+                            SelectApplyNames={SelectAcceptNames}
+                            // handleDeleteNames={data => handleDeleteNames(data)}
+                        ></PersonApplyContentAcceptModal>
+                    ) : (
+                        <div></div>
+                    )}
+                </div>
+                <div>
+                    <div className="PersonApplyContent_Modal_divButton">
+                        <button
+                            onClick={() => {
+                                setSelectApplyNames(SendSelectApplyNames);
+                                setSelectAcceptNames(SendSelectAcceptNames);
+                                closeModal();
+                            }}
+                        >
+                            취소
+                        </button>
+                        <button
+                            onClick={() => {
+                                setSendSelectApplyNames(SelectApplyNames);
+                                setSendSelectAcceptNames(SelectAcceptNames);
+                                closeModal();
+                            }}
+                        >
+                            확인
+                        </button>
+                    </div>
+                </div>
+            </Modal> */}
      </ApplyPaymentMainDivBox>   
+        </div>
     )
 }
 

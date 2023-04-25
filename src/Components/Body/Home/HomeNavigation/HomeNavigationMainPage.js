@@ -16,7 +16,7 @@ const HomeNavigationMainPageMainDivBox = styled.div`
         background: #e0e8ee;
         width: 100%;
         .BodyContentBox {
-            width: 70%;
+            width: 95%;
             margin: 0 auto;
             height:100%;
             .BodyContnetListsShow {

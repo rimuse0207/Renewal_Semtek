@@ -1,59 +1,14 @@
-import React,{useState} from "react";
+import React, { useState } from "react"
+import moment from "moment";
+import { AnnualLeaveCalendarTableMainDivBox } from "../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveSelect/AnnualLeaveSelectContainer/AnnualLeaveSelectContent/AnnualLeaveCalendarContent/AnnualLeaveCalendarTable/AnnualLeaveCalendarTable";
 import styled from "styled-components";
-import moment from 'moment';
-import 'moment/locale/ko';
 
-export const AnnualLeaveCalendarTableMainDivBox = styled.div`
+const HomeCalendarMainDivBox = styled.div`
     
-    table{width: 100%;
-    border-top: 1px solid lightgray;
-    border-collapse: collapse;
-    th {
-        background: #eff4fc;
-        font-weight: 500;
-        font-size: 0.9em;
-        height: 40px !important;
-    }
-    th,
-    td {
-        border-bottom: 1px solid lightgray;
-        border-left: 1px solid lightgray;
-    }
-    .row {
-        height: 140px;
-    }
-    th:first-child,
-    td:first-child {
-        border-left: none;
-    }
-    .Telecommuting_Table_nextMonth {
-        .Telecommuting_Table_dayNumber {
-            color: #c9c9c9 !important;
-        }
-
-        background-color: #efefef;
-    }
-    .Telecommuting_Table_nowMonth,
-    .Telecommuting_Table_nextMonth,
-    .Telecommuting_table_today {
-        width: 14%;
-        position: relative;
-        .Telecommuting_Table_dayNumber {
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-size: 0.9em;
-            color: #5b5a5a;
-        }
-    }
-    .Telecommuting_table_today {
-        /* border: 1.2px solid #619bf9; */
-        background-color:skyblue;
-        z-index: 100;
-    }}
 `
-const AnnualLeaveCalendarTable = () => {
-     const [date, setdate] = useState(() => moment());
+
+const HomeCalendar = () => {
+    const [date, setdate] = useState(() => moment());
     const [getMoment, setGetMoment] = useState(moment());
 
     // chalandar generate logic
@@ -109,7 +64,8 @@ const AnnualLeaveCalendarTable = () => {
         return result;
     };
     return (
-        <AnnualLeaveCalendarTableMainDivBox>
+        <HomeCalendarMainDivBox>
+             <AnnualLeaveCalendarTableMainDivBox>
             <table>
                   <thead>
                 <tr>
@@ -124,7 +80,8 @@ const AnnualLeaveCalendarTable = () => {
             </table>
             <div style={{ marginTop: "50px", marginBottom:"50px"}}></div>
         </AnnualLeaveCalendarTableMainDivBox>
+        </HomeCalendarMainDivBox>
     )
 }
 
-export default AnnualLeaveCalendarTable;
+export default HomeCalendar;

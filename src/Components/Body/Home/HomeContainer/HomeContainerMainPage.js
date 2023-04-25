@@ -2,23 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import HomeClockStatusMainPage from "./HomeClockStatus/HomeClockStatusMainPage";
 import HomeApprovalMainPage from "./HomeApproval/HomeApprovalMainPage";
+import HomeCalendar from "./HomeCalnedar/HomeCalendar";
 
 const HomeContainerMainPageMainDivBox = styled.div`
     
     background-color:#eaeced;
 
       .BodyContentFloat {
-        width: 70%;
+        width: 95%;
         margin: 0 auto;
-
-        ::after {
-            clear: both;
-            content: '';
-            display: block;
-        }
+        display:flex;
+        justify-content:space-around;
         .BodyContentLeft {
-            float: left;
-            width: 33%;
+            
+            width: 23%;
             height: 100vh;
             min-width: 300px;
             .MainBodyContent_Left_WorkCheck {
@@ -83,6 +80,15 @@ const HomeContainerMainPageMainDivBox = styled.div`
                 }
             }
         }
+        .BodyContentRight{
+            width: 77%;
+            margin-left: 30px;
+            background: #fff;
+            margin-top: 17px;
+            padding: 10px;
+            border-radius: 10px;
+    
+        }
     }
 `
 
@@ -94,9 +100,12 @@ const HomeContainerMainPage = () => {
                                 <HomeClockStatusMainPage></HomeClockStatusMainPage>
                                 <HomeApprovalMainPage></HomeApprovalMainPage>
                         </div>
-                        <div className="BodyContentRight">
+                <div className="BodyContentRight">
                     <div>
-                        근무내용이 들어갑니다.
+                        <h4>2023-04</h4>
+                    </div>
+                            <div>
+                                <HomeCalendar></HomeCalendar>
                             </div>
                         </div>
                 </div>

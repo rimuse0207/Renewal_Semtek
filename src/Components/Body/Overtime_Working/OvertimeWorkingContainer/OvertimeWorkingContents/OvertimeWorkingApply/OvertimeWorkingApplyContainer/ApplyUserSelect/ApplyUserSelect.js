@@ -1,33 +1,8 @@
 import React,{useState} from "react";
-import styled from "styled-components"
+import { ApplyUserSelectMainDivBox } from "../../../../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveApply/AnnualLeaveApplyContainer/AnnualLeaveApplyContent/ApplyUserSelect/ApplyUserSelect";
 
-export const ApplyUserSelectMainDivBox = styled.div`
-  .PersonApplyContentUserSelectPageMain_UserSelectBox {
-        h4 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        ul {
-            li {
-                font-size: 1.1em;
-                margin-bottom: 20px;
-                .UserSelectHover {
-                    display: inline-block;
-                    :hover {
-                        cursor: pointer;
-                    }
-                    label {
-                        :hover {
-                            cursor: pointer;
-                        }
-                    }
-                }
-            }
-        }
-    }
-`
 const ApplyUserSelect = () => {
-    const [userSelected, setUserSelected] = useState({
+     const [userSelected, setUserSelected] = useState({
         self: {
             checked: true,
             name: '',
@@ -63,6 +38,7 @@ const ApplyUserSelect = () => {
         }
     };
     return (
+        <div>
         <ApplyUserSelectMainDivBox>
               <div className="PersonApplyContentUserSelectPageMain_UserSelectBox">
                 <div>
@@ -107,6 +83,8 @@ const ApplyUserSelect = () => {
                 </div>
             </div>
         </ApplyUserSelectMainDivBox>
+        </div>
     )
 }
-export default ApplyUserSelect
+
+export default ApplyUserSelect;
