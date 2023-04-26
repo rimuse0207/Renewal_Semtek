@@ -5,6 +5,9 @@ import 'moment/locale/ko';
 import styled from "styled-components"
 
 const ApplySelectTableMainDivBox = styled.div`
+margin-top:50px;
+margin-bottom:50px;
+
 .PersonalApplyBodyConent_ApplyContents_CalendarTable {
         font-size: 0.8em;
         table {
@@ -313,6 +316,8 @@ const ApplySelectTable = () => {
                         </tbody>
                     </table>
                 </div>
+                
+            
                 <div>
                     <div>
                         <div>

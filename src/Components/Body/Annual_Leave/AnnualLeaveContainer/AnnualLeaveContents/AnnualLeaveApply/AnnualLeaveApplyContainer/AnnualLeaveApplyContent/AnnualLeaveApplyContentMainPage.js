@@ -26,6 +26,9 @@ const AnnualLeaveApplyContentMainPageMainDivBox = styled.div`
             background: #056ac9;
         }
     }
+
+    
+    
     `
 
 const AnnualLeaveApplyContentMainPage = () => {
@@ -33,9 +36,10 @@ const AnnualLeaveApplyContentMainPage = () => {
         <AnnualLeaveApplyContentMainPageMainDivBox>
             <ApplyBasicSetting></ApplyBasicSetting>
             <ApplyPayment></ApplyPayment>
-            <ApplyUserSelect></ApplyUserSelect>
+            {/* <ApplyUserSelect></ApplyUserSelect> */}
             <ApplySelectTable></ApplySelectTable>
             <ApplyReason></ApplyReason>
+
               <div className="PersonalNavigation_ApplyPage">
                 <div>휴가 등록</div>
              </div>

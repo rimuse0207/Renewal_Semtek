@@ -4,7 +4,10 @@ import styled from "styled-components";
 import { FaArrowsAltH } from "react-icons/fa";
 import OrganChartMainPage from "./OrganChart/OrganChartMainPage";
 import Select from "react-select";
+import { useDispatch,useSelector } from "react-redux";
 import {TbSquareRoundedArrowLeft,TbSquareRoundedArrowRight} from "react-icons/tb";
+import { Payment_Accept_User_Change_Func, Payment_Apply_User_Change_Func, Payment_Review_User_Change_Func } from "../../../../../../../../../../Models/PaymentUserReducer/PaymentUserReducer";
+import { AiOutlineUserDelete } from "react-icons/ai";
 
 const UserModalMainDivBox = styled.div`
     width:100%;
@@ -105,22 +108,50 @@ const UserModalMainDivBox = styled.div`
             color:gray;
             min-width:5%;
             align-items:center;
+            .ArrowIcons_Container{
+                :hover{
+                    cursor: pointer;
+                    color:blue;
+                    transition:all 0.5s;
+                }
+            }
         }
         .Fourth_Container{
             display:flex;
             justify-content:space-around;
             flex-flow: column;
             .Selected_Container{
-                height:35%;
+                height:30%;
                 max-width:40%;
                 width:40%;
                 min-width:400px;
                 div{
                     border:1px solid lightgray;
-                    height:100%;
+                    height:90%;
                     min-width:300px;
                     width:30%;
-                    
+                    overflow:auto;
+                    .Selected_User_Container{
+                        display:flex;
+                        justify-content:space-between;
+                        border-bottom:1px solid lightgray;
+                        padding:5px;
+                            :hover{
+                                cursor: pointer;
+                                background-color:aliceblue;
+                            }
+                        li{
+                            
+                            :last-child{
+                            color:orange;
+                            :hover{
+                                
+                                color:red;
+                            }
+                        }
+                            padding:5px;
+                        }
+                    }
                 }
             }
 
@@ -146,10 +177,78 @@ const customStyles = {
 
 Modal.setAppElement('#Modals');
 const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
+    const dispatch = useDispatch();
+    const Apply_User_State = useSelector(state => state.PaymentUserReducerState.Apply)
+    const Review_User_State = useSelector(state => state.PaymentUserReducerState.Review)
+    const Accept_User_State = useSelector(state => state.PaymentUserReducerState.Accept)
     const [ClickedUser, setClickedUser] = useState(null);
     const [UserDetailInfo, setUserDetailInfo] = useState([]);
     const [SelectUserInfoData, setSelectUserInfoData] = useState([]);
     const [SelectUserNames, setSelectUserNames] = useState("");
+    const [PrePare_ApplyUser_State, setPrePare_ApplyUser_State] = useState(Apply_User_State);
+    const [PrePare_ReviewUser_State, setPrePare_ReviewUser_State] = useState(Review_User_State);
+    const [PrePare_AcceptUser_State, setPrePare_AcceptUser_State] = useState(Accept_User_State);
+
+
+    const handleAddBox = (choice) => {
+
+        const data = UserDetailInfo.filter(list => list.checked ? list : "")
+        console.log(data);
+
+        const CheckedFalse = UserDetailInfo.map(list => list.checked ? { ...list, checked: false } : list);
+        setUserDetailInfo(CheckedFalse);
+
+        if (choice === 'Apply') {
+            setPrePare_ApplyUser_State(PrePare_ApplyUser_State.concat(data));
+            // dispatch(Payment_Apply_User_Change_Func(data))
+        } else if(choice === "Review"){
+            setPrePare_ReviewUser_State(PrePare_ReviewUser_State.concat(data));
+            // dispatch(Payment_Review_User_Change_Func(data))
+        } else if (choice === 'Accept') {
+            setPrePare_AcceptUser_State(PrePare_AcceptUser_State.concat(data));
+            // dispatch(Payment_Accept_User_Change_Func(data))
+        }
+    }
+
+
+    const handleUserClick = (data) => {
+        console.log(data);
+
+        // setUserDetailInfo()
+        const ChangeUser = UserDetailInfo.map((list) =>
+            list.uid === data.uid ? { ...list, checked: !data.checked } :  list 
+        );
+        setUserDetailInfo(ChangeUser)
+        
+    }
+
+    const handleAllChecked = (e) => {
+        
+        setUserDetailInfo(UserDetailInfo.map((list) => 
+            e.target.checked ? {...list,checked:true}:{...list,checked:false}
+        ));
+    }
+
+    const handleClickDeletUser = (data,choice) => {
+        console.log(data);
+        if (choice === "Apply") {
+            setPrePare_ApplyUser_State(PrePare_ApplyUser_State.filter(list => list.uid !== data.uid ? list : ''))    
+        } else if (choice === 'Review') {
+            setPrePare_ReviewUser_State(PrePare_ReviewUser_State.filter(list => list.uid !== data.uid ? list : ''))
+        } else if (choice === 'Accept') {
+            setPrePare_AcceptUser_State(PrePare_AcceptUser_State.filter(list => list.uid !== data.uid ? list : ''))
+        }
+        
+        
+    }
+
+
+    const HandleSaveDispatch = () => {
+          dispatch(Payment_Apply_User_Change_Func(PrePare_ApplyUser_State))
+            dispatch(Payment_Review_User_Change_Func(PrePare_ReviewUser_State))
+            dispatch(Payment_Accept_User_Change_Func(PrePare_AcceptUser_State))
+    }
+
 
     return <Modal isOpen={modalIsOpen} style={customStyles} onRequestClose={() => setModalIsOpen()}>
         <UserModalMainDivBox>
@@ -177,6 +276,7 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
                             <table>
                                 <thead>
                                     <tr>
+                                        <th><input type="checkbox" id="All_Checked" readOnly onChange={(e)=>handleAllChecked(e)}></input></th>
                                         <th>No.</th>
                                         <th>성명</th>
                                         <th>부서</th>
@@ -186,8 +286,9 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
                                 </thead>
                                 <tbody className="table_tbody">
                                     {UserDetailInfo.map((list,j) => {
-                                        return <tr key={list.uid} style={SelectUserNames === list.uid ? { backgroundColor: "yellow" } : {}} >
-                                            <td>{ j+1}</td>
+                                        return <tr key={list.uid} style={SelectUserNames === list.uid ? { backgroundColor: "yellow" } : list.checked ?{backgroundColor:"aliceblue"}:{}} onClick={()=>handleUserClick(list)}>
+                                            <td><input type="checkbox" checked={list.checked} readOnly ></input></td>
+                                            <td>{ j+1}. </td>
                                             <td>{list.cn}</td>
                                             <td>{ list.department_name}</td>
                                             <td>
@@ -205,77 +306,73 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
             </div>
                 <div className="Third_Container">
                     <div>
-                        <div>
+                        <div className="ArrowIcons_Container" onClick={()=>handleAddBox("Apply")}>
                             <TbSquareRoundedArrowRight></TbSquareRoundedArrowRight>
                         </div>
-                        <div>
+                        <div className="ArrowIcons_Container">
                             <TbSquareRoundedArrowLeft></TbSquareRoundedArrowLeft>
                         </div>
                     </div>
                     <div>
-                        <div>
+                        <div className="ArrowIcons_Container" onClick={()=>handleAddBox("Review")}>
                             <TbSquareRoundedArrowRight></TbSquareRoundedArrowRight>
                         </div>
-                        <div>
+                        <div className="ArrowIcons_Container">
+                            <TbSquareRoundedArrowLeft></TbSquareRoundedArrowLeft>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="ArrowIcons_Container" onClick={()=>handleAddBox("Accept")}>
+                            <TbSquareRoundedArrowRight></TbSquareRoundedArrowRight>
+                        </div>
+                        <div className="ArrowIcons_Container">
                             <TbSquareRoundedArrowLeft></TbSquareRoundedArrowLeft>
                         </div>
                     </div>
             </div>
             <div className="Fourth_Container">
                 <div className="Selected_Container">
-                    <h3>검토</h3>
-                    <div>검토 박스</div>
+                        <h3>신청 ({ PrePare_ApplyUser_State.length})</h3>
+                        <div>
+                                {PrePare_ApplyUser_State.map((list,i) => {
+                                    return <ul className="Selected_User_Container">
+                                        <li>{ i+1}. </li>
+                                        <li>{list.cn}</li>
+                                        <li>{list.department_name}</li>
+                                        <li onClick={()=>handleClickDeletUser(list,'Apply')}><AiOutlineUserDelete></AiOutlineUserDelete></li>
+                                    </ul>
+                                })}
+                    </div>
+                </div>
+                <div className="Selected_Container">
+                    <h3>검토 ({ PrePare_ReviewUser_State.length})</h3>
+                    <div>     {PrePare_ReviewUser_State.map((list,i) => {
+                         return <ul className="Selected_User_Container">
+                                        <li>{ i+1}. </li>
+                                        <li>{list.cn}</li>
+                                        <li>{list.department_name}</li>
+                                        <li onClick={()=>handleClickDeletUser(list,'Review')}><AiOutlineUserDelete></AiOutlineUserDelete></li>
+                                    </ul>
+                                })}</div>
                 </div>
                 <div  className="Selected_Container">
-                    <h3>승인</h3>
-                    <div>승인 박스</div>
+                    <h3>승인 ({ PrePare_AcceptUser_State.length})</h3>
+                    <div>     {PrePare_AcceptUser_State.map((list,i) => {
+                                     return <ul className="Selected_User_Container">
+                                        <li>{ i+1}. </li>
+                                        <li>{list.cn}</li>
+                                        <li>{list.department_name}</li>
+                                        <li onClick={()=>handleClickDeletUser(list,'Accept')}><AiOutlineUserDelete></AiOutlineUserDelete></li>
+                                    </ul>
+                    })}
+                        </div>
                 </div>
             </div>
 
             </div>
-                {/* <div>
-                    {ApplyMainModalOpen ? <PersonApplyContentSignModal></PersonApplyContentSignModal> : <div></div>}
-                    {ApplyModalOpen ? (
-                        <PersonApplyContentApplyModal
-                            setSelectApplyNames={data => setSelectApplyNames(data)}
-                            SelectApplyNames={SelectApplyNames}
-                            handleDeleteNames={data => handleDeleteNames(data)}
-                        ></PersonApplyContentApplyModal>
-                    ) : (
-                        <div></div>
-                    )}
-                    {AcceptModalOpen ? (
-                        <PersonApplyContentAcceptModal
-                            setSelectApplyNames={data => setSelectAcceptNames(data)}
-                            SelectApplyNames={SelectAcceptNames}
-                            // handleDeleteNames={data => handleDeleteNames(data)}
-                        ></PersonApplyContentAcceptModal>
-                    ) : (
-                        <div></div>
-                    )}
-                </div>
-                <div>
-                    <div className="PersonApplyContent_Modal_divButton">
-                        <button
-                            onClick={() => {
-                                setSelectApplyNames(SendSelectApplyNames);
-                                setSelectAcceptNames(SendSelectAcceptNames);
-                                closeModal();
-                            }}
-                        >
-                            취소
-                        </button>
-                        <button
-                            onClick={() => {
-                                setSendSelectApplyNames(SelectApplyNames);
-                                setSendSelectAcceptNames(SelectAcceptNames);
-                                closeModal();
-                            }}
-                        >
-                            확인
-                        </button>
-                    </div>
-                </div> */}
+            <div>
+                <button onClick={()=>HandleSaveDispatch()}>저장</button>
+            </div>
         </UserModalMainDivBox>  
             </Modal> 
 }

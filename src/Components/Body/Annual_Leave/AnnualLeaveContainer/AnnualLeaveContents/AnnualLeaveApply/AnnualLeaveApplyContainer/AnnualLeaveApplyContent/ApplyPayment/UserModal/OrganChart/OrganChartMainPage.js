@@ -35,7 +35,7 @@ const OrganChartMainPage = ({  ClickedUser,setUserDetailInfo,setSelectUserInfoDa
         if (e) {
              setSelectUserNames(e.value);
             await Upper_Department_Select_Getting(e.department_code)
-            setClickItemSelected(e.department_code)   
+            setClickItemSelected(e.department_code)
         } else {
             setSearchUser('');
         }
@@ -112,7 +112,7 @@ const OrganChartMainPage = ({  ClickedUser,setUserDetailInfo,setSelectUserInfoDa
             })
             console.log(ChangeSelectedInfoGettingPersonInfo_Axios)
             if (ChangeSelectedInfoGettingPersonInfo_Axios.data.dataSuccess) {
-                setUserDetailInfo(ChangeSelectedInfoGettingPersonInfo_Axios.data.ChangeSelectedInfoGettingPersonInfo_Rows)
+                setUserDetailInfo(ChangeSelectedInfoGettingPersonInfo_Axios.data.UserMap_State)
             }
 
         } catch (error) {

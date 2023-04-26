@@ -2,6 +2,7 @@ import React,{ useState } from "react";
 import styled from "styled-components";
 import { BsPlusCircle } from 'react-icons/bs';
 import UserModal from "./UserModal/UserModal";
+import { useSelector } from "react-redux";
 
 export const ApplyPaymentMainDivBox = styled.div`
     .PersonalApplyBodyConent_ApplyContents_Sign {
@@ -55,6 +56,7 @@ export const ApplyPaymentMainDivBox = styled.div`
             }
         }
         .PayMentFlexDivBox {
+            margin-bottom:30px;
             h4 {
                 margin-right: 30px;
                 display: inline;
@@ -72,8 +74,56 @@ export const ApplyPaymentMainDivBox = styled.div`
             }
         }
     }
+
+
+
+    .PayMent_Main_Flex_Box{
+        display:flex;
+        flex-flow:wrap;
+        max-width:80%;
+        .PayMent_Container{
+        display:flex;
+        max-width:80%;
+        .Payment_Title{
+            width:100px;
+            height:200px;
+            background-color:rgb(239, 244, 252);
+            border:0.5px solid lightgray;
+            text-align:center;
+            line-height:200px;
+        }
+        .Payment_Content{
+            /* border:0.5px solid lightgray; */
+            width:100px;
+            
+            .First{
+                background-color:rgb(239, 244, 252);
+                border-bottom:0.5px solid lightgray;
+                border-top:0.5px solid lightgray;
+                
+            }
+            .Third{
+                border-bottom:0.5px solid lightgray;
+            }
+            .First,.Third{
+                border-right:0.5px solid lightgray;
+                height:45px;
+                text-align:center;
+                line-height:45px;
+            }
+            .Second{
+                border-bottom:0.5px solid lightgray;
+                border-right:0.5px solid lightgray;
+                height:110px;
+            }
+        }
+    }
+    }
 `
 const ApplyPayment = () => {
+    const Apply_User_State = useSelector(state => state.PaymentUserReducerState.Apply)
+    const Review_User_State = useSelector(state => state.PaymentUserReducerState.Review)
+    const Accept_User_State = useSelector(state => state.PaymentUserReducerState.Accept)
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [ApplyMainModalOpen, setApplyMainModalOpen] = useState(false);
     const [ApplyModalOpen, setApplyModalOpen] = useState(false);
@@ -165,10 +215,8 @@ const ApplyPayment = () => {
 
     return (
         <ApplyPaymentMainDivBox>
-               <div className="PersonalApplyBodyConent_ApplyContents_Sign">
-                <div>
-                    <div>
-                        <div className="PayMentFlexDivBox">
+            <div className="PersonalApplyBodyConent_ApplyContents_Sign">
+                <div className="PayMentFlexDivBox">
                             <h4>결재선</h4>
                             <div>
                                 <button
@@ -182,75 +230,44 @@ const ApplyPayment = () => {
                             </div>
                         </div>
 
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th rowSpan={3} className="ClicksButtonMainTh">
-                                        <div>신청</div>
-                                        {/* <div className="ClicksButtonMainIcon" onClick={e => ApplyModalhandleClicks(e)}>
-                                            <BsPlusCircle></BsPlusCircle>
-                                        </div> */}
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th rowSpan={3} className="ClicksButtonMainTh">
-                                        <div>처리</div>
-                                        <div className="ClicksButtonMainIcon" onClick={e => AcceptModalhandleClicks(e)}>
-                                            <BsPlusCircle></BsPlusCircle>
-                                        </div>
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                <tr className="PersonalApplyBodyCotent_ApplyContentsTable">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    {SendSelectApplyNames.map((list, i) => {
-                                        return <td>{list.text}</td>;
-                                    })}
-                                    {Array(4 - SendSelectApplyNames.length)
-                                        .fill(0)
-                                        .map((list, i) => {
-                                            return <td></td>;
-                                        })}
-
-                                    {SendSelectAcceptNames.map((list, i) => {
-                                        return <td>{list.text}</td>;
-                                    })}
-
-                                    {Array(4 - SendSelectAcceptNames.length)
-                                        .fill(0)
-                                        .map((list, i) => {
-                                            return <td></td>;
-                                        })}
-                                </tr>
-                                <tr>
-                                    <th>참조</th>
-                                    <td colSpan="9" style={{ textAlign: 'left', paddingLeft: '20px' }}>
-                                        <input
-                                            style={{ height: '30px', border: '1px solid lightgray', paddingLeft: '10px' }}
-                                            placeholder="클릭후 입력하세요"
-                                        ></input>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                       
-                    </div>
+                  <div className="PayMent_Main_Flex_Box">
+                <div className="PayMent_Container">
+                        <div className="Payment_Title">신청</div>
+                        {Apply_User_State.map((list) => {
+                            return      <div className="Payment_Content">
+                                <div className="First">{ list.department_name}</div>
+                        <div className="Second"></div>
+                                <div className="Third">{ list.cn}</div>
+                </div>       
+                        })}
+                
                 </div>
+                <div className="PayMent_Container">
+                        <div className="Payment_Title">검토</div>
+                        {Review_User_State.map((list) => {
+                            return    <div className="Payment_Content">
+                        <div className="First">{ list.department_name}</div>
+                        <div className="Second"></div>
+                                <div className="Third">{ list.cn}</div>
+                    </div>
+                        })}
+                 
+                
+                     
+                    
+                </div>
+                <div className="PayMent_Container">
+                    <div className="Payment_Title">승인</div>
+                         {Accept_User_State.map((list) => {
+                            return    <div className="Payment_Content">
+                        <div className="First">{ list.department_name}</div>
+                        <div className="Second"></div>
+                                <div className="Third">{ list.cn}</div>
+                    </div>
+                        })}
+                </div>
+            </div>
+                
             </div>
           <UserModal modalIsOpen={modalIsOpen} setModalIsOpen={data=>setModalIsOpen(data)}></UserModal>
      </ApplyPaymentMainDivBox>   
