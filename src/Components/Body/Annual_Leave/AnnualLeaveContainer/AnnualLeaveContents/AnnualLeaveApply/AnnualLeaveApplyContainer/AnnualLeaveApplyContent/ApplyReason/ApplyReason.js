@@ -18,7 +18,7 @@ const ApplyReasonMainMainDivBox = styled.div`
         }
     }
 `
-const ApplyReason = () => {
+const ApplyReason = ({Apply_Reason,setApply_Reason}) => {
     return (
         <ApplyReasonMainMainDivBox>
              <div>
@@ -27,7 +27,7 @@ const ApplyReason = () => {
                         <h4>사유</h4>
                     </div>
                     <div>
-                        <textarea></textarea>
+                        <textarea placeholder="사유를 자세하게 작성 부탁드립니다..." value={Apply_Reason} onChange={(e)=>setApply_Reason(e.target.value)}></textarea>
                     </div>
                 </div>
             </div>

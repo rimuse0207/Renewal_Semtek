@@ -233,12 +233,13 @@ const ApplyPayment = () => {
                   <div className="PayMent_Main_Flex_Box">
                 <div className="PayMent_Container">
                         <div className="Payment_Title">신청</div>
+                               
                         {Apply_User_State.map((list) => {
                             return      <div className="Payment_Content">
                                 <div className="First">{ list.department_name}</div>
-                        <div className="Second"></div>
+                                <div className="Second"></div>
                                 <div className="Third">{ list.cn}</div>
-                </div>       
+                            </div>       
                         })}
                 
                 </div>
@@ -252,7 +253,7 @@ const ApplyPayment = () => {
                     </div>
                         })}
                  
-                
+                    
                      
                     
                 </div>
@@ -264,7 +265,8 @@ const ApplyPayment = () => {
                         <div className="Second"></div>
                                 <div className="Third">{ list.cn}</div>
                     </div>
-                        })}
+                         })}
+                    
                 </div>
             </div>
                 

@@ -8,6 +8,7 @@ import { useDispatch,useSelector } from "react-redux";
 import {TbSquareRoundedArrowLeft,TbSquareRoundedArrowRight} from "react-icons/tb";
 import { Payment_Accept_User_Change_Func, Payment_Apply_User_Change_Func, Payment_Review_User_Change_Func } from "../../../../../../../../../../Models/PaymentUserReducer/PaymentUserReducer";
 import { AiOutlineUserDelete } from "react-icons/ai";
+import { BiX } from "react-icons/bi";
 
 const UserModalMainDivBox = styled.div`
     width:100%;
@@ -156,7 +157,37 @@ const UserModalMainDivBox = styled.div`
             }
 
         }
-    
+    .PersonalNavigation_ApplyPage{
+        width: 90%;
+        /* margin: 0 auto; */
+        border-radius: 5px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 1.1em;
+        text-align: center;
+        background: #2985db;
+        font-weight: bolder;
+        border-bottom: 1px solid lightgray;
+        max-width:300px;
+        color:#fff;
+        margin-bottom:50px;
+        margin-top:50px;
+        padding-bottom:50px;
+        :hover {
+            cursor: pointer;
+            background: #056ac9;
+        }
+    }
+    .Delete_Modal{
+        position:fixed;
+        top:0px;
+        right:10px;
+        font-size:2em;
+        color:red;
+        :hover{
+            cursor: pointer;
+        }
+    }
 `
 
 const customStyles = {
@@ -169,7 +200,7 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
         animation: 'smoothAppear 0.3s ease',
         zIndex: '105',
-        height: "80vh",
+        height: "90vh",
         width:"90vw"
         
     },
@@ -193,7 +224,6 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
     const handleAddBox = (choice) => {
 
         const data = UserDetailInfo.filter(list => list.checked ? list : "")
-        console.log(data);
 
         const CheckedFalse = UserDetailInfo.map(list => list.checked ? { ...list, checked: false } : list);
         setUserDetailInfo(CheckedFalse);
@@ -212,9 +242,7 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
 
 
     const handleUserClick = (data) => {
-        console.log(data);
-
-        // setUserDetailInfo()
+        
         const ChangeUser = UserDetailInfo.map((list) =>
             list.uid === data.uid ? { ...list, checked: !data.checked } :  list 
         );
@@ -230,7 +258,6 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
     }
 
     const handleClickDeletUser = (data,choice) => {
-        console.log(data);
         if (choice === "Apply") {
             setPrePare_ApplyUser_State(PrePare_ApplyUser_State.filter(list => list.uid !== data.uid ? list : ''))    
         } else if (choice === 'Review') {
@@ -244,9 +271,10 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
 
 
     const HandleSaveDispatch = () => {
-          dispatch(Payment_Apply_User_Change_Func(PrePare_ApplyUser_State))
-            dispatch(Payment_Review_User_Change_Func(PrePare_ReviewUser_State))
-            dispatch(Payment_Accept_User_Change_Func(PrePare_AcceptUser_State))
+        dispatch(Payment_Apply_User_Change_Func(PrePare_ApplyUser_State))
+        dispatch(Payment_Review_User_Change_Func(PrePare_ReviewUser_State))
+        dispatch(Payment_Accept_User_Change_Func(PrePare_AcceptUser_State))
+        setModalIsOpen();
     }
 
 
@@ -305,14 +333,14 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
                     </div>
             </div>
                 <div className="Third_Container">
-                    <div>
+                    {/* <div>
                         <div className="ArrowIcons_Container" onClick={()=>handleAddBox("Apply")}>
                             <TbSquareRoundedArrowRight></TbSquareRoundedArrowRight>
                         </div>
                         <div className="ArrowIcons_Container">
                             <TbSquareRoundedArrowLeft></TbSquareRoundedArrowLeft>
                         </div>
-                    </div>
+                    </div> */}
                     <div>
                         <div className="ArrowIcons_Container" onClick={()=>handleAddBox("Review")}>
                             <TbSquareRoundedArrowRight></TbSquareRoundedArrowRight>
@@ -329,9 +357,17 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
                             <TbSquareRoundedArrowLeft></TbSquareRoundedArrowLeft>
                         </div>
                     </div>
+                    <div>
+                        <div className="ArrowIcons_Container" onClick={()=>handleAddBox("Accept")}>
+                            {/* <TbSquareRoundedArrowRight></TbSquareRoundedArrowRight> */}
+                        </div>
+                        <div className="ArrowIcons_Container">
+                            {/* <TbSquareRoundedArrowLeft></TbSquareRoundedArrowLeft> */}
+                        </div>
+                    </div>
             </div>
             <div className="Fourth_Container">
-                <div className="Selected_Container">
+                {/* <div className="Selected_Container">
                         <h3>신청 ({ PrePare_ApplyUser_State.length})</h3>
                         <div>
                                 {PrePare_ApplyUser_State.map((list,i) => {
@@ -343,7 +379,7 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
                                     </ul>
                                 })}
                     </div>
-                </div>
+                </div> */}
                 <div className="Selected_Container">
                     <h3>검토 ({ PrePare_ReviewUser_State.length})</h3>
                     <div>     {PrePare_ReviewUser_State.map((list,i) => {
@@ -366,12 +402,15 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
                                     </ul>
                     })}
                         </div>
-                </div>
+                    </div>
+                    <div className="PersonalNavigation_ApplyPage">
+                        <div onClick={()=>HandleSaveDispatch()}>저장</div>
+                    </div>
             </div>
 
             </div>
-            <div>
-                <button onClick={()=>HandleSaveDispatch()}>저장</button>
+            <div className="Delete_Modal" onClick={()=>setModalIsOpen()}>
+                <BiX></BiX>
             </div>
         </UserModalMainDivBox>  
             </Modal> 

@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import PaymentUserReducerState from "./PaymentUserReducer/PaymentUserReducer"
-const rootReducer = combineReducers({ PaymentUserReducerState});
+import VacationApplyReducerState from "./VacationApplyReducer/VacationApplyReducer";
+const rootReducer = combineReducers({ PaymentUserReducerState,VacationApplyReducerState});
 
 export default rootReducer;
