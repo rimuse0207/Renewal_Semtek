@@ -1,5 +1,8 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { request } from "../../../../../../../../../../API";
+import moment from 'moment';
 
 export const AnnualLeaveHistoryTableMainDivBox = styled.div`
  .PersonStatusHistoryCreateTableTextFlexBox {
@@ -37,7 +40,36 @@ export const AnnualLeaveHistoryTableMainDivBox = styled.div`
     }
 `
 
-const AnnualLeaveHistoryTable = ({DateData}) => {
+const AnnualLeaveHistoryTable = ({ DateData }) => {
+    const Vacation_Info_State = useSelector(state => state.Vacation_Info_Reducer_State.data);
+    const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
+    const [Apply_History_Data, setApply_History_Data] = useState([]);
+    const [Vacation_Count_Data, setVacation_Count_Data] = useState([]);
+    const Get_Apply_Vacation_Info_Data = async () => {
+        try {
+            
+            const Get_Apply_Vacation_Info_Data_Axios = await request.get(`/semtek/Get_Apply_Vacation_Info_Data`, {
+                params: {
+                    id: Login_Info.id,
+                    Date:DateData
+                }
+            })
+
+            if (Get_Apply_Vacation_Info_Data_Axios.data.dataSuccess) {
+                console.log(Get_Apply_Vacation_Info_Data_Axios)
+                setApply_History_Data(Get_Apply_Vacation_Info_Data_Axios.data.Vacation_Data);
+                setVacation_Count_Data(Get_Apply_Vacation_Info_Data_Axios.data.Vacation_Count_Payment_Rows);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        Get_Apply_Vacation_Info_Data();
+    },[DateData])
+
     return (
         <AnnualLeaveHistoryTableMainDivBox>
             <div className="PersonStatusHistoryCreateTableTextFlexBox">
@@ -50,32 +82,40 @@ const AnnualLeaveHistoryTable = ({DateData}) => {
                 <table className="Create_History_Table">
                     <thead>
                         <tr>
-                            <th rowSpan={2}>생성일</th>
-                            <th colSpan={2}>생성내역</th>
-                            <th rowSpan={2}>내용</th>
-                            <th rowSpan={2}>비고</th>
-                        </tr>
-                        <tr>
-                            <th style={{ borderLeft: '1px solid lightgray' }}>발생</th>
-                            <th>최종</th>
+                            <th >생성일</th>
+                            <th >생성</th>
+                            <th >내용</th>
+                            <th >비고</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        {Vacation_Count_Data.length > 0 ? Vacation_Count_Data.map((list) => {
+                            return <tr>
+                                <td>{moment(list.vacation_count_payment_write_date).format("YYYY-MM-DD") }</td>
+                                <td>{list.vacation_count_payment_number } 일</td>
+                                <td>{list.vacation_count_payment_reason }</td>
+                                <td>{ }</td>
+                            </tr>
+                        }):   <tr>
                             <td colSpan={5} style={{ color: 'lightgray' }}>
                                 데이터가 없습니다.
                             </td>
-                        </tr>
+                        </tr>}
+                     
                     </tbody>
                 </table>
             </div>
             <div className="PersonStatusHistoryCreateTableTextFlexBox">
                 <h4>휴가 현황</h4>
-                <div>총 휴가: 0일</div>
+                <div>총 휴가: { Vacation_Info_State.vacation_count_payment_number}일</div>
                 <div className="SubTextDesc"> </div>
-                <div>사용: 0일</div>
+                <div>사용: {Apply_History_Data.reduce((accumulator, currentValue) => {
+                    return accumulator+currentValue.Apply.vacation_apply_info_count
+                },0)}일</div>
                 <div className="SubTextDesc"></div>
-                <div>잔여: 0일</div>
+                <div>잔여: {  Vacation_Info_State.vacation_count_payment_number - Apply_History_Data.reduce((accumulator, currentValue) => {
+                    return accumulator+(currentValue.Apply.vacation_apply_info_count_check === 1 ?currentValue.Apply.vacation_apply_info_count :0 )
+                },0)}일</div>
             </div>
             <div>
                 <h4 style={{ marginTop: '30px', marginBottom: '20px' }}>휴가 신청 내역</h4>
@@ -88,15 +128,34 @@ const AnnualLeaveHistoryTable = ({DateData}) => {
                             <th>일수</th>
                             <th>기간</th>
                             <th>상태</th>
-                            <th>상세</th>
+                            <th>휴가 사유</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        {Apply_History_Data.length > 0 ? Apply_History_Data.map((list,j) => {
+                            return <tr key={list.Apply.vacation_apply_info_keys}>
+                                <td>{Apply_History_Data.length - j}</td>
+                                <td>{list.Apply.cn}</td>
+                                <td>{list.Apply.vacation_apply_info_divison}</td>
+                                <td>{list.Apply.vacation_apply_info_count} 일</td>
+                                <td>
+                                    <div>{list.Apply.vacation_apply_info_start_date} ({moment(list.Apply.vacation_apply_info_start_date).lang("ko").format("dd")}) {list.Apply.vacation_apply_info_start_time}</div>
+                                    <div>~</div>
+                                    <div>{list.Apply.vacation_apply_info_end_date} ({moment(list.Apply.vacation_apply_info_end_date).lang("ko").format("dd")}) {list.Apply.vacation_apply_info_end_time}</div>
+                                </td>
+                                <td>{(list.Review.some((elem, index, arr) => {
+                                    return elem.vacation_review_info_review_check === 0 
+                                }))?"검토중":(list.Accept.some((elem, index, arr) => {
+                                    return elem.vacation_review_info_review_check === 0 
+                                }))?"승인중":"승인 완료"}</td>
+                                <td>{list.Apply.vacation_apply_info_reason}</td>
+                            </tr>
+                        }):<tr>
                             <td colSpan={7} style={{ color: 'lightgray' }}>
                                 데이터가 없습니다.
                             </td>
-                        </tr>
+                        </tr>}
+                        
                     </tbody>
                 </table>
             </div>

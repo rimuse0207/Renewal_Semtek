@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { AiFillMail } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
+import { useCookies } from 'react-cookie';
+import { request } from "../../../API";
+import { useDispatch, useSelector } from "react-redux";
+import { Login_Info_Apply_State_Func } from "../../../Models/LoginInfoReducer/LoginInfoReducer";
+import { useHistory } from "react-router-dom";
+import { get_Vacation_Info_State_API } from "../../../Models/VacationInfoReducer/VacationInfoReducer";
+
 
 const LoginMainPageDivBox = styled.div`
     .page-container {
@@ -132,79 +139,83 @@ const LoginMainPageDivBox = styled.div`
 `;
 
 const LoginMainPage = () => {
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const LoginInfo = useSelector((state)=>state.Login_Info_Reducer_State.Login_Info)
+     const [cookies, setCookie, removeCookie] = useCookies(['id']);
      const [LoginDataInfo, setLoginDataInfo] = useState({
-        email: localStorage.getItem('id') ? localStorage.getItem('id') : '',
+        email: LoginInfo.id ? LoginInfo.id : '',
         password: '',
      });
-    
+    console.log(cookies);
     
     const handleClicksLogin = async (e) => {
-        // try {
-        //     e.preventDefault();
-        //     if (LoginDataInfo.email === '' || LoginDataInfo.password === '') {
-        //         toast.show({
-        //             title: `ID 또는 패스워드를 확인 해 주세요.`,
-        //             successCheck: false,
-        //             duration: ToastTime,
-        //         });
-        //         return;
-        //     }
+        e.preventDefault();
+        console.log(LoginDataInfo);
+        try {
+            
+            if (LoginDataInfo.email === '' || LoginDataInfo.password === '') {
+                // toast.show({
+                //     title: `ID 또는 패스워드를 확인 해 주세요.`,
+                //     successCheck: false,
+                //     duration: ToastTime,
+                // });
+                return;
+            }
 
-        //     const LoginCheckFromServer = await LoginCheckAPI(`/LoginCheck_app_server/LoginCheckData`, LoginDataInfo);
+            const LoginCheckFromServer = await request.post(`/semtek/logincheck`, {
+                LoginID: LoginDataInfo.email,
+                LoginPass:LoginDataInfo.password
+            });
+            console.log(LoginCheckFromServer)
 
-        //     if (LoginCheckFromServer.data.dataSuccess) {
-        //         if (LoginCheckFromServer.data.PasswordChange) {
-        //             setPasswordChangeModalState(LoginCheckFromServer.data.PasswordChange);
-        //             setLoginDataInfo({
-        //                 ...LoginDataInfo,
-        //                 password: '',
-        //             });
-        //             toast.show({
-        //                 title: `초기 비밀번호이므로 패스워드 변경 후 이용 가능합니다.`,
-        //                 successCheck: true,
-        //                 duration: ToastTime,
-        //             });
-        //         } else {
-        //             const testSuccess = {
-        //                 LoginCheck: true,
-        //                 email: LoginDataInfo.email,
-        //                 LoginToken: LoginCheckFromServer.data.token,
-        //                 refreshToken: LoginCheckFromServer.data.refreshToken,
-        //                 AdminAccess: LoginCheckFromServer.data.AdminAccess,
-        //             };
-        //             dispatch(AccessKeyMenuBarRedux(LoginCheckFromServer.data.CompanySelectAccessKey));
-        //             dispatch(LoginCheckRedux(testSuccess));
-
-        //             localStorage.setItem('id', LoginDataInfo.email ? LoginDataInfo.email : '');
-        //             sessionStorage.setItem('email', LoginCheckFromServer.data.email);
-        //             sessionStorage.setItem('name', LoginCheckFromServer.data.name);
-        //             setLoginDataInfo({
-        //                 email: '',
-        //                 password: '',
-        //             });
-        //             history.push('/');
-        //         }
-        //     } else {
-        //         if (!LoginCheckFromServer.data.LoginChecking) {
-        //             toast.show({
-        //                 title: `ID 또는 패스워드를 확인 해 주세요.`,
-        //                 successCheck: false,
-        //                 duration: ToastTime,
-        //             });
-        //             setLoginDataInfo({
-        //                 ...LoginDataInfo,
-        //                 password: '',
-        //             });
-        //         }
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        //     toast.show({
-        //         title: `서버와의 연결 끊김 IT팀에 문의바랍니다.`,
-        //         successCheck: false,
-        //         duration: ToastTime,
-        //     });
-        // }
+            if (LoginCheckFromServer.data.dataSuccess) {
+                if (LoginCheckFromServer.data.PasswordChange) {
+                    
+                    setLoginDataInfo({
+                        ...LoginDataInfo,
+                        password: '',
+                    });
+                 console.log(LoginCheckFromServer)
+                } else {
+                    console.log(LoginCheckFromServer)
+                    setCookie('token', LoginCheckFromServer.data.rows[0].id);
+                    const data = {
+                        name: LoginCheckFromServer.data.rows[0].name,
+                        id: LoginCheckFromServer.data.rows[0].id,
+                        position: LoginCheckFromServer.data.rows[0].position,
+                        team: LoginCheckFromServer.data.rows[0].team,
+                        company: LoginCheckFromServer.data.rows[0].company,
+                        vacation_admin_access: false,
+                        ot_admin: false,
+                        epid:LoginCheckFromServer.data.rows[0].id
+                    }
+                    dispatch(Login_Info_Apply_State_Func(data))
+                    
+                    
+                    history.push('/Main')
+                }
+            } else {
+                // if (!LoginCheckFromServer.data.LoginChecking) {
+                //     toast.show({
+                //         title: `ID 또는 패스워드를 확인 해 주세요.`,
+                //         successCheck: false,
+                //         duration: ToastTime,
+                //     });
+                //     setLoginDataInfo({
+                //         ...LoginDataInfo,
+                //         password: '',
+                //     });
+                // }
+            }
+        } catch (error) {
+            console.log(error);
+            // toast.show({
+            //     title: `서버와의 연결 끊김 IT팀에 문의바랍니다.`,
+            //     successCheck: false,
+            //     duration: ToastTime,
+            // });
+        }
     };
 
 

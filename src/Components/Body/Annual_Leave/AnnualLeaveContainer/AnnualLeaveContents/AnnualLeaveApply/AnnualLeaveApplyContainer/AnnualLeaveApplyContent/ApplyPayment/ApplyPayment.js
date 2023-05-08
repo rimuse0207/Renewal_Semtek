@@ -1,8 +1,10 @@
-import React,{ useState } from "react";
+import React,{ useEffect, useState } from "react";
 import styled from "styled-components";
 import { BsPlusCircle } from 'react-icons/bs';
 import UserModal from "./UserModal/UserModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { request } from "../../../../../../../../../API";
+import { Payment_Accept_User_Change_Func, Payment_Apply_User_Change_Func, Payment_Review_User_Change_Func } from "../../../../../../../../../Models/PaymentUserReducer/PaymentUserReducer";
 
 export const ApplyPaymentMainDivBox = styled.div`
     .PersonalApplyBodyConent_ApplyContents_Sign {
@@ -94,7 +96,7 @@ export const ApplyPaymentMainDivBox = styled.div`
         }
         .Payment_Content{
             /* border:0.5px solid lightgray; */
-            width:100px;
+            width:140px;
             
             .First{
                 background-color:rgb(239, 244, 252);
@@ -121,6 +123,8 @@ export const ApplyPaymentMainDivBox = styled.div`
     }
 `
 const ApplyPayment = () => {
+    const dispatch = useDispatch();
+    const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
     const Apply_User_State = useSelector(state => state.PaymentUserReducerState.Apply)
     const Review_User_State = useSelector(state => state.PaymentUserReducerState.Review)
     const Accept_User_State = useSelector(state => state.PaymentUserReducerState.Accept)
@@ -158,34 +162,34 @@ const ApplyPayment = () => {
             text: '유성재',
         },
     ]);
-    const [SendSelectAcceptNames, setSendSelectAcceptNames] = useState([
-        {
-            id: 1,
-            text: '김성준',
-        },
-        {
-            id: 2,
-            text: '이지형',
-        },
-        {
-            id: 3,
-            text: '차재윤',
-        },
-    ]);
-    const [SelectAcceptNames, setSelectAcceptNames] = useState([
-        {
-            id: 1,
-            text: '김성준',
-        },
-        {
-            id: 2,
-            text: '이지형',
-        },
-        {
-            id: 3,
-            text: '차재윤',
-        },
-    ]);
+    // const [SendSelectAcceptNames, setSendSelectAcceptNames] = useState([
+    //     {
+    //         id: 1,
+    //         text: '김성준',
+    //     },
+    //     {
+    //         id: 2,
+    //         text: '이지형',
+    //     },
+    //     {
+    //         id: 3,
+    //         text: '차재윤',
+    //     },
+    // ]);
+    // const [SelectAcceptNames, setSelectAcceptNames] = useState([
+    //     {
+    //         id: 1,
+    //         text: '김성준',
+    //     },
+    //     {
+    //         id: 2,
+    //         text: '이지형',
+    //     },
+    //     {
+    //         id: 3,
+    //         text: '차재윤',
+    //     },
+    // ]);
 
     const handleDeleteNames = data => {
         console.log(data);
@@ -212,6 +216,32 @@ const ApplyPayment = () => {
         setModalIsOpen(true);
         setAcceptModalOpen(true);
     };
+
+
+    const payment_user_info_select = async() => {
+        try {
+            
+            const payment_user_info_select_Axios = await request.get(`/semtek/payment_user_info_select`, {
+                params: {
+                    id:Login_Info.id
+                }
+            })
+
+            if (payment_user_info_select_Axios.data.dataSuccess) {
+                console.log(payment_user_info_select_Axios);
+                dispatch(Payment_Apply_User_Change_Func(payment_user_info_select_Axios.data.Apply_payment_user_info_select_Rows))
+                dispatch(Payment_Review_User_Change_Func(payment_user_info_select_Axios.data.Review_payment_user_info_select_Rows))
+                dispatch(Payment_Accept_User_Change_Func(payment_user_info_select_Axios.data.Accept_payment_user_info_select_Rows))
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        payment_user_info_select();
+    },[])
 
     return (
         <ApplyPaymentMainDivBox>

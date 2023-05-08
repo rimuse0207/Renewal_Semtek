@@ -9,6 +9,7 @@ import Thunk from 'redux-thunk';
 import { PersistGate } from 'redux-persist/integration/react';
 import rootReducer from './Models/index';
 import { persistConfig } from './Configs/ReduxPersistConfig';
+import { CookiesProvider } from 'react-cookie';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -19,8 +20,10 @@ const persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}></PersistGate>
-        <App />
-    </Provider>
+    <CookiesProvider>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}></PersistGate>
+                <App />
+            </Provider>
+        </CookiesProvider>
 );

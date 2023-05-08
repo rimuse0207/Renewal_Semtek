@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import Modal from 'react-modal';
 import styled from "styled-components";
 import { FaArrowsAltH } from "react-icons/fa";
@@ -276,6 +276,12 @@ const UserModal = ({ modalIsOpen, setModalIsOpen }) => {
         dispatch(Payment_Accept_User_Change_Func(PrePare_AcceptUser_State))
         setModalIsOpen();
     }
+
+    useEffect(() => {
+     setPrePare_ApplyUser_State(Apply_User_State);
+     setPrePare_ReviewUser_State(Review_User_State);
+     setPrePare_AcceptUser_State(Accept_User_State);
+    },[modalIsOpen])
 
 
     return <Modal isOpen={modalIsOpen} style={customStyles} onRequestClose={() => setModalIsOpen()}>

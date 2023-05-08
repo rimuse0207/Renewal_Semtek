@@ -28,7 +28,7 @@ const AnnualLeaveCalendarContentMainPage = () => {
                 </div>
                 </div>
             </AnnualLeaveSelectDateMainDivBox>
-            <AnnualLeaveCalendarTable></AnnualLeaveCalendarTable>
+            <AnnualLeaveCalendarTable MonthDateData={MonthDateData}></AnnualLeaveCalendarTable>
         </AnnualLeaveCalendarContentMainPageMainDivBox>
     )
 }

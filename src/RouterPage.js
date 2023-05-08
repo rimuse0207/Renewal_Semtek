@@ -13,7 +13,7 @@ const RouterPage = () => {
                     <Route exact path="/Main" component={HomeMainPage}></Route>
                     <Route exact path='/Annual_Leave' component={AnnualLeaveMainPage}></Route>
                     <Route exact path='/Overtime_Working' component={OvertimeWorkingMainPage}></Route>
-            </Switch>
+                 </Switch>
             </BrowserRouter>
         </div>
     )

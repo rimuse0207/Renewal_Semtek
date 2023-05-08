@@ -1,7 +1,9 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import styled from "styled-components";
 import moment from 'moment';
 import 'moment/locale/ko';
+import { request } from "../../../../../../../../../../API";
+import { useSelector } from "react-redux";
 
 export const AnnualLeaveCalendarTableMainDivBox = styled.div`
     
@@ -28,6 +30,7 @@ export const AnnualLeaveCalendarTableMainDivBox = styled.div`
     }
     .Telecommuting_Table_nextMonth {
         .Telecommuting_Table_dayNumber {
+            width:100%;
             color: #c9c9c9 !important;
         }
 
@@ -39,6 +42,7 @@ export const AnnualLeaveCalendarTableMainDivBox = styled.div`
         width: 14%;
         position: relative;
         .Telecommuting_Table_dayNumber {
+            width:100%;
             position: absolute;
             top: 0;
             left: 0;
@@ -51,14 +55,52 @@ export const AnnualLeaveCalendarTableMainDivBox = styled.div`
         background-color:skyblue;
         z-index: 100;
     }}
+    .Canlendar_Bar{
+    color: rgb(255, 255, 255);
+    padding-left: 10px;
+    border:1px solid #368;
+    background-color:#368;
+    color:#fff;
+    border-radius:5px;
+    box-shadow: 0.5px 0.5px 0.5px 0.5px lightgray;
+    :hover{
+        cursor: pointer;
+        opacity:0.7;
+    }
+    }
 `
-const AnnualLeaveCalendarTable = () => {
-     const [date, setdate] = useState(() => moment());
-    const [getMoment, setGetMoment] = useState(moment());
+const AnnualLeaveCalendarTable = ({ MonthDateData }) => {
+    const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
+    const [Apply_Vacation_Calendar_Data, setApply_Vacation_Calendar_Data] = useState([]);
+
+    const Apply_Vacation_Calendar_Data_Getting = async () => {
+        try {
+            
+            const Apply_Vacation_Calendar_Data_Getting_Axios = await request.get(`/semtek/Apply_Vacation_Calendar_Data_Getting`, {
+                params: {
+                    date : MonthDateData,
+                    id:Login_Info.id
+                }
+            })
+
+            if (Apply_Vacation_Calendar_Data_Getting_Axios.data.dataSuccess) {
+                console.log(Apply_Vacation_Calendar_Data_Getting_Axios);
+                setApply_Vacation_Calendar_Data(Apply_Vacation_Calendar_Data_Getting_Axios.data.Apply_Vacation_Calendar_Data_Rows);
+            }
+
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        Apply_Vacation_Calendar_Data_Getting();
+    },[MonthDateData])
 
     // chalandar generate logic
 
-    const today = getMoment;
+    const today = MonthDateData;
     const firstWeek = today.clone().startOf('month').week();
     const lastWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
 
@@ -98,6 +140,13 @@ const AnnualLeaveCalendarTable = () => {
                                     >
                                         <div className="Telecommuting_Table_dayNumber">
                                             <div style={{ paddingLeft: '5px' }}>{days.format('D')}</div>
+                                            <div>
+                                                <div>{Apply_Vacation_Calendar_Data.map((list) => {
+                                                    return moment(days).isBetween(list.vacation_apply_info_start_date, list.vacation_apply_info_end_date, undefined, 'day') ? <div className="Canlendar_Bar" >
+                                                        <div>{list.cn}</div>
+                                                    </div> : <></>
+                                                })}</div>
+                                            </div>
                                         </div>
                                     </td>
                                 );

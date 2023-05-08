@@ -599,7 +599,9 @@ const ApplySelectTable = () => {
                     <div>
                         <div>
                             <div style={{fontSize:"1.2em",lineHeight:"30px"}}>
-                                <h4 style={{marginTop:"20px"}}>휴가 신청 <button onClick={()=>handleClickOnDate()}>추가 신청</button></h4>
+                                <h4 style={{ marginTop: "20px" }}>휴가 신청
+                                    {/* <button onClick={() => handleClickOnDate()}>추가 신청</button> */}
+                                </h4>
                                 <div>
                                     선택 일수 : <span style={{ color: 'skyblue' }}>{clickedDateData.reduce((pre,acc) => pre + acc.Select_Days,0)}일</span>
                                 </div>

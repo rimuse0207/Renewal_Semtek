@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { AiFillCalendar } from "react-icons/ai";
 import { RiTimeFill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { get_Vacation_Info_State_API } from "../../../../../../../../../Models/VacationInfoReducer/VacationInfoReducer";
 export const AnnualLeaveCheckingMainDivBox = styled.div`
     margin-top:20px;
     .Checking_Container{
@@ -38,6 +40,8 @@ export const AnnualLeaveCheckingMainDivBox = styled.div`
 `
 
 const AnnualLeaveChecking = () => {
+   const Vacation_Info_State = useSelector(state => state.Vacation_Info_Reducer_State.data);
+
     return (
         <AnnualLeaveCheckingMainDivBox>
             <h3>올해 휴가/근무 정보</h3>
@@ -50,7 +54,7 @@ const AnnualLeaveChecking = () => {
                     <div className="Checking_Content_Block_Content_Box">
                         <div className="Checking_Content_Block_Content">
                             <h5>잔여 휴가</h5>
-                            <div> 0 일</div>
+                            <div> {Vacation_Info_State.vacation_count_payment_number} 일</div>
                         </div>
                         <div className="Checking_Content_Block_Content">
                             <h5>휴가 현황</h5>
