@@ -4,6 +4,7 @@ import AnnualLeaveNavigationMainPage from "./AnnualLeaveNavigation/AnnualLeaveNa
 import NavigationMainPage from "../../../Header/NavigationMainPage";
 import { useState } from "react";
 import AnnualLeaveSelectMainPage from "./AnnualLeaveContents/AnnualLeaveSelect/AnnualLeaveSelectMainPage";
+import { useSelector } from "react-redux";
 
 export const AnnualLeaveContainerMainPageMainDivBox = styled.div`
     .Personal_Main_Float{
@@ -24,23 +25,26 @@ export const AnnualLeaveContainerMainPageMainDivBox = styled.div`
 `
 
 const AnnualLeaveContainerMainPage = () => {
-    const [AnnualLeaveNavState, setAnnualLeaveNavState] = useState([{
-        menu_name: 'MainPage',
-        menu_check:true
-    },{
-        menu_name: 'AnnualLeaveSelect',
-        menu_check:false
-        }, {
-        menu_name: 'ApplyAnnualLeave',
-            menu_check:false
-    }])
+    const AnnualLeaveNavState  = useSelector((state)=>state.AnuualLeaveNavState.Annual_Leave_Nav_State) 
+    // const [AnnualLeaveNavState, setAnnualLeaveNavState] = useState([{
+    //         menu_name: 'MainPage',
+    //         menu_check:true
+    // },
+    //     {
+    //         menu_name: 'AnnualLeaveSelect',
+    //         menu_check:false
+    //     },
+    //     {
+    //         menu_name: 'ApplyAnnualLeave',
+    //         menu_check:false
+    // }])
     return (
         <AnnualLeaveContainerMainPageMainDivBox>
             <NavigationMainPage></NavigationMainPage>
             <div className="Personal_Main_Float">
                 <div className="Personal_Main_Float_Left">
                     {AnnualLeaveNavState.map((list) => {
-                        return list.menu_check ? <AnnualLeaveNavigationMainPage AnnualLeaveNavState={AnnualLeaveNavState} currentPageOn={ list.menu_name} key={list.menu_name} setAnnualLeaveNavState={(data)=>setAnnualLeaveNavState(data)}></AnnualLeaveNavigationMainPage>:
+                        return list.menu_check ? <AnnualLeaveNavigationMainPage AnnualLeaveNavState={AnnualLeaveNavState} currentPageOn={ list.menu_name} key={list.menu_name} ></AnnualLeaveNavigationMainPage>:
                         ""
                     })}
                     

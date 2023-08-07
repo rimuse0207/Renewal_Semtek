@@ -8,6 +8,7 @@ import { TbHomeStats } from "react-icons/tb";
 import { BsPersonWorkspace } from "react-icons/bs";
 import { MdOutlineGroups, MdOutlineSettingsInputComposite } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { GiMeal } from "react-icons/gi";
 
 
 const HomeNavigationMainPageMainDivBox = styled.div`
@@ -123,6 +124,14 @@ const HomeNavigationMainPage = () => {
                         <div className="BodyContentText">연장 근무</div>
                     </Link>
                         </li>
+                        <li>
+                            <Link to='/'>
+                                <div  className="BodyContentIcons">
+                                    <GiMeal></GiMeal>
+                                </div>
+                                <div className="BodyContentText">식대 정산</div>
+                            </Link>
+                        </li>
                         
                         <li>
                     <Link to="/Annual_Leave">
@@ -131,7 +140,8 @@ const HomeNavigationMainPage = () => {
                         </div>
                         <div className="BodyContentText">휴가</div>
                     </Link>
-                </li> 
+                        </li> 
+                        
 
                 <li>
                     <Link to="/check_payment">
@@ -140,7 +150,8 @@ const HomeNavigationMainPage = () => {
                         </div>
                         <div className="BodyContentText">결재</div>
                     </Link>
-                </li>
+                        </li>
+                        
                 {/* <li>
                     <Link to="/group">
                         <div className="BodyContentIcons">

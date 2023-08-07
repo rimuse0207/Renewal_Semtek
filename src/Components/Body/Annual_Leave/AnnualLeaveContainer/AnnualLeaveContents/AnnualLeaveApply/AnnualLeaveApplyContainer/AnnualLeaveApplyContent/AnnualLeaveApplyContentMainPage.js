@@ -5,8 +5,9 @@ import ApplyUserSelect from "./ApplyUserSelect/ApplyUserSelect";
 import ApplySelectTable from "./ApplySelectTable/ApplySelectTable";
 import ApplyReason from "./ApplyReason/ApplyReason";
 import styled from "styled-components"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { request } from "../../../../../../../../API";
+import { AnuualLeaveNavStateChange } from "../../../../../../../../Models/AnnualLeaveNavReducer/AnnualLeaveNavReducer";
 
 const AnnualLeaveApplyContentMainPageMainDivBox = styled.div`
  .PersonalNavigation_ApplyPage {
@@ -34,10 +35,13 @@ const AnnualLeaveApplyContentMainPageMainDivBox = styled.div`
     `
 
 const AnnualLeaveApplyContentMainPage = () => {
+    const dispatch = useDispatch();
+    const AnnualLeaveNavState  = useSelector((state)=>state.AnuualLeaveNavState.Annual_Leave_Nav_State) 
     const clickedDateData = useSelector(state => state.VacationApplyReducerState.clickedDateData);
     const PaymentUserData = useSelector(state => state.PaymentUserReducerState);
     const [Apply_Reason, setApply_Reason] = useState("");
-    const HandleClick_Apply_Vacation_Submit = async() => {
+    const HandleClick_Apply_Vacation_Submit = async () => {
+        
         console.log(clickedDateData);
         console.log(Apply_Reason);
         console.log(PaymentUserData);
@@ -53,6 +57,8 @@ const AnnualLeaveApplyContentMainPage = () => {
             if (HandleClick_Apply_Vacation_Submit_Axios.data.dataSuccess) {
                 console.log("신청 오나료")
                 console.log(HandleClick_Apply_Vacation_Submit_Axios);
+                const ChangeMenu = AnnualLeaveNavState.map(list => list.menu_name === "AnnualLeaveSelect" ? { ...list, menu_check: true } : { ...list, menu_check: false });
+                dispatch(AnuualLeaveNavStateChange(ChangeMenu))
             }
 
         } catch (error) {

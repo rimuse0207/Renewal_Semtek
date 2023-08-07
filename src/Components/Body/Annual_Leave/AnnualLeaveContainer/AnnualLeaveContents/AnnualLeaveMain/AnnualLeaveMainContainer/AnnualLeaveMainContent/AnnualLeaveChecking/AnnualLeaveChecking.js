@@ -11,7 +11,7 @@ export const AnnualLeaveCheckingMainDivBox = styled.div`
         display:flex;
         justify-content:start;
         .Checking_Content_Block{
-            width:30%;
+            width:50%;
             margin-right:50px;
             .Checking_Content_Block_Title{
                 display:flex;
@@ -53,8 +53,16 @@ const AnnualLeaveChecking = () => {
                     </div>
                     <div className="Checking_Content_Block_Content_Box">
                         <div className="Checking_Content_Block_Content">
+                            <h5>총 휴가</h5>
+                            <div> {Vacation_Info_State?.vacation_count_payment} 일</div>
+                        </div>
+                        <div className="Checking_Content_Block_Content">
+                            <h5>사용 휴가</h5>
+                            <div> {Vacation_Info_State?.vacation_used_count + Vacation_Info_State?.vacation_not_used_count} 일</div>
+                        </div>
+                        <div className="Checking_Content_Block_Content">
                             <h5>잔여 휴가</h5>
-                            <div> {Vacation_Info_State.vacation_count_payment_number} 일</div>
+                            <div> {Vacation_Info_State?.vacation_count_payment-Vacation_Info_State?.vacation_used_count} 일</div>
                         </div>
                         <div className="Checking_Content_Block_Content">
                             <h5>휴가 현황</h5>
@@ -63,7 +71,7 @@ const AnnualLeaveChecking = () => {
 
                     </div>
                 </div>
-                <div className="Checking_Content_Block">
+                {/* <div className="Checking_Content_Block">
                     <div className="Checking_Content_Block_Title">
                         <RiTimeFill></RiTimeFill>
                         <h5>근무시간</h5>
@@ -79,7 +87,7 @@ const AnnualLeaveChecking = () => {
                         </div>
 
                     </div>
-                </div>
+                </div> */}
             </div>
 
         </AnnualLeaveCheckingMainDivBox>

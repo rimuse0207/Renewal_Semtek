@@ -143,7 +143,11 @@ const AnnualLeaveCalendarTable = ({ MonthDateData }) => {
                                             <div>
                                                 <div>{Apply_Vacation_Calendar_Data.map((list) => {
                                                     return moment(days).isBetween(list.vacation_apply_info_start_date, list.vacation_apply_info_end_date, undefined, 'day') ? <div className="Canlendar_Bar" >
-                                                        <div>{list.cn}</div>
+                                                        <div>
+                                                            {/* <span>{list.cn}</span> */}
+                                                            {/* <span>{"  "}</span> */}
+                                                            <span>{list.vacation_apply_info_divison}</span>
+                                                        </div>
                                                     </div> : <></>
                                                 })}</div>
                                             </div>

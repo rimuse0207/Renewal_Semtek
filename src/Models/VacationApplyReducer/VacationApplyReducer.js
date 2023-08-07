@@ -5,9 +5,8 @@ export const VACATION_APPLY_INTIAL_STATE_REDUCER_GET = 'VACATION_APPLY_INTIAL_ST
 
 
 const initState = {
-    clickedDateData: [{
+    clickedDateData: {
             keys: uuid(),
-            date: moment(),
             datePlan: "연차 휴가",
             Start_Date:  moment(),
             End_Date:  moment(),
@@ -16,7 +15,7 @@ const initState = {
             Weekend_days: 0,
             Start_Time: "09:00",
             End_Time:"18:00"
-    }]
+    }
 }
 
 export const Vacation_Apply_State_Func = (data) => ({

@@ -192,12 +192,12 @@ const ApplyPayment = () => {
     // ]);
 
     const handleDeleteNames = data => {
-        console.log(data);
+        
         const a = SelectApplyNames.filter((list, i) => {
             return list.text === data.text ? '' : list;
         });
         setSelectApplyNames(a);
-        console.log(a);
+        
     };
 
     const closeModal = () => {
@@ -207,7 +207,7 @@ const ApplyPayment = () => {
         setModalIsOpen(false);
     };
     const ApplyModalhandleClicks = e => {
-        console.log(e);
+        
         setModalIsOpen(true);
         setApplyModalOpen(true);
     };
@@ -228,7 +228,6 @@ const ApplyPayment = () => {
             })
 
             if (payment_user_info_select_Axios.data.dataSuccess) {
-                console.log(payment_user_info_select_Axios);
                 dispatch(Payment_Apply_User_Change_Func(payment_user_info_select_Axios.data.Apply_payment_user_info_select_Rows))
                 dispatch(Payment_Review_User_Change_Func(payment_user_info_select_Axios.data.Review_payment_user_info_select_Rows))
                 dispatch(Payment_Accept_User_Change_Func(payment_user_info_select_Axios.data.Accept_payment_user_info_select_Rows))
@@ -265,7 +264,7 @@ const ApplyPayment = () => {
                         <div className="Payment_Title">신청</div>
                                
                         {Apply_User_State.map((list) => {
-                            return      <div className="Payment_Content">
+                            return      <div className="Payment_Content" key={list.epid}>
                                 <div className="First">{ list.department_name}</div>
                                 <div className="Second"></div>
                                 <div className="Third">{ list.cn}</div>
@@ -276,7 +275,7 @@ const ApplyPayment = () => {
                 <div className="PayMent_Container">
                         <div className="Payment_Title">검토</div>
                         {Review_User_State.map((list) => {
-                            return    <div className="Payment_Content">
+                            return    <div className="Payment_Content"  key={list.epid}>
                         <div className="First">{ list.department_name}</div>
                         <div className="Second"></div>
                                 <div className="Third">{ list.cn}</div>
@@ -290,7 +289,7 @@ const ApplyPayment = () => {
                 <div className="PayMent_Container">
                     <div className="Payment_Title">승인</div>
                          {Accept_User_State.map((list) => {
-                            return    <div className="Payment_Content">
+                            return    <div className="Payment_Content"  key={list.epid}>
                         <div className="First">{ list.department_name}</div>
                         <div className="Second"></div>
                                 <div className="Third">{ list.cn}</div>

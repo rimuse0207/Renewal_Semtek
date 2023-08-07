@@ -29,7 +29,7 @@ const ApplyBasicSettingMainDivBox = styled.div`
     }
 `
 
-const ApplyBasicSetting = () => {
+const ApplyBasicSetting = ({Selected}) => {
     return (
         <ApplyBasicSettingMainDivBox>
              <div className="PersonalApplyBodyConent_ApplyContents">
@@ -41,7 +41,7 @@ const ApplyBasicSetting = () => {
                             <tbody>
                                 <tr>
                                     <th>문서 종류</th>
-                                    <td>휴가신청서</td>
+                                    <td>{ Selected==='Overtime' ? "연장 근무":"휴가"} 신청서</td>
                                     <th>작성자</th>
                                     <td>기타 테스트</td>
                                 </tr>

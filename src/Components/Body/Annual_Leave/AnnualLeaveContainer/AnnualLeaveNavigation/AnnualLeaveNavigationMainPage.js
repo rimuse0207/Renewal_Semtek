@@ -5,6 +5,8 @@ import { MdKeyboardArrowUp } from 'react-icons/md';
 import { AiFillCalendar } from 'react-icons/ai';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { BsBarChartFill } from 'react-icons/bs';
+import { useDispatch } from "react-redux";
+import { AnuualLeaveNavStateChange } from "../../../../../Models/AnnualLeaveNavReducer/AnnualLeaveNavReducer";
 
 export const AnnualLeaveNavigationMainPageMainDivBox = styled.div`
     border-right:1px solid lightgray;
@@ -95,11 +97,12 @@ export const AnnualLeaveNavigationMainPageMainDivBox = styled.div`
     }
 `
 
-const AnnualLeaveNavigationMainPage = ({ AnnualLeaveNavState,currentPageOn,setAnnualLeaveNavState }) => {
+const AnnualLeaveNavigationMainPage = ({ AnnualLeaveNavState, currentPageOn }) => {
+    const dispatch = useDispatch();
     const [ClicksOnOff, setClicksOnOff] = useState(true);
     const handleClickMenu = (data) => {
         const ChangeMenu = AnnualLeaveNavState.map(list => list.menu_name === data ? { ...list, menu_check: true } : { ...list, menu_check: false });
-        setAnnualLeaveNavState(ChangeMenu)
+        dispatch(AnuualLeaveNavStateChange(ChangeMenu))
     }
 
     return (

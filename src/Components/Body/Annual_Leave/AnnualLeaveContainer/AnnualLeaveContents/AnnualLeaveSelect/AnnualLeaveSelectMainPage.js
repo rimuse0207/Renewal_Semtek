@@ -10,7 +10,7 @@ const AnnualLeaveSelectMainPage = ({currentPageOn}) => {
             {currentPageOn === "MainPage" ? <AnnualLeaveMainPage currentPageOn={currentPageOn}></AnnualLeaveMainPage> : <></>}
             {currentPageOn === "AnnualLeaveSelect" ? <AnnualLeaveSelectContainer currentPageOn={currentPageOn}></AnnualLeaveSelectContainer> : <></>}
             {currentPageOn === "ApplyAnnualLeave" ? <AnnualLeaveApplyMainPage currentPageOn={currentPageOn}></AnnualLeaveApplyMainPage> : <></>}
-            
+            <div style={{height:"100px"}}></div>
         </div>
     )
 }

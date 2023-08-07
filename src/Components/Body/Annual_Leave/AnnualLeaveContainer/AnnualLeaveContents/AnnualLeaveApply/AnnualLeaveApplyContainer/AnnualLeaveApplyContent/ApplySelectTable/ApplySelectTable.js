@@ -8,9 +8,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ko } from 'date-fns/esm/locale';
 import uuid from 'react-uuid'
 import { TiDelete } from "react-icons/ti";
-import axios from 'axios';
+import ApplyShowTitle from "./ApplyShowTitle";
 import { useDispatch, useSelector } from 'react-redux';
 import { Vacation_Apply_State_Func } from '../../../../../../../../../Models/VacationApplyReducer/VacationApplyReducer';
+import { request } from '../../../../../../../../../API';
+import {Vacation_Calendar_Data_Getting_Redux_Thunk, Vacation_Menu_Select_Checked} from "../../../../../../../../../Models/Redux-Thunk/VacataionCalendarReduce"
+
 
 const ApplySelectTableMainDivBox = styled.div`
 margin-top:50px;
@@ -75,7 +78,7 @@ margin-bottom:50px;
                 }
             }
             .PersonalApplyBodyConent_ApplyContents_CalendarTable_ButtonTable {
-                height: 90px;
+                height: 60px;
                 td {
                     /* :hover {
                         cursor: pointer;
@@ -184,274 +187,103 @@ margin-bottom:50px;
 
     .SelectedCehcking_Container{
         height:100%;
-        div{
-            height:50%;
+        position:relative;
+        .Now_Checked{
+            height:100%;
+            background: #166;
+            position:relative;
+             .Select_Menu{
+                position:absolute;
+                width:110px;
+                 top: 50%;
+                left: 60%;
+                transform: translate(-40%, -50%);
+                background-color:#fff;
+                z-index:100;
+                li{
+                        border: 1px solid gray;
+                        padding: 5px;
+                        font-weight:bolder;
+                        :hover{
+                            cursor:pointer;
+                            background-color:darkgray;
+                            color:#fff;
+                        }
+                }
+                
+            }
         }
+        .Nonthing{
+            width:100%;
+            height:100%;
+            position:relative;
+            :hover{
+                cursor: pointer;
+            }
+            .Select_Menu{
+                position:absolute;
+                width:110px;
+                 top: 50%;
+                left: 60%;
+                transform: translate(-40%, -50%);
+                background-color:#fff;
+                z-index:100;
+                li{
+                        border: 1px solid gray;
+                        padding: 5px;
+                        font-weight:bolder;
+                        :hover{
+                            cursor:pointer;
+                            background-color:darkgray;
+                            color:#fff;
+                        }
+                }
+                
+            }
+        }
+
+        .Selected_Menu_IsOpen{
+            position:absolute;
+            bottom:0px;
+            left:0px;
+            border:1px solid gray;
+            width:130px;
+            text-align:start;
+            background-color:#fff;
+            z-index:100;
+            li{
+                padding:5px;
+                border:1px solid lightgray;
+                background-color:#fff;
+                :hover{
+                    cursor: pointer;
+                    background-color:darkgray;
+                    color:#fff;
+                }
+            }
+        }
+        
     }
     
 `
 const ApplySelectTable = () => {
     const dispatch = useDispatch();
+    const Login_Info = useSelector((state) => state.Login_Info_Reducer_State.Login_Info);
     const clickedDateData = useSelector(state => state.VacationApplyReducerState.clickedDateData);
+    const Vacation_Date_Data = useSelector((state) => state.VacationCalendarState.Vacation_Calendar_State.Vacation_Date_Data);
+
     const [GetData, setGetData] = useState(moment());
-    const [Weekend_Day, setWeekend_Day] = useState([]);
-    const [DateMonthCheck, setDateMonthCheck] = useState({
-        FirstTableMonthLength: 0,
-        FirstTableMonthDataCheck: false,
-        FirstTableMonth: '',
-        FirstTableData: [],
-        SecondTableMonthLength: 17,
-        SecondTableMonthDataCheck: true,
-        SecondTableMonth: '',
-        SecondTableData: [],
-    });
-    // const [clickedDateData, setClickedDateData] = useState([{
-    //         keys: uuid(),
-    //         date: moment(),
-    //         datePlan: "연차 휴가",
-    //         Start_Date:  moment(),
-    //         End_Date:  moment(),
-    //         Select_Days:1,
-    //         Week_days: 1,
-    //         Weekend_days: 0,
-    //         Start_Time: "09:00",
-    //         End_Time:"18:00"
-    //     }]);
-    
-    useEffect(() => {
-        CalcuDate();
-    }, [GetData]);
-
-    const CalcuDate = () => {
-        let FirstData = [
-            {
-                date: GetData.clone(),
-                dayFormat: GetData.clone().format('D'),
-                weekFormat: GetData.clone().locale('ko').format('(dd)'),
-                clickCheck: false,
-                datePlan: '',
-            },
-        ];
-        let SecondData = [];
-
-        if (GetData.clone().format('YYYY-MM') !== GetData.clone().add(14, 'day').format('YYYY-MM')) {
-            for (var i = 1; i < 15; i++) {
-                if (GetData.clone().format('YYYY-MM') === GetData.clone().add(i, 'day').format('YYYY-MM')) {
-                    FirstData.push({
-                        date: GetData.clone().add(i, 'day'),
-                        dayFormat: GetData.clone().add(i, 'day').format('D'),
-                        weekFormat: GetData.clone().add(i, 'day').locale('ko').format('(dd)'),
-                        clickCheck: false,
-                        datePlan: '',
-                    });
-                } else {
-                    SecondData.push({
-                        date: GetData.clone().add(i, 'day'),
-                        dayFormat: GetData.clone().add(i, 'day').format('D'),
-                        weekFormat: GetData.clone().add(i, 'day').locale('ko').format('(dd)'),
-                        clickCheck: false,
-                        datePlan: '',
-                    });
-                }
-            }
-            setDateMonthCheck({
-                FirstTableMonthLength: FirstData.length + 2,
-                FirstTableMonthDataCheck: true,
-                FirstTableMonth: GetData.format('YYYY-MM-DD'),
-                FirstTableData: FirstData,
-                SecondTableMonthLength: SecondData.length,
-                SecondTableMonthDataCheck: true,
-                SecondTableMonth: GetData.clone().add(14, 'day').format('YYYY-MM-DD'),
-                SecondTableData: SecondData,
-            });
-        } else {
-            SecondData.push({
-                date: GetData.clone(),
-                dayFormat: GetData.clone().format('D'),
-                weekFormat: GetData.clone().locale('ko').format('(dd)'),
-                clickCheck: false,
-                datePlan: '',
-            });
-            for (var i = 1; i < 15; i++) {
-                SecondData.push({
-                    date: GetData.clone().add(i, 'day'),
-                    dayFormat: GetData.clone().add(i, 'day').format('D'),
-                    weekFormat: GetData.clone().add(i, 'day').locale('ko').format('(dd)'),
-                    clickCheck: false,
-                    datePlan: '',
-                });
-            }
-            setDateMonthCheck({
-                FirstTableMonthLength: 0,
-                FirstTableMonthDataCheck: false,
-                FirstTableMonth: '',
-                FirstTableData: [],
-                SecondTableMonthLength: 17,
-                SecondTableMonthDataCheck: true,
-                SecondTableMonth: GetData.clone().format('YYYY-MM'),
-                SecondTableData: SecondData,
-            });
-        }
-    };
-
+   
     const handleMinusCalendar = () => {
-        setGetData(GetData.clone().subtract(14, 'day'));
+        setGetData(GetData.clone().subtract(7, 'day'));
     };
     const handlePlusCalendar = () => {
-        setGetData(GetData.clone().add(14, 'day'));
-    };
-    const handleClickOnDate = async () => {
-        //연차 신청 데이터 추가
-        const Show_Tables = {
-            keys: uuid(),
-            date: moment(),
-            datePlan: "연차 휴가",
-            Start_Date:  moment(),
-            End_Date:  moment(),
-            Select_Days:1,
-            Week_days: 1,
-            Weekend_days: 0,
-            Start_Time: "09:00",
-            End_Time:"18:00"
-        }
-        dispatch(Vacation_Apply_State_Func(clickedDateData.concat(Show_Tables)))
-        
+        setGetData(GetData.clone().add(7, 'day'));
     };
 
-    //종료날짜 변경 시 
-    const handleEndClickDates = (date, list) => {
-        const SelectDate = moment(moment(date).format("YYYY-MM-DD 23:59"));
-        const SumDayCount = moment(SelectDate).diff(moment(list.Start_Date), 'days') + 1;
-        const WeekDayCount = CalcDate(new Date(list.Start_Date), new Date(SelectDate)) - (list.Start_Time === "14:00" ? 0.5 : 0);
-        const WeekendDayCount = SumDayCount - WeekDayCount - (list.Start_Time === "14:00" ? 0.5:0);
-
-        
-        const Change_Data = clickedDateData.map((item) => list.keys === item.keys ? { ...item, End_Date: moment(date).format("YYYY-MM-DD"), Week_days: WeekDayCount, Weekend_days: WeekendDayCount, Select_Days: SumDayCount, End_Time: "18:00" } : item);
-        dispatch(Vacation_Apply_State_Func(Change_Data))
-    }
-
-
-    //시작날짜 변경 시 
-    const handleStartClickDates = (date, list) => {
-        
-        const SelectDate = moment(moment(date).format("YYYY-MM-DD"))
-        const SumDayCount = moment(list.End_Date).diff(SelectDate, 'days') + 1;
-        const WeekDayCount = CalcDate(new Date(SelectDate), new Date(list.End_Date)) - (list.End_Time === "14:00" ? 0.5 : 0);
-        const WeekendDayCount = SumDayCount - WeekDayCount - (list.End_Time === "14:00" ? 0.5 : 0);
-
-        //선택한 날짜가 종료날짜랑 같은 경우
-        if (moment(list.End_Date).isSame(SelectDate)) {
-
-            const Change_Data = clickedDateData.map((item) => list.keys === item.keys ? { ...item, Start_Date: moment(date).format("YYYY-MM-DD"), Week_days: WeekDayCount, Weekend_days: WeekendDayCount, Select_Days: SumDayCount, Start_Time: "09:00" } : item);
-            dispatch(Vacation_Apply_State_Func(Change_Data))
-            
-        }
-        //선택한 날짜가 종료날짜보다 긴 경우
-        else if (moment(list.End_Date).isBefore(SelectDate)) {
-            
-            const Change_Data = clickedDateData.map((item) => list.keys === item.keys ? { ...item, Start_Date: moment(date).format("YYYY-MM-DD"), End_Date: moment(date).format("YYYY-MM-DD"), Start_Time: "09:00" } : item)
-            dispatch(Vacation_Apply_State_Func(Change_Data))
-            
-            
-        } else {
-        //선택한 날짜가 종료날짜보다 적은 경우            
-            const Change_Data = clickedDateData.map((item) => list.keys === item.keys ? { ...item, Start_Date: moment(date).format("YYYY-MM-DD"), Week_days: WeekDayCount, Weekend_days: WeekendDayCount, Select_Days: SumDayCount, Start_Time: "09:00" } : item);
-            dispatch(Vacation_Apply_State_Func(Change_Data))
-            
-        }   
-    }
-
-    //시작날짜의 시간 변경 시
-    const handleChangeStartTime = (e,list) => {
-
-        if (e.target.value === '09:00') {
-            if (new Date(list.Start_Date).getDay() === 0 || new Date(list.Start_Date).getDay() === 6) {
-                //선택 항목이 주말 일때
-                const Change_Data = clickedDateData.map((item)=>list.keys === item.keys ? {...item,Start_Time:e.target.value,Weekend_days:item.Weekend_days+0.5}:item)
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            } else {
-                //선택 항목이 평일 일때
-                const Change_Data = clickedDateData.map((item) => list.keys === item.keys ? { ...item, Start_Time: e.target.value, Week_days: item.Week_days + 0.5 } : item);
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            }
-            
-        } else {
-            if (new Date(list.Start_Date).getDay() === 0 || new Date(list.Start_Date).getDay() === 6) {
-                //선택 항목이 주말 일때
-                const Change_Data = clickedDateData.map((item) => list.keys === item.keys ? { ...item, Start_Time: e.target.value, Weekend_days: item.Weekend_days - 0.5 } : item);
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            } else {
-                //선택 항목이 평일 일때
-                const Change_Data = clickedDateData.map((item)=>list.keys === item.keys ? {...item,Start_Time:e.target.value,Week_days:item.Week_days-0.5}:item)
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            }
-            
-        }
-
-        
-    }
-
-    //종료 날짜의 시간 변경 시
-     const handleChangeEndTime = (e,list) => {
-
-        if (e.target.value === '14:00') {
-            if (new Date(list.End_Date).getDay() === 0 || new Date(list.End_Date).getDay() === 6) {
-                //선택 항목이 주말 일때
-                const Change_Data = clickedDateData.map((item)=>list.keys === item.keys ? {...item,End_Time:e.target.value,Weekend_days:item.Weekend_days-0.5}:item)
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            } else {
-                //선택 항목이 평일 일때
-                const Change_Data =clickedDateData.map((item)=>list.keys === item.keys ? {...item,End_Time:e.target.value,Week_days:item.Week_days-0.5}:item) 
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            }
-            
-        } else {
-            if (new Date(list.End_Date).getDay() === 0 || new Date(list.End_Date).getDay() === 6) {
-                //선택 항목이 주말 일때
-                const Change_Data = clickedDateData.map((item)=>list.keys === item.keys ? {...item,End_Time:e.target.value,Weekend_days:item.Weekend_days+0.5}:item)
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            } else {
-                //선택 항목이 평일 일때
-                const Change_Data = clickedDateData.map((item)=>list.keys === item.keys ? {...item,End_Time:e.target.value,Week_days:item.Week_days+0.5}:item)
-                dispatch(Vacation_Apply_State_Func(Change_Data))
-            }
-        }
-
-        
-    }
-
-
-
-    const handleDeleteApplyData = (data) => {
-        const Change_Data = (clickedDateData.filter(item => item.keys === data.keys ? "" : item))
-        dispatch(Vacation_Apply_State_Func(Change_Data))
-    }
-
-
-    const CalcDate = (startDate,endDate) => {
-        let count = 0;
-        while (true) {
-            var temp_date = startDate;
-                if(temp_date.getTime() > endDate.getTime()) {
-                    break;
-                } else {
-                    var tmp = temp_date.getDay();
-                    if(tmp == 0 || tmp == 6) {
-                        // 주말
-                        console.log("주말");
-                    } else {
-                        // 평일
-                        
-                        if (!Weekend_Day.some(dates => String(dates.locdate) === moment(temp_date).format("YYYYMMDD"))) {
-                            count++;             
-                        } 
-                        
-                    }
-                    temp_date.setDate(startDate.getDate() + 1); 
-                }
-        }
-        return count;
-    }
+    useEffect(() => {
+        dispatch(Vacation_Calendar_Data_Getting_Redux_Thunk(GetData));
+    },[GetData])
 
 
     //공공API 휴일정보 데이터 불러오기
@@ -476,118 +308,370 @@ const ApplySelectTable = () => {
 //     },[])
 
 
+    
+
+
+    //월날짜 표시용
+    const Handle_First_Header_Month_Date_Count = () => {
+        const monthlyCounts = {};
+      
+        if (Vacation_Date_Data) {
+            Vacation_Date_Data.forEach(item => {
+                const month = item.dateMonthFormat // 날짜에서 월 추출
+                if (monthlyCounts[month]) {
+                    monthlyCounts[month] += 1;
+                } else {
+                    monthlyCounts[month] = 1;
+                }
+            });
+           const monthlyCountsArray = Object.entries(monthlyCounts).map(([month, count]) => ({ month, count }));
+            return monthlyCountsArray;
+        } else {
+            return [];
+        }
+            
+       
+    }
+
+
+    //달력 클릭 시, 메뉴 생성
+    const Handle_Selected_Menu_Open = (e, Selected, Selected_Data) => {
+        e.stopPropagation();
+        if (Selected === 'Morning') {
+            const Menu_Selected_Checked = Vacation_Date_Data.map((list)=>list.dateFormat === Selected_Data.dateFormat ? {...list,Morinig_selected_menu_isChecking:true,Afternoon_selected_menu_isChecking:false}:{...list,Morinig_selected_menu_isChecking:false,Afternoon_selected_menu_isChecking:false})
+
+
+            dispatch(Vacation_Menu_Select_Checked(Menu_Selected_Checked));
+        } else if (Selected === "Afternoon") {
+            const Menu_Selected_Checked = Vacation_Date_Data.map((list)=>list.dateFormat === Selected_Data.dateFormat ? {...list,Afternoon_selected_menu_isChecking:true,Morinig_selected_menu_isChecking:false}:{...list,Morinig_selected_menu_isChecking:false,Afternoon_selected_menu_isChecking:false})
+
+
+            dispatch(Vacation_Menu_Select_Checked(Menu_Selected_Checked));
+        } else {
+             const Menu_Selected_Checked = Vacation_Date_Data.map((list)=> list ? {...list,Morinig_selected_menu_isChecking:false,Afternoon_selected_menu_isChecking:false}:{})
+
+            dispatch(Vacation_Menu_Select_Checked(Menu_Selected_Checked));
+        }
+    }
+
+  
+
+    const End_Date_Setting_Func = (e, Selected, Selected_Data) => {
+        e.stopPropagation();
+        if (Selected === "Morning") {
+            ///종료날짜가 시작 날짜보다 적을 때
+            if (moment(clickedDateData.Start_Date).isAfter(moment(Selected_Data.dateFormat), 'day')) {
+                const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "09:00",
+                        End_Date:Selected_Data.dateFormat,
+                        End_Time: "14:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            } else if (moment(clickedDateData.Start_Date).isBefore(moment(Selected_Data.dateFormat), 'day')) {
+                /// 시작날짜가 종료 날짜보다 클때 데이터 초기화 및 재 설정
+                  const Change_Data = {
+                    ...clickedDateData,
+                        End_Date: Selected_Data.dateFormat,
+                        End_Time: "14:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            } else {
+                 const Change_Data = {
+                    ...clickedDateData,
+                        End_Date: Selected_Data.dateFormat,
+                        End_Time: "14:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            }
+
+        } else if (Selected === "Afternoon") {
+            //종룍날짜가 시작 날짜보다 클때
+            if (moment(clickedDateData.Start_Date).isAfter(moment(Selected_Data.dateFormat), 'day')) {
+                    const Change_Data = {
+                        ...clickedDateData,
+                            Start_Date: Selected_Data.dateFormat,
+                            Start_Time: "09:00",
+                            End_Date:Selected_Data.dateFormat,
+                            End_Time: "18:00",
+                    };
+                    Vacation_Calendar_State_Change_Fun(Change_Data);
+            }
+            else if (moment(clickedDateData.Start_Date).isBefore(moment(Selected_Data.dateFormat), 'day')) {
+                /// 시작날짜가 종료 날짜보다 클때 데이터 초기화 및 재 설정
+                  const Change_Data = {
+                    ...clickedDateData,
+                        End_Date: Selected_Data.dateFormat,
+                        End_Time: "18:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            }else {
+                 const Change_Data = {
+                    ...clickedDateData,
+                        End_Date: Selected_Data.dateFormat,
+                        End_Time: "18:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            }
+        }
+    }
+
+    const Start_Date_Setting_Func = (e, Selected, Selected_Data) => {
+        e.stopPropagation();
+        if (Selected === "Morning") {
+            if (moment(Selected_Data.dateFormat).isAfter(moment(clickedDateData.End_Date), 'day')) {
+                /// 시작날짜가 종료날짜보다 클때 종료날짜 초기화
+                 const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "09:00",
+                        End_Date:Selected_Data.dateFormat,
+                        End_Time: "14:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            } else if (moment(Selected_Data.dateFormat).isBefore(moment(clickedDateData.End_Date), 'day')) {
+                /// 시작날짜가 종료 날짜보다 작을때 데이터 초기화 및 재 설정
+                  const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "09:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            } else {
+                    const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "09:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            }
+        } else if (Selected === "Afternoon") {
+              if (moment(Selected_Data.dateFormat).isAfter(moment(clickedDateData.End_Date), 'day')) {
+                /// 시작날짜가 종료날짜보다 클때 종료날짜 초기화
+                 const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "14:00",
+                        End_Date:Selected_Data.dateFormat,
+                        End_Time: "18:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            } else if (moment(Selected_Data.dateFormat).isBefore(moment(clickedDateData.End_Date), 'day')) {
+                /// 시작날짜가 종료 날짜보다 작을때 데이터 초기화 및 재 설정
+                  const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "14:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            } else {
+                    const Change_Data = {
+                    ...clickedDateData,
+                        Start_Date: Selected_Data.dateFormat,
+                        Start_Time: "14:00",
+                        End_Time: "18:00",
+                };
+                Vacation_Calendar_State_Change_Fun(Change_Data);
+            }
+        }
+    }
+
+ const Vacation_Calendar_State_Change_Fun = (Change_Data) => {
+        
+        const daysBetween = [];
+        let currentDate = moment(Change_Data.Start_Date).clone();
+
+        while (currentDate.isSameOrBefore(moment(Change_Data.End_Date))) {
+                daysBetween.push(currentDate.format('YYYY-MM-DD'));
+                 currentDate.add(1, 'days');
+        }
+
+         const Menu_Selected_Checked = Vacation_Date_Data.map((list) => {
+                    if (daysBetween.includes(list.dateFormat)) {
+                        //특정 날짜 안에 있는지 확인
+                        if (moment(list.dateFormat).isSame(moment(Change_Data.End_Date).format("YYYY-MM-DD"))) {
+                            ///종료 날짜의 오후 체크 인지 아닌지 확인 
+                            if (list.holiday_Check) {
+                                //공휴일 일때는 숫자만 체크
+                                if (Change_Data.End_Time === "14:00") {
+                                    //오전 반차 인경우 오후 해제처리
+                                         return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0.5,Afternoon_clickCheck:false,Afternoon_Count :0}
+                                } else {
+                                         return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0.5,Afternoon_clickCheck:false,Afternoon_Count :0.5}
+                                }
+                            } else {
+                                if (Change_Data.End_Time === "14:00") {
+                                    //오전 반차 인경우 오후 해제처리
+                                         return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: true, Morning_Count: 0.5,Afternoon_clickCheck:false,Afternoon_Count :0 }
+                                } else {
+                                       return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: true, Morning_Count: 0.5,Afternoon_clickCheck:true,Afternoon_Count :0.5 }
+                                }
+                            }
+                            
+                        } else if (moment(list.dateFormat).isSame(moment(Change_Data.Start_Date).format("YYYY-MM-DD"))) {
+                             if (list.holiday_Check) {
+                                //공휴일 일때는 숫자만 체크
+                                if (Change_Data.Start_Time === "14:00") {
+                                    //오전 반차 인경우 오후 해제처리
+                                         return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0,Afternoon_clickCheck:false,Afternoon_Count :0}
+                                } else {
+                                         return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0.5,Afternoon_clickCheck:false,Afternoon_Count :0.5}
+                                }
+                            } else {
+                                if (Change_Data.Start_Time === "14:00") {
+                                    //오전 반차 인경우 오후 해제처리
+                                         return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0,Afternoon_clickCheck:true,Afternoon_Count :0.5 }
+                                } else {
+                                       return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: true, Morning_Count: 0.5,Afternoon_clickCheck:true,Afternoon_Count :0.5 }
+                                }
+                            }
+                        }
+                        else if (list.holiday_Check) {
+                            //공휴일  일때는 숫자만 카운트
+                            return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0.5,Afternoon_clickCheck:false,Afternoon_Count :0.5}
+                        } else {
+                            //공휴일 아닐땐 색칠 및 카운트
+                            return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: true, Morning_Count: 0.5,Afternoon_clickCheck:true,Afternoon_Count :0.5 }
+                        }
+                    } else {
+                        //아무것도 아닐때 초기화
+                        return { ...list, Afternoon_selected_menu_isChecking: false, Morinig_selected_menu_isChecking: false, Morning_clickCheck: false, Morning_Count: 0,Afternoon_clickCheck:false,Afternoon_Count :0}   
+                    }
+                   
+                })
+                dispatch(Vacation_Menu_Select_Checked(Menu_Selected_Checked));
+                const Weekend_Days_Count = Weekend_Days_Count_Func(Menu_Selected_Checked);
+                const Selected_Days_Count = Selected_Days_Count_Func(Menu_Selected_Checked);
+                Selected_ClickedChange_Data(moment(Change_Data.Start_Date),Change_Data.Start_Time,moment(Change_Data.End_Date),Change_Data.End_Time,Weekend_Days_Count,Selected_Days_Count)
+    }
+
+    //날짜 변경에 따른 캘린더 수정 함수
+    const Selected_ClickedChange_Data = (Start_Date,Start_Time,End_Date,End_Time,Weekend_days,Select_Days) => {
+         const Change_Data = {
+                ...clickedDateData,
+                Start_Date: Start_Date,
+                Start_Time: Start_Time,
+                End_Date:End_Date,
+                End_Time: End_Time,
+                Weekend_days: Weekend_days,
+                Select_Days:Select_Days
+                
+            };
+            dispatch(Vacation_Apply_State_Func(Change_Data));
+    }
    
+    // 공휴일 갯수 확인
+    const Weekend_Days_Count_Func = (Menu_Selected_Checked) => {
+        return Menu_Selected_Checked.reduce((accumulator, currentValue) => {
+                                if (currentValue.holiday_Check) {
+                                    return accumulator + currentValue.Morning_Count+ currentValue.Afternoon_Count;
+                                } else {
+                                    return accumulator;
+                                }
+                                }, 0);
+    }
+    // 연차 사용 확인
+    const Selected_Days_Count_Func = (Menu_Selected_Checked) => {
+        return Menu_Selected_Checked.reduce((accumulator, currentValue) => {
+                                if (!currentValue.holiday_Check) {
+                                    return accumulator + currentValue.Morning_Count+ currentValue.Afternoon_Count;
+                                } else {
+                                    return accumulator;
+                                }
+                                }, 0);
+    }
+
 
     return (
         <ApplySelectTableMainDivBox>
             <div className="PersonalApplyBodyConent_ApplyContents_CalendarTable">
                 <div>
-                    <table>
+                    <table >
                         <thead></thead>
                         <tbody>
                             <tr>
-                                <td className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ArrowClick" rowSpan={4}>
+                                <td className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ArrowClick" rowSpan={5}>
                                     <MdOutlineArrowBackIos onClick={handleMinusCalendar}></MdOutlineArrowBackIos>
                                 </td>
-                                {DateMonthCheck.FirstTableMonthDataCheck ? (
-                                    <th colSpan={DateMonthCheck.FirstTableMonthLength}>
-                                        {moment(DateMonthCheck.FirstTableMonth).format('YYYY-MM')}
-                                    </th>
-                                ) : (
-                                    <></>
-                                )}
-                                <th colSpan={DateMonthCheck.SecondTableMonthLength}>
-                                    {moment(DateMonthCheck.SecondTableMonth).format('YYYY-MM')}
-                                </th>
-                                <td className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ArrowClick" rowSpan={4}>
+                                {Handle_First_Header_Month_Date_Count().map((list, j) => {
+                                    return <th colSpan={list.count+2}>{ list.month}</th>
+                                })}
+                                <td className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ArrowClick" rowSpan={5}>
                                     <MdOutlineArrowForwardIos onClick={handlePlusCalendar}></MdOutlineArrowForwardIos>
                                 </td>
                             </tr>
                             <tr>
                                 <td style={{ border: 'none' }}></td>
-                                <th>일자</th>
-                                {DateMonthCheck.FirstTableMonthDataCheck ? (
-                                    DateMonthCheck.FirstTableData.map((list, i) => {
-                                        return (
-                                            <td style={list.weekFormat === "(토)" ? { color: "blue" } : list.weekFormat === "(일)" ? { color: "red" } : {}}>
+                                <th >일자</th>
+                                {Vacation_Date_Data.map((list) => {
+                                    return <td style={list.weekFormat === "토" ? { color: "blue" } : list.weekFormat === "일" ? { color: "red" } : {}}>
                                                 <div>{list.dayFormat}</div>
-                                                <div>{list.weekFormat}</div>
+                                                <div>({list.weekFormat})</div>
                                             </td>
-                                        );
-                                    })
-                                ) : (
-                                    <></>
-                                )}
-                                {DateMonthCheck.SecondTableMonthDataCheck ? (
-                                    DateMonthCheck.SecondTableData.map((list, i) => {
-                                        return (
-                                            <td style={list.weekFormat === "(토)" ? { color: "blue" } : list.weekFormat === "(일)" ? { color: "red" } : {}}>
-                                                <div>{list.dayFormat}</div>
-                                                <div>{list.weekFormat}</div>
-                                            </td>
-                                        );
-                                    })
-                                ) : (
-                                    <></>
-                                )}
+                                })}
                             </tr>
                             <tr>
                                 <td style={{ border: 'none' }}></td>
                                 <th>휴가 계획</th>
-                                {DateMonthCheck.FirstTableMonthDataCheck ? (
-                                    DateMonthCheck.FirstTableData.map((list, i) => {
-                                        return <td>
-                                            {clickedDateData.map((item) => list.date.isBetween(item.Start_Date, item.End_Date, "day", "[]") ? <div className="">
-                                                {list.weekFormat === "(토)" || list.weekFormat === "(일)"?"공휴일":  Weekend_Day.some(dates => String(dates.locdate) === moment(list.date).format("YYYYMMDD"))?"공휴일":item.datePlan}
-                                            </div> : <></>)}
-                                        </td>
-                                    })
-                                ) : (
-                                    <></>
-                                )}
-                                {DateMonthCheck.SecondTableMonthDataCheck ? (
-                                    DateMonthCheck.SecondTableData.map((list, i) => {
-                                         return <td>
-                                            {clickedDateData.map((item) => list.date.isBetween(item.Start_Date, item.End_Date, "day", "[]") ? <div className="position_text">
-                                                {list.weekFormat === "(토)" || list.weekFormat === "(일)"?"공휴일":  Weekend_Day.some(dates => String(dates.locdate) === moment(list.date).format("YYYYMMDD"))?"공휴일":item.datePlan}
-                                            </div> : <></>)}
-                                        </td>
-                                    })
-                                ) : (
-                                    <></>
-                                )}
+                                {Vacation_Date_Data.map((list) => {
+                                    return <td >
+                                                <div className="position_text">{list.datePlan}</div>
+                                            </td>
+                                })}
                             </tr>
                             <tr className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ButtonTable">
                                 <td style={{ border: 'none' }}></td>
-                                <th>휴가선택</th>
-                                {DateMonthCheck.FirstTableMonthDataCheck ? (
-                                    DateMonthCheck.FirstTableData.map((list, i) => {
-                                        return <td
-                                            // onClick={e => handleClickOnDate(e, list)}
-                                        >
-                                            {clickedDateData.map((item) => list.date.isBetween(item.Start_Date, item.End_Date, "day", "[]") ? <div className="SelectedCehcking_Container">
-                                                <div style={list.date.isSame(item.Start_Date, "day") ?  item.Start_Time === "09:00" ? { background: "#166" }:{} :{ background: "#166" } }></div>
-                                                <div style={list.date.isSame(item.End_Date, "day") ? item.End_Time === "14:00"?{}:{background: "#166"}:{background: "#166"}}></div>
-                                            </div> : <div ></div>)}
-                                        </td>
-                                    })
-                                ) : (
-                                    <></>
-                                )}
-                                {DateMonthCheck.SecondTableMonthDataCheck ? (
-                                    DateMonthCheck.SecondTableData.map((list, i) => {
-                                        return <td
-                                            // onClick={e => handleClickOnDate(e, list)}
-                                        >
-                                            {clickedDateData.map((item) => list.date.isBetween(item.Start_Date, item.End_Date, "day", "[]") ? <div className="SelectedCehcking_Container">
-                                                <div style={list.date.isSame(item.Start_Date, "day") ?  item.Start_Time === "09:00" ? { background: "#166" }:{} :{ background: "#166" } }></div>
-                                                <div style={list.date.isSame(item.End_Date, "day") ? item.End_Time === "14:00"?{}:{background: "#166"}:{background: "#166"}}></div>
-                                            </div> : <div></div>)}
-                                        </td>
-                                    })
-                                ) : (
-                                    <></>
-                                )}
+                                <th >오전<br/> 휴가선택</th>
+                                {Vacation_Date_Data.map((list) => {
+                                    return <td >
+                                        <div className="SelectedCehcking_Container">
+                                            {list.holiday_Check || list.Morning_disabled ?
+                                                <div style={{ background: "gray", height: "100%", opacity: "0.1" }} onClick={(e)=>Handle_Selected_Menu_Open(e,"Disabled")}></div> : 
+                                                list.Morning_clickCheck ?
+                                                    <div className="Now_Checked" onClick={(e)=>Handle_Selected_Menu_Open(e,"Morning",list)} >
+                                                           { list.Morinig_selected_menu_isChecking ?<ul className="Select_Menu">
+                                                            <li onClick={(e)=>Start_Date_Setting_Func(e,"Morning",list)}>시작날짜로 선택</li>
+                                                            <li onClick={(e)=>End_Date_Setting_Func(e,"Morning",list)}>종료날짜로 선택</li>
+                                                        </ul>:<></>}
+                                                    </div> :
+                                                    <div className="Nonthing" onClick={(e)=>Handle_Selected_Menu_Open(e,"Morning",list)}>
+                                                        { list.Morinig_selected_menu_isChecking ?<ul className="Select_Menu">
+                                                            <li onClick={(e)=>Start_Date_Setting_Func(e,"Morning",list)}>시작날짜로 선택</li>
+                                                            <li onClick={(e)=>End_Date_Setting_Func(e,"Morning",list)}>종료날짜로 선택</li>
+                                                        </ul>:<></>}
+                                                        
+                                                    </div>
+                                                }
+                                            </div>
+                                            </td>
+                                })}
+                                <td style={{ border: 'none' }}></td>
+                            </tr>
+                            <tr className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ButtonTable">
+                                <td style={{ border: 'none' }}></td>
+                                <th >오후<br/> 휴가선택</th>
+                                {Vacation_Date_Data.map((list) => {
+                                    return <td >
+                                        <div className="SelectedCehcking_Container">
+                                            {list.holiday_Check || list.Afternoon_disabled ?
+                                                <div style={{ background: "gray", height: "100%", opacity: "0.1" }} onClick={(e)=>Handle_Selected_Menu_Open(e,"Disabled")}></div> : list.Afternoon_clickCheck ?
+                                                    <div className="Now_Checked" onClick={(e)=>Handle_Selected_Menu_Open(e,"Afternoon",list)}>
+                                                         { list.Afternoon_selected_menu_isChecking ?<ul className="Select_Menu">
+                                                            <li onClick={(e)=>Start_Date_Setting_Func(e,"Afternoon",list)}>시작날짜로 선택</li>
+                                                            <li onClick={(e)=>End_Date_Setting_Func(e,"Afternoon",list)}>종료날짜로 선택</li>
+                                                        </ul>:<></>}
+                                                    </div> :  <div className="Nonthing" onClick={(e)=>Handle_Selected_Menu_Open(e,"Afternoon",list)}>
+                                                        { list.Afternoon_selected_menu_isChecking ?<ul className="Select_Menu">
+                                                            <li onClick={(e)=>Start_Date_Setting_Func(e,"Afternoon",list)}>시작날짜로 선택</li>
+                                                            <li onClick={(e)=>End_Date_Setting_Func(e,"Afternoon",list)}>종료날짜로 선택</li>
+                                                        </ul>:<></>}
+                                                        
+                                                    </div>}
+                                                </div>
+                                            </td>
+                                })}
+                             
                                 <td style={{ border: 'none' }}></td>
                             </tr>
                         </tbody>
@@ -597,31 +681,13 @@ const ApplySelectTable = () => {
             
                 <div>
                     <div>
-                        <div>
-                            <div style={{fontSize:"1.2em",lineHeight:"30px"}}>
-                                <h4 style={{ marginTop: "20px" }}>휴가 신청
-                                    {/* <button onClick={() => handleClickOnDate()}>추가 신청</button> */}
-                                </h4>
-                                <div>
-                                    선택 일수 : <span style={{ color: 'skyblue' }}>{clickedDateData.reduce((pre,acc) => pre + acc.Select_Days,0)}일</span>
-                                </div>
-                                 <div>
-                                    연차 차감 일수 : <span style={{ color: 'skyblue' }}>{clickedDateData.reduce((pre,acc) => pre + (acc.datePlan === "연차 휴가" || acc.datePlan === "병가"? acc.Week_days:0),0)}일</span>
-                                </div>
-                                <div>
-                                    연차 미차감 일수 : <span style={{ color: 'skyblue' }}>{clickedDateData.reduce((pre,acc) => pre + (acc.datePlan === "연차 휴가" || acc.datePlan === "병가"? 0:acc.Week_days),0)}일</span>
-                                </div>
-                                  <div>
-                                    공휴일 일수 : <span style={{ color: 'skyblue' }}>{clickedDateData.reduce((pre,acc) => pre + acc.Weekend_days,0)}일</span>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        {clickedDateData.map((list, i) => {
-                            return (
-                                <div className="Vacation_Container" key={list.keys}>
+                        {/* <ApplyShowTitle clickedDateData={clickedDateData}></ApplyShowTitle> */}
+
+                      
+                                <div className="Vacation_Container" key={clickedDateData.keys}>
                                     <div className="Type_Container">
-                                        <select value={list.datePlan} onChange={(e)=>dispatch(Vacation_Apply_State_Func(clickedDateData.map((item)=>item.keys === list.keys ? {...item,datePlan:e.target.value}:item)))}>
+                                <select value={clickedDateData.datePlan}
+                                    onChange={(e) => dispatch(Vacation_Apply_State_Func({ ...clickedDateData, datePlan: e.target.value }))}>
                                             <option value="연차 휴가">연차 휴가</option>
                                             <option value="보건 휴가">보건 휴가</option>
                                             <option value="공가">공가</option>
@@ -636,8 +702,8 @@ const ApplySelectTable = () => {
                                             <div className="Date_Pickers_Container">
                                                 <div className="Date_Pickers_Text">시작날짜</div>
                                                 <div className="Date_Pickers_Pickers">
-                                                    <DatePicker selected={new Date(list.Start_Date)}
-                                                        onChange={(date) => handleStartClickDates(date,list) }
+                                                    <DatePicker selected={new Date(clickedDateData.Start_Date)}
+                                                        // onChange={(date) => handleStartClickDates(date,clickedDateData) }
                                                         dateFormat={"yyyy-MM-dd"}
                                                         locale={ko}
                                                         
@@ -646,8 +712,8 @@ const ApplySelectTable = () => {
                                             </div>
                                             <div className="Time_Pickers_Container">
                                                 <div className="Hour_Pickers_Container">
-                                                    <select value={list.Start_Time} onChange={(e) => {
-                                                        handleChangeStartTime(e,list);
+                                                    <select value={clickedDateData.Start_Time} onChange={(e) => {
+                                                        // handleChangeStartTime(e,clickedDateData);
                                                     }}>
                                                         <option value="09:00">09시 </option>
                                                         <option value="14:00">14시 </option>
@@ -665,19 +731,20 @@ const ApplySelectTable = () => {
                                             <div className="Date_Pickers_Container">
                                                 <div className="Date_Pickers_Text">종료날짜</div>
                                                 <div className="Date_Pickers_Pickers">
-                                                    <DatePicker selected={new Date(list.End_Date)}
-                                                        onChange={(date)=>handleEndClickDates(date,list)}
+                                                    <DatePicker selected={new Date(clickedDateData.End_Date)}
+                                                        // onChange={(date)=>handleEndClickDates(date,clickedDateData)}
                                                             dateFormat={"yyyy-MM-dd"}
                                                             locale={ko}
-                                                            minDate={new Date(list.Start_Date)}
+                                                            minDate={new Date(clickedDateData.Start_Date)}
                                                     ></DatePicker>
                                                 </div>
                                             </div>
                                             <div className="Time_Pickers_Container">
                                                 <div className="Hour_Pickers_Container">
-                                                        <select value={list.End_Time} onChange={(e) => {
-                                                            handleChangeEndTime(e,list)
+                                                        <select value={clickedDateData.End_Time} onChange={(e) => {
+                                                            // handleChangeEndTime(e,clickedDateData)
                                                     }}>
+                                                        <option value="09:00">09시 </option>
                                                              <option value="14:00">14시 </option>
                                                             <option value="18:00">18시 </option>
                                                     </select>
@@ -690,15 +757,12 @@ const ApplySelectTable = () => {
                                             </div>
                                     </div>
                                     </div>
-                                    <div className="Delete_Icons_Container" onClick={()=>{handleDeleteApplyData(list)}}>
-                                        <TiDelete></TiDelete>
-                                    </div>
+                                    
                                 </div>
                                     
                                 </div>
                                 
-                            );
-                        })}
+                        
                     </div>
                 </div>
                 

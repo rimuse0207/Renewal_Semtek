@@ -2,7 +2,8 @@ import React,{useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { request } from "../../../../../../../../../../API";
-import moment from 'moment';
+import moment from 'moment'; 
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 export const AnnualLeaveHistoryTableMainDivBox = styled.div`
  .PersonStatusHistoryCreateTableTextFlexBox {
@@ -38,6 +39,12 @@ export const AnnualLeaveHistoryTableMainDivBox = styled.div`
                 border-left: none;
             }
     }
+    .Vacation_Apply_Data_Delete{
+        color:red;
+        :hover{
+            cursor: pointer;
+        }
+    }
 `
 
 const AnnualLeaveHistoryTable = ({ DateData }) => {
@@ -45,6 +52,16 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
     const [Apply_History_Data, setApply_History_Data] = useState([]);
     const [Vacation_Count_Data, setVacation_Count_Data] = useState([]);
+
+
+    const handleDeleteData = (data) => {
+        try {
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const Get_Apply_Vacation_Info_Data = async () => {
         try {
             
@@ -90,7 +107,7 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
                     </thead>
                     <tbody>
                         {Vacation_Count_Data.length > 0 ? Vacation_Count_Data.map((list) => {
-                            return <tr>
+                            return <tr key={list.vacation_count_payment_indexs}>
                                 <td>{moment(list.vacation_count_payment_write_date).format("YYYY-MM-DD") }</td>
                                 <td>{list.vacation_count_payment_number } 일</td>
                                 <td>{list.vacation_count_payment_reason }</td>
@@ -107,15 +124,19 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
             </div>
             <div className="PersonStatusHistoryCreateTableTextFlexBox">
                 <h4>휴가 현황</h4>
-                <div>총 휴가: { Vacation_Info_State.vacation_count_payment_number}일</div>
-                <div className="SubTextDesc"> </div>
+                <div>잔여: {  Vacation_Info_State.vacation_count_payment - Apply_History_Data.reduce((accumulator, currentValue) => {
+                    return accumulator+(currentValue.Apply.vacation_apply_info_count_check === 1 ?currentValue.Apply.vacation_apply_info_count :0 )
+                },0)}일</div>
+                <div className="SubTextDesc"></div>
                 <div>사용: {Apply_History_Data.reduce((accumulator, currentValue) => {
                     return accumulator+currentValue.Apply.vacation_apply_info_count
                 },0)}일</div>
-                <div className="SubTextDesc"></div>
-                <div>잔여: {  Vacation_Info_State.vacation_count_payment_number - Apply_History_Data.reduce((accumulator, currentValue) => {
-                    return accumulator+(currentValue.Apply.vacation_apply_info_count_check === 1 ?currentValue.Apply.vacation_apply_info_count :0 )
-                },0)}일</div>
+                <div className="SubTextDesc"> </div>
+                <div>총 휴가: { Vacation_Info_State.vacation_count_payment}일</div>
+                
+                
+                
+                
             </div>
             <div>
                 <h4 style={{ marginTop: '30px', marginBottom: '20px' }}>휴가 신청 내역</h4>
@@ -129,6 +150,7 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
                             <th>기간</th>
                             <th>상태</th>
                             <th>휴가 사유</th>
+                            <th>삭제 처리</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,21 +161,32 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
                                 <td>{list.Apply.vacation_apply_info_divison}</td>
                                 <td>{list.Apply.vacation_apply_info_count} 일</td>
                                 <td>
-                                    <div>{list.Apply.vacation_apply_info_start_date} ({moment(list.Apply.vacation_apply_info_start_date).lang("ko").format("dd")}) {list.Apply.vacation_apply_info_start_time}</div>
+                                    <div>{list.Apply.vacation_apply_info_start_date} ({moment(list.Apply.vacation_apply_info_start_date).locale("ko").format("dd")}) {list.Apply.vacation_apply_info_start_time}</div>
                                     <div>~</div>
-                                    <div>{list.Apply.vacation_apply_info_end_date} ({moment(list.Apply.vacation_apply_info_end_date).lang("ko").format("dd")}) {list.Apply.vacation_apply_info_end_time}</div>
+                                    <div>{list.Apply.vacation_apply_info_end_date} ({moment(list.Apply.vacation_apply_info_end_date).locale("ko").format("dd")}) {list.Apply.vacation_apply_info_end_time}</div>
                                 </td>
                                 <td>{(list.Review.some((elem, index, arr) => {
                                     return elem.vacation_review_info_review_check === 0 
                                 }))?"검토중":(list.Accept.some((elem, index, arr) => {
                                     return elem.vacation_review_info_review_check === 0 
-                                }))?"승인중":"승인 완료"}</td>
+                                })) ? "승인중" : <div>
+                                            <div>승인 완료</div>
+                                            <div>
+                                                <button>출력 하기</button>
+                                            </div>
+                                </div>}</td>
                                 <td>{list.Apply.vacation_apply_info_reason}</td>
+                                 <td>{(list.Review.some((elem, index, arr) => {
+                                    return elem.vacation_review_info_review_check === 0 && elem.vacation_review_info_review_check === 0
+                                })) ? <div className="Vacation_Apply_Data_Delete" onClick={()=>handleDeleteData(list)}>
+                                       <RiDeleteBin6Fill></RiDeleteBin6Fill> 
+                                </div>:<div>검토 또는 승인처리가되어 삭제가 불가합니다.</div> }</td>
                             </tr>
                         }):<tr>
                             <td colSpan={7} style={{ color: 'lightgray' }}>
                                 데이터가 없습니다.
-                            </td>
+                                </td>
+                               
                         </tr>}
                         
                     </tbody>
