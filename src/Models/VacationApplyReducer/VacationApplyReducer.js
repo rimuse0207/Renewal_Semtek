@@ -10,9 +10,9 @@ const initState = {
             datePlan: "연차 휴가",
             Start_Date:  moment(),
             End_Date:  moment(),
-            Select_Days:1,
-            Week_days: 1,
+            Select_Days:0,
             Weekend_days: 0,
+            Already_Days :0,
             Start_Time: "09:00",
             End_Time:"18:00"
     }

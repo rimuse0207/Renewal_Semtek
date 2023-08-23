@@ -3,7 +3,6 @@ import { request } from '../../API';
 
 
 
-
 const VACATION_CALENDAR_GET_START = 'VACATION_CALENDAR_GET_START';
 const VACATION_CALENDAR_GET_SUCCESS = 'VACATION_CALENDAR_GET_SUCCESS';
 const VACATION_CALENDAR_GET_ERROR = 'VACATION_CALENDAR_GET_ERROR';
@@ -17,6 +16,7 @@ const Vacation_Calendar_Data_Async = createAsyncAction(
     VACATION_CALENDAR_GET_ERROR
 )();
 
+
 const Vacation_Apply_Table_Data_Getting_Axios = async (GetData,ID) => {
     try {
        
@@ -26,8 +26,7 @@ const Vacation_Apply_Table_Data_Getting_Axios = async (GetData,ID) => {
                     ID
                 }
          })
-        
-        console.log(Vacation_Apply_Table_Data_Getting_Axios);
+      
         
         if (Vacation_Apply_Table_Data_Getting_Axios.data.dataSuccess) {
             return Vacation_Apply_Table_Data_Getting_Axios.data;
@@ -85,12 +84,13 @@ const VacationCalendarReduce = createReducer(initialState, {
         Vacation_Calendar_State: {
             ...state.Vacation_Calendar_State,
             loading: true,      
-                Vacation_Date_Data:[]
+            Vacation_Date_Data:[]
         },
     }),
     [VACATION_CALENDAR_GET_SUCCESS]: (state, action) => ({
         ...state,
         Vacation_Calendar_State: {
+            ...state.Vacation_Calendar_State,
             loading: false,
             error: null,
             Vacation_Date_Data: action.payload.Vacation_Date_Data,
@@ -100,6 +100,7 @@ const VacationCalendarReduce = createReducer(initialState, {
     [VACATION_CALENDAR_GET_ERROR]: (state, action) => ({
         ...state,
         Vacation_Calendar_State: {
+            ...state.Vacation_Calendar_State,
             loading: false,
             error: action.payload,
             Vacation_Date_Data:[]

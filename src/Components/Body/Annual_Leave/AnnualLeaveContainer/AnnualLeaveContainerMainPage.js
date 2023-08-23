@@ -26,18 +26,6 @@ export const AnnualLeaveContainerMainPageMainDivBox = styled.div`
 
 const AnnualLeaveContainerMainPage = () => {
     const AnnualLeaveNavState  = useSelector((state)=>state.AnuualLeaveNavState.Annual_Leave_Nav_State) 
-    // const [AnnualLeaveNavState, setAnnualLeaveNavState] = useState([{
-    //         menu_name: 'MainPage',
-    //         menu_check:true
-    // },
-    //     {
-    //         menu_name: 'AnnualLeaveSelect',
-    //         menu_check:false
-    //     },
-    //     {
-    //         menu_name: 'ApplyAnnualLeave',
-    //         menu_check:false
-    // }])
     return (
         <AnnualLeaveContainerMainPageMainDivBox>
             <NavigationMainPage></NavigationMainPage>
