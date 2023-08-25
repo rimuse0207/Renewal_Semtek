@@ -74,7 +74,6 @@ const AnnualLeaveChecking = () => {
             });
 
             if (Get_Apply_Vacation_Info_Data_Axios.data.dataSuccess) {
-                console.log(Get_Apply_Vacation_Info_Data_Axios);
                 setApply_History_Data(Get_Apply_Vacation_Info_Data_Axios.data.Vacation_Data);
                 setVacation_Count_Data(Get_Apply_Vacation_Info_Data_Axios.data.Vacation_Count_Payment_Rows);
             }

@@ -55,8 +55,6 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
 
     const handleDeleteData = async data => {
         try {
-            console.log(data);
-
             const Applyed_Vacation_Delete_Axios = await request.post('/semtek/Applyed_Vacation_Delete', {
                 data,
                 ID: Login_Info.id,
@@ -172,7 +170,7 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
                             <th>일수</th>
                             <th>기간</th>
                             <th>상태</th>
-                            <th>휴가 사유</th>
+                            <th style={{ minWidth: '500px' }}>휴가 사유</th>
                             <th>삭제 처리</th>
                         </tr>
                     </thead>
@@ -228,7 +226,7 @@ const AnnualLeaveHistoryTable = ({ DateData }) => {
                                                     <RiDeleteBin6Fill></RiDeleteBin6Fill>
                                                 </div>
                                             ) : (
-                                                <div>검토 또는 승인처리가되어 삭제가 불가합니다.</div>
+                                                <div>불가</div>
                                             )}
                                         </td>
                                     </tr>

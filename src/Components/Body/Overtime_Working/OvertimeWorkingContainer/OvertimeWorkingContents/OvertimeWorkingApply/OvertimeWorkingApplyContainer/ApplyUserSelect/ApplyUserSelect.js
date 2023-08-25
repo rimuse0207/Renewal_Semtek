@@ -5,12 +5,17 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { TimeClicksOptions, RestTimeClicksOptions } from './SelectTimeOptionData';
+import { TimeClicksOptions, RestTimeClicksOptions, NightTimeClicksOptions } from './SelectTimeOptionData';
 import uuid from 'react-uuid';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { After_Overtime_Apply_State_Func } from '../../../../../../../../Models/OvertimeApplyReducer/AfterApplyReducer';
+import { Before_Overtime_Apply_State_Func } from '../../../../../../../../Models/OvertimeApplyReducer/BeforeApplyReducer';
+import { useEffect } from 'react';
+import { request } from '../../../../../../../../API';
 
 const ApplyedUserSelectMainDivBox = styled.div`
     border-bottom: 2px solid black;
@@ -64,8 +69,12 @@ const ApplyedUserSelectMainDivBox = styled.div`
 `;
 
 const ApplyUserSelect = () => {
-    const [Before_Apply_State, setBefore_Apply_State] = useState([]);
-    const [After_Apply_State, setAfter_Apply_State] = useState([]);
+    const dispatch = useDispatch();
+    const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
+    const Before_Apply_State = useSelector(state => state.BeforeApplyReducerState.Before_Overtime_State);
+    const After_Apply_State = useSelector(state => state.AfterApplyReducerState.After_Overtime_State);
+    const [Before_Except_Date, setBefore_Except_Date] = useState([]);
+    const [After_Except_Date, setAfter_Except_Date] = useState([]);
 
     const Handle_Add_Before_Overtime = () => {
         const Before_Datas = {
@@ -73,18 +82,17 @@ const ApplyUserSelect = () => {
             before_overtime_apply_info_date: new Date(),
             before_overtime_apply_info_basic_start_time: '09:00',
             before_overtime_apply_info_basic_end_time: '18:00',
-            before_overtime_apply_info_basic_rest_time: '1:00',
-            before_overtime_apply_info_basic_sum_time: 8,
+            before_overtime_apply_info_basic_rest_time: 1,
+            before_overtime_apply_info_basic_sum_time: 9,
             before_overtime_apply_info_start_time: '18:00',
             before_overtime_apply_info_end_time: '18:00',
-            before_overtime_apply_info_rest_time: '00:00',
+            before_overtime_apply_info_rest_time: 0,
             before_overtime_apply_info_night_time: 0,
             before_overtime_apply_info_sum_time: 0,
             before_overtime_apply_info_reason: '',
             before_overtime_apply_info_holiday_check: false,
         };
-
-        setBefore_Apply_State(Before_Apply_State.concat(Before_Datas));
+        dispatch(Before_Overtime_Apply_State_Func(Before_Apply_State.concat(Before_Datas)));
     };
 
     const Handle_Add_After_Overtime = () => {
@@ -93,105 +101,237 @@ const ApplyUserSelect = () => {
             after_overtime_apply_info_date: new Date(),
             after_overtime_apply_info_basic_start_time: '09:00',
             after_overtime_apply_info_basic_end_time: '18:00',
-            after_overtime_apply_info_basic_rest_time: '1:00',
-            after_overtime_apply_info_basic_sum_time: 8,
+            after_overtime_apply_info_basic_rest_time: 1,
+            after_overtime_apply_info_basic_sum_time: 9,
             after_overtime_apply_info_start_time: '18:00',
             after_overtime_apply_info_end_time: '18:00',
-            after_overtime_apply_info_rest_time: '00:00',
+            after_overtime_apply_info_rest_time: 0,
             after_overtime_apply_info_night_time: 0,
             after_overtime_apply_info_sum_time: 0,
             after_overtime_apply_info_reason: '',
             after_overtime_apply_info_holiday_check: false,
         };
+        dispatch(After_Overtime_Apply_State_Func(After_Apply_State.concat(After_Datas)));
+    };
 
-        setAfter_Apply_State(After_Apply_State.concat(After_Datas));
+    const Hour_Checking_Data = (start_time, end_time) => {
+        const moment_start_time = moment(`2023-01-01 ${start_time}`);
+        const moment_end_time = moment(`2023-01-01 ${end_time}`);
+        return moment.duration(moment_end_time.diff(moment_start_time)).asMinutes() / 60;
+    };
+
+    const Overtime_NightChecking_Data = (start_time, end_time) => {
+        if (NightTimeClicksOptions.some(list => list.value === end_time)) {
+            //야간 수당 추가
+            const moment_start_time = moment(`2023-01-01 ${start_time}`);
+            const moment_basic_end_time = moment(`2023-01-01 22:00`);
+
+            const moment_night_start_time = moment(`2023-01-01 22:00`);
+            const moment_night_end_time = moment(`2023-01-01 ${end_time}`);
+            return {
+                originTime: moment.duration(moment_basic_end_time.diff(moment_start_time)).asMinutes() / 60,
+                nightTime:
+                    moment.duration(moment_night_end_time.diff(moment_night_start_time)).asMinutes() / 60 < 0
+                        ? 24 + moment.duration(moment_night_end_time.diff(moment_night_start_time)).asMinutes() / 60
+                        : moment.duration(moment_night_end_time.diff(moment_night_start_time)).asMinutes() / 60,
+            };
+        } else {
+            //야간 수당 없음.
+            const moment_start_time = moment(`2023-01-01 ${start_time}`);
+            const moment_end_time = moment(`2023-01-01 ${end_time}`);
+            return {
+                originTime: moment.duration(moment_end_time.diff(moment_start_time)).asMinutes() / 60,
+                nightTime: 0,
+            };
+        }
     };
 
     const Before_Overtime_Time_Change = (e, data, Select_Menu) => {
-        console.log(e, data);
-
         if (Select_Menu === 'basic_start_time') {
+            const Sum_Hour_Count = Hour_Checking_Data(e.target.value, data.before_overtime_apply_info_basic_end_time);
+            const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
             const Change_Data = Before_Apply_State.map(list =>
                 list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
                 list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? { ...Before_Apply_State, before_overtime_apply_info_basic_start_time: e.target.value }
+                    ? {
+                          ...list,
+                          before_overtime_apply_info_basic_start_time: e.target.value,
+                          before_overtime_apply_info_basic_sum_time: Sum_Hour_Count,
+                          before_overtime_apply_info_basic_rest_time: rest_Hour_Count,
+                      }
                     : list
             );
-            setBefore_Apply_State(Change_Data);
+
+            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'basic_end_time') {
+            const Sum_Hour_Count = Hour_Checking_Data(data.before_overtime_apply_info_basic_start_time, e.target.value);
+            const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
             const Change_Data = Before_Apply_State.map(list =>
                 list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
                 list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? { ...Before_Apply_State, before_overtime_apply_info_basic_end_time: e.target.value }
+                    ? {
+                          ...list,
+                          before_overtime_apply_info_basic_end_time: e.target.value,
+                          before_overtime_apply_info_basic_sum_time: Sum_Hour_Count,
+                          before_overtime_apply_info_basic_rest_time: rest_Hour_Count,
+                      }
                     : list
             );
-            setBefore_Apply_State(Change_Data);
+
+            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'overtime_start_time') {
+            const Overtime_Sum_Hour_Count = Overtime_NightChecking_Data(e.target.value, data.before_overtime_apply_info_end_time);
             const Change_Data = Before_Apply_State.map(list =>
                 list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
                 list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? { ...Before_Apply_State, before_overtime_apply_info_start_time: e.target.value }
+                    ? {
+                          ...list,
+                          before_overtime_apply_info_start_time: e.target.value,
+                          before_overtime_apply_info_night_time: Overtime_Sum_Hour_Count.nightTime,
+                          before_overtime_apply_info_sum_time: Overtime_Sum_Hour_Count.nightTime + Overtime_Sum_Hour_Count.originTime,
+                      }
                     : list
             );
-            setBefore_Apply_State(Change_Data);
+            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'overtime_end_time') {
+            const Overtime_Sum_Hour_Count = Overtime_NightChecking_Data(data.before_overtime_apply_info_start_time, e.target.value);
             const Change_Data = Before_Apply_State.map(list =>
                 list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
                 list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? { ...Before_Apply_State, before_overtime_apply_info_end_time: e.target.value }
+                    ? {
+                          ...list,
+                          before_overtime_apply_info_end_time: e.target.value,
+                          before_overtime_apply_info_night_time: Overtime_Sum_Hour_Count.nightTime,
+                          before_overtime_apply_info_sum_time: Overtime_Sum_Hour_Count.nightTime + Overtime_Sum_Hour_Count.originTime,
+                      }
                     : list
             );
-            setBefore_Apply_State(Change_Data);
+            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'overtime_rest_time') {
             const Change_Data = Before_Apply_State.map(list =>
                 list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
                 list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? { ...Before_Apply_State, before_overtime_apply_info_rest_time: e.target.value }
+                    ? { ...list, before_overtime_apply_info_rest_time: e.target.value }
                     : list
             );
-            setBefore_Apply_State(Change_Data);
+            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'After_start_time') {
+            const Sum_Hour_Count = Hour_Checking_Data(e.target.value, data.after_overtime_apply_info_basic_end_time);
+            const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
             const Change_Data = After_Apply_State.map(list =>
                 list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys &&
                 list.after_overtime_apply_info_date === data.after_overtime_apply_info_date
-                    ? { ...After_Apply_State, after_overtime_apply_info_basic_start_time: e.target.value }
+                    ? {
+                          ...list,
+                          after_overtime_apply_info_basic_start_time: e.target.value,
+                          after_overtime_apply_info_basic_sum_time: Sum_Hour_Count,
+                          after_overtime_apply_info_basic_rest_time: rest_Hour_Count,
+                      }
                     : list
             );
-            setAfter_Apply_State(Change_Data);
+            dispatch(After_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'After_end_time') {
+            const Sum_Hour_Count = Hour_Checking_Data(data.after_overtime_apply_info_basic_start_time, e.target.value);
+            const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
             const Change_Data = After_Apply_State.map(list =>
                 list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys &&
                 list.after_overtime_apply_info_date === data.after_overtime_apply_info_date
-                    ? { ...After_Apply_State, after_overtime_apply_info_basic_end_time: e.target.value }
+                    ? {
+                          ...list,
+                          after_overtime_apply_info_basic_end_time: e.target.value,
+                          after_overtime_apply_info_basic_sum_time: Sum_Hour_Count,
+                          after_overtime_apply_info_basic_rest_time: rest_Hour_Count,
+                      }
                     : list
             );
-            setAfter_Apply_State(Change_Data);
+            dispatch(After_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'After_overtime_start_time') {
+            const Overtime_Sum_Hour_Count = Overtime_NightChecking_Data(e.target.value, data.after_overtime_apply_info_end_time);
             const Change_Data = After_Apply_State.map(list =>
                 list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys &&
                 list.after_overtime_apply_info_date === data.after_overtime_apply_info_date
-                    ? { ...After_Apply_State, after_overtime_apply_info_start_time: e.target.value }
+                    ? {
+                          ...list,
+                          after_overtime_apply_info_start_time: e.target.value,
+                          after_overtime_apply_info_night_time: Overtime_Sum_Hour_Count.nightTime,
+                          after_overtime_apply_info_sum_time: Overtime_Sum_Hour_Count.nightTime + Overtime_Sum_Hour_Count.originTime,
+                      }
                     : list
             );
-            setAfter_Apply_State(Change_Data);
+            dispatch(After_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'After_overtime_end_time') {
+            const Overtime_Sum_Hour_Count = Overtime_NightChecking_Data(data.after_overtime_apply_info_start_time, e.target.value);
             const Change_Data = After_Apply_State.map(list =>
                 list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys &&
                 list.after_overtime_apply_info_date === data.after_overtime_apply_info_date
-                    ? { ...After_Apply_State, after_overtime_apply_info_end_time: e.target.value }
+                    ? {
+                          ...list,
+                          after_overtime_apply_info_end_time: e.target.value,
+                          after_overtime_apply_info_night_time: Overtime_Sum_Hour_Count.nightTime,
+                          after_overtime_apply_info_sum_time: Overtime_Sum_Hour_Count.nightTime + Overtime_Sum_Hour_Count.originTime,
+                      }
                     : list
             );
-            setAfter_Apply_State(Change_Data);
+            dispatch(After_Overtime_Apply_State_Func(Change_Data));
         } else if (Select_Menu === 'After_overtime_rest_time') {
             const Change_Data = After_Apply_State.map(list =>
                 list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys &&
                 list.after_overtime_apply_info_date === data.after_overtime_apply_info_date
-                    ? { ...After_Apply_State, after_overtime_apply_info_rest_time: e.target.value }
+                    ? { ...list, after_overtime_apply_info_rest_time: e.target.value }
                     : list
             );
-            setAfter_Apply_State(Change_Data);
+            dispatch(After_Overtime_Apply_State_Func(Change_Data));
         }
     };
+
+    const handleChangesClickDates = (date, data, select_Menu) => {
+        if (select_Menu === 'before') {
+            const ChangeData = Before_Apply_State.map(list =>
+                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys
+                    ? { ...list, before_overtime_apply_info_date: new Date(date) }
+                    : list
+            );
+            dispatch(Before_Overtime_Apply_State_Func(ChangeData));
+        } else {
+            const ChangeData = After_Apply_State.map(list =>
+                list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys
+                    ? { ...list, after_overtime_apply_info_date: new Date(date) }
+                    : list
+            );
+            dispatch(After_Overtime_Apply_State_Func(ChangeData));
+        }
+    };
+
+    const User_Overtime_Applyed_Data_Getting = async () => {
+        try {
+            const User_Overtime_Applyed_Data_Getting_Axios = await request.get('/semtek/User_Overtime_Applyed_Data_Getting', {
+                params: {
+                    ID: Login_Info.id,
+                },
+            });
+
+            if (User_Overtime_Applyed_Data_Getting_Axios.data.dataSuccess) {
+                const Before_ChangeData = [];
+                const After_ChangeData = [];
+
+                User_Overtime_Applyed_Data_Getting_Axios.data.Before_User_Overtime_Applyed_Date_Data_Getting_Rows.map(list => {
+                    Before_ChangeData.push(new Date(list.before_overtime_apply_info_date));
+                });
+
+                User_Overtime_Applyed_Data_Getting_Axios.data.After_User_Overtime_Applyed_Date_Data_Getting_Rows.map(list => {
+                    After_ChangeData.push(new Date(list.after_overtime_apply_info_date));
+                });
+                setBefore_Except_Date(Before_ChangeData);
+                setAfter_Except_Date(After_ChangeData);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        User_Overtime_Applyed_Data_Getting();
+    }, []);
 
     return (
         <ApplyedUserSelectMainDivBox>
@@ -235,9 +375,11 @@ const ApplyUserSelect = () => {
                                                             selected={
                                                                 new Date(moment(list.before_overtime_apply_info_date).format('YYYY-MM-DD'))
                                                             }
-                                                            // onChange={date => handleEndClickDates(date)}
+                                                            onChange={date => handleChangesClickDates(date, list, 'before')}
                                                             dateFormat={'yyyy-MM-dd'}
                                                             locale={ko}
+                                                            excludeDates={Before_Except_Date}
+
                                                             // minDate={new Date(clickedDateData.Start_Date)}
                                                         ></DatePicker>
                                                     </div>
@@ -285,7 +427,8 @@ const ApplyUserSelect = () => {
                                                 </td>
                                                 <td width="50px">
                                                     <span className="sum_time" id="sum_time_mon">
-                                                        {list.before_overtime_apply_info_basic_sum_time}{' '}
+                                                        {list.before_overtime_apply_info_basic_sum_time -
+                                                            list.before_overtime_apply_info_basic_rest_time}{' '}
                                                     </span>
                                                     <span>시간</span>
                                                 </td>
@@ -358,7 +501,8 @@ const ApplyUserSelect = () => {
                                                 </td>
                                                 <td width="50px">
                                                     <span className="sum_over_time" id="sum_over_time_monOver">
-                                                        {list.before_overtime_apply_info_sum_time}{' '}
+                                                        {list.before_overtime_apply_info_sum_time -
+                                                            list.before_overtime_apply_info_rest_time}{' '}
                                                     </span>
                                                     <span>시간</span>
                                                 </td>
@@ -428,9 +572,10 @@ const ApplyUserSelect = () => {
                                                             selected={
                                                                 new Date(moment(list.after_overtime_apply_info_date).format('YYYY-MM-DD'))
                                                             }
-                                                            // onChange={date => handleEndClickDates(date)}
+                                                            onChange={date => handleChangesClickDates(date, list, 'after')}
                                                             dateFormat={'yyyy-MM-dd'}
                                                             locale={ko}
+                                                            excludeDates={After_Except_Date}
                                                             // minDate={new Date(clickedDateData.Start_Date)}
                                                         ></DatePicker>
                                                     </div>
@@ -444,7 +589,7 @@ const ApplyUserSelect = () => {
                                                             id="demo-select-small"
                                                             value={list.after_overtime_apply_info_basic_start_time}
                                                             label="시작시간"
-                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'after_start_time')}
+                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'After_start_time')}
                                                         >
                                                             {TimeClicksOptions.map(list => {
                                                                 return (
@@ -464,7 +609,7 @@ const ApplyUserSelect = () => {
                                                             id="demo-select-small"
                                                             value={list.after_overtime_apply_info_basic_end_time}
                                                             label="종료시간"
-                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'after_end_time')}
+                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'After_end_time')}
                                                         >
                                                             {TimeClicksOptions.map(list => {
                                                                 return (
@@ -478,7 +623,8 @@ const ApplyUserSelect = () => {
                                                 </td>
                                                 <td width="50px">
                                                     <span className="sum_time" id="sum_time_mon">
-                                                        {list.after_overtime_apply_info_basic_sum_time}{' '}
+                                                        {list.after_overtime_apply_info_basic_sum_time -
+                                                            list.after_overtime_apply_info_basic_rest_time}{' '}
                                                     </span>
                                                     <span>시간</span>
                                                 </td>
@@ -551,7 +697,7 @@ const ApplyUserSelect = () => {
                                                 </td>
                                                 <td width="50px">
                                                     <span className="sum_over_time" id="sum_over_time_monOver">
-                                                        {list.after_overtime_apply_info_sum_time}{' '}
+                                                        {list.after_overtime_apply_info_sum_time - list.after_overtime_apply_info_rest_time}{' '}
                                                     </span>
                                                     <span>시간</span>
                                                 </td>

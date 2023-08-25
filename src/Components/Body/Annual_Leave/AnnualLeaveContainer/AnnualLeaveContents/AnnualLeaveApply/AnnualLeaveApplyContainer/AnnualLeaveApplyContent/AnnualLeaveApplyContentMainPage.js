@@ -11,7 +11,7 @@ import { AnuualLeaveNavStateChange } from '../../../../../../../../Models/Annual
 import { Used_Vacation_Data_Getting_Redux_Thunk } from '../../../../../../../../Models/Redux-Thunk/UsedVacationReduce';
 import { useEffect } from 'react';
 import moment from 'moment';
-const AnnualLeaveApplyContentMainPageMainDivBox = styled.div`
+export const AnnualLeaveApplyContentMainPageMainDivBox = styled.div`
     .PersonalNavigation_ApplyPage {
         width: 90%;
         margin: 0 auto;

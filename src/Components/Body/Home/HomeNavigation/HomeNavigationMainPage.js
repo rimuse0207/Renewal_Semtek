@@ -1,30 +1,29 @@
-import React from "react";
-import styled from "styled-components"
+import React from 'react';
+import styled from 'styled-components';
 import { IoNewspaperOutline } from 'react-icons/io5';
 import { BsCalendarCheck } from 'react-icons/bs';
 import { RiBookletLine, RiMailCheckLine } from 'react-icons/ri';
 import { FiCheckCircle } from 'react-icons/fi';
-import { TbHomeStats } from "react-icons/tb";
-import { BsPersonWorkspace } from "react-icons/bs";
+import { TbHomeStats } from 'react-icons/tb';
+import { BsPersonWorkspace } from 'react-icons/bs';
 import { MdOutlineGroups, MdOutlineSettingsInputComposite } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { GiMeal } from "react-icons/gi";
-
+import { GiMeal } from 'react-icons/gi';
 
 const HomeNavigationMainPageMainDivBox = styled.div`
-.BodyMenbar {
+    .BodyMenbar {
         height: 180px;
         background: #e0e8ee;
         width: 100%;
         .BodyContentBox {
             width: 95%;
             margin: 0 auto;
-            height:100%;
+            height: 100%;
             .BodyContnetListsShow {
                 display: flex;
                 flex-flow: wrap;
-                justify-items:center;
-                padding-top:35px;
+                justify-items: center;
+                padding-top: 35px;
                 li {
                     width: 72px;
                     height: 72px;
@@ -64,27 +63,23 @@ const HomeNavigationMainPageMainDivBox = styled.div`
                     }
                 }
             }
-
-           
-                }
-                .BodyContentRight {
-                    float: right;
-                    width: 64%;
-                    height: 100vh;
-                    border: 1px solid blue;
-                }
-            }
-    
-
-`
+        }
+        .BodyContentRight {
+            float: right;
+            width: 64%;
+            height: 100vh;
+            border: 1px solid blue;
+        }
+    }
+`;
 
 const HomeNavigationMainPage = () => {
     return (
         <HomeNavigationMainPageMainDivBox>
             <div className="BodyMenbar">
-            <div className="BodyContentBox">
-            <ul className="BodyContnetListsShow">
-                {/* <li>
+                <div className="BodyContentBox">
+                    <ul className="BodyContnetListsShow">
+                        {/* <li>
                     <Link to="/post">
                         <div className="BodyContentIcons">
                             <IoNewspaperOutline></IoNewspaperOutline>
@@ -116,43 +111,42 @@ const HomeNavigationMainPage = () => {
                         <div className="BodyContentText">예약</div>
                     </Link>
                 </li> */}
-                <li>
-                    <Link to="/Overtime_Working">
-                        <div className="BodyContentIcons">
-                            <BsPersonWorkspace></BsPersonWorkspace>
-                        </div>
-                        <div className="BodyContentText">연장 근무</div>
-                    </Link>
+                        <li>
+                            <Link to="/Overtime_Working">
+                                <div className="BodyContentIcons">
+                                    <BsPersonWorkspace></BsPersonWorkspace>
+                                </div>
+                                <div className="BodyContentText">연장 근무</div>
+                            </Link>
                         </li>
                         <li>
-                            <Link to='/'>
-                                <div  className="BodyContentIcons">
+                            <Link to="/Meal_Expense_Reimbursement">
+                                <div className="BodyContentIcons">
                                     <GiMeal></GiMeal>
                                 </div>
                                 <div className="BodyContentText">식대 정산</div>
                             </Link>
                         </li>
-                        
-                        <li>
-                    <Link to="/Annual_Leave">
-                        <div className="BodyContentIcons">
-                            <TbHomeStats></TbHomeStats>
-                        </div>
-                        <div className="BodyContentText">휴가</div>
-                    </Link>
-                        </li> 
-                        
 
-                <li>
-                    <Link to="/check_payment">
-                        <div className="BodyContentIcons">
-                            <RiMailCheckLine></RiMailCheckLine>
-                        </div>
-                        <div className="BodyContentText">결재</div>
-                    </Link>
+                        <li>
+                            <Link to="/Annual_Leave">
+                                <div className="BodyContentIcons">
+                                    <TbHomeStats></TbHomeStats>
+                                </div>
+                                <div className="BodyContentText">휴가</div>
+                            </Link>
                         </li>
-                        
-                {/* <li>
+
+                        <li>
+                            <Link to="/check_payment">
+                                <div className="BodyContentIcons">
+                                    <RiMailCheckLine></RiMailCheckLine>
+                                </div>
+                                <div className="BodyContentText">결재</div>
+                            </Link>
+                        </li>
+
+                        {/* <li>
                     <Link to="/group">
                         <div className="BodyContentIcons">
                             <MdOutlineGroups></MdOutlineGroups>
@@ -160,11 +154,11 @@ const HomeNavigationMainPage = () => {
                         <div className="BodyContentText">그룹</div>
                     </Link>
                 </li> */}
-            </ul>
+                    </ul>
                 </div>
-                </div>
+            </div>
         </HomeNavigationMainPageMainDivBox>
-    )
-}
+    );
+};
 
 export default HomeNavigationMainPage;

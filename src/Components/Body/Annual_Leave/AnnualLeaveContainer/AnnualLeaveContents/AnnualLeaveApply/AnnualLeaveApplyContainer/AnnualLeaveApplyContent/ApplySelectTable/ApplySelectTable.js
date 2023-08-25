@@ -281,34 +281,10 @@ const ApplySelectTable = () => {
 
     useEffect(() => {
         if (Vacation_Date_Data.length > 0) {
-            console.log('실행');
-            console.log(clickedDateData);
             Vacation_Calendar_State_Change_Fun(clickedDateData);
         }
     }, [Vacation_Date_Data.length]);
 
-    //공공API 휴일정보 데이터 불러오기
-    //   const Weekenday_API = async () => {
-
-    //         const Weekenday_API_Axios = await axios.get(`http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo`, {
-    //             params: {
-    //                 ServiceKey: "na+wV0c2FFwQNuFZEVLtdgtc6w86EKsTEoqWDkgE6kN8CZ349qgMdPGUNZNN+N7RB5uoB7rJyijsEqFANsD0iw==",
-    //                 pageNo: "1",
-    //                 numOfRows: "100",
-    //                 solYear: moment().format("YYYY"),
-    //             }
-    //         })
-
-    //         if (Weekenday_API_Axios.data) {
-    //             setWeekend_Day(Weekenday_API_Axios.data.response.body.items.item);
-    //         }
-    //     }
-
-    //     useEffect(() => {
-    //         Weekenday_API();
-    //     },[])
-
-    //월날짜 표시용
     const Handle_First_Header_Month_Date_Count = () => {
         const monthlyCounts = {};
 
@@ -733,7 +709,11 @@ const ApplySelectTable = () => {
                                     <MdOutlineArrowBackIos onClick={handleMinusCalendar}></MdOutlineArrowBackIos>
                                 </td>
                                 {Handle_First_Header_Month_Date_Count().map((list, j) => {
-                                    return <th colSpan={list.count + 1}>{list.month}</th>;
+                                    return (
+                                        <th key={list.month} colSpan={list.count + 1}>
+                                            {list.month}
+                                        </th>
+                                    );
                                 })}
                                 <td className="PersonalApplyBodyConent_ApplyContents_CalendarTable_ArrowClick" rowSpan={5}>
                                     <MdOutlineArrowForwardIos onClick={handlePlusCalendar}></MdOutlineArrowForwardIos>
@@ -745,6 +725,7 @@ const ApplySelectTable = () => {
                                 {Vacation_Date_Data.map(list => {
                                     return (
                                         <td
+                                            key={list.dateFormat}
                                             style={
                                                 list.weekFormat === '토'
                                                     ? { color: 'blue' }
@@ -764,7 +745,7 @@ const ApplySelectTable = () => {
                                 <th>휴가 계획</th>
                                 {Vacation_Date_Data.map(list => {
                                     return (
-                                        <td>
+                                        <td key={list.dateFormat}>
                                             <div className="position_text">{list.datePlan}</div>
                                         </td>
                                     );
@@ -778,7 +759,7 @@ const ApplySelectTable = () => {
                                 </th>
                                 {Vacation_Date_Data.map(list => {
                                     return (
-                                        <td>
+                                        <td key={list.dateFormat}>
                                             <div className="SelectedCehcking_Container">
                                                 {list.holiday_Check || list.Morning_disabled ? (
                                                     <div
@@ -833,7 +814,7 @@ const ApplySelectTable = () => {
                                 </th>
                                 {Vacation_Date_Data.map(list => {
                                     return (
-                                        <td>
+                                        <td key={list.dateFormat}>
                                             <div className="SelectedCehcking_Container">
                                                 {list.holiday_Check || list.Afternoon_disabled ? (
                                                     <div

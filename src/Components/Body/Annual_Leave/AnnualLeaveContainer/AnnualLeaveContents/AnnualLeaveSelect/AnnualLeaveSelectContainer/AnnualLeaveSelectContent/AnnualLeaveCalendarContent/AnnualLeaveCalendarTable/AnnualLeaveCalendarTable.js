@@ -52,7 +52,7 @@ export const AnnualLeaveCalendarTableMainDivBox = styled.div`
         }
         .Telecommuting_table_today {
             /* border: 1.2px solid #619bf9; */
-            background-color: skyblue;
+            background-color: pink;
             z-index: 100;
         }
     }
@@ -85,7 +85,6 @@ const AnnualLeaveCalendarTable = ({ MonthDateData }) => {
             });
 
             if (Apply_Vacation_Calendar_Data_Getting_Axios.data.dataSuccess) {
-                console.log(Apply_Vacation_Calendar_Data_Getting_Axios);
                 setApply_Vacation_Calendar_Data(Apply_Vacation_Calendar_Data_Getting_Axios.data.Apply_Vacation_Calendar_Data_Rows);
             }
         } catch (error) {
@@ -148,10 +147,8 @@ const AnnualLeaveCalendarTable = ({ MonthDateData }) => {
                                                             undefined,
                                                             'day'
                                                         ) ? (
-                                                            <div className="Canlendar_Bar">
+                                                            <div className="Canlendar_Bar" key={list.vacation_apply_info_start_date}>
                                                                 <div>
-                                                                    {/* <span>{list.cn}</span> */}
-                                                                    {/* <span>{"  "}</span> */}
                                                                     <span>{list.vacation_apply_info_divison}</span>
                                                                 </div>
                                                             </div>
