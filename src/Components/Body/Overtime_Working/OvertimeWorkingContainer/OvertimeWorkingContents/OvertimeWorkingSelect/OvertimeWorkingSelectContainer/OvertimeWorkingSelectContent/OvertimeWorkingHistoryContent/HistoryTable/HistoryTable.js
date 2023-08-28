@@ -75,7 +75,7 @@ const HistoryTable = ({ DateData }) => {
                                 <th rowSpan={2}>상태</th>
                             </tr>
                             <tr>
-                                <th>시작</th>
+                                <th style={{ borderLeft: '1px solid lightgrey' }}>시작</th>
                                 <th>종료</th>
                                 {/* <th>휴게</th> */}
                                 <th>합계</th>
@@ -151,7 +151,7 @@ const HistoryTable = ({ DateData }) => {
                                 <th rowSpan={2}>상태</th>
                             </tr>
                             <tr>
-                                <th>시작</th>
+                                <th style={{ borderLeft: '1px solid lightgrey' }}>시작</th>
                                 <th>종료</th>
 
                                 <th>합계</th>

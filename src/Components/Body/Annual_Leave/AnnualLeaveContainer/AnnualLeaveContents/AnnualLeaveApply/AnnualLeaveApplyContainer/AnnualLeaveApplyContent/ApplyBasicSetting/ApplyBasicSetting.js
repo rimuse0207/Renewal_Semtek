@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const ApplyBasicSettingMainDivBox = styled.div`
- .PersonalApplyBodyConent_ApplyContents {
-        margin-top:30px;
+    .PersonalApplyBodyConent_ApplyContents {
+        margin-top: 30px;
         table {
             border-collapse: collapse;
             width: 1000px;
@@ -27,12 +27,12 @@ const ApplyBasicSettingMainDivBox = styled.div`
             }
         }
     }
-`
+`;
 
-const ApplyBasicSetting = ({Selected}) => {
+const ApplyBasicSetting = ({ Selected }) => {
     return (
         <ApplyBasicSettingMainDivBox>
-             <div className="PersonalApplyBodyConent_ApplyContents">
+            <div className="PersonalApplyBodyConent_ApplyContents">
                 <div>
                     <div>
                         <h4>기본설정</h4>
@@ -41,7 +41,7 @@ const ApplyBasicSetting = ({Selected}) => {
                             <tbody>
                                 <tr>
                                     <th>문서 종류</th>
-                                    <td>{ Selected==='Overtime' ? "연장 근무":"휴가"} 신청서</td>
+                                    <td>{Selected === 'Overtime' ? '연장 근무' : Selected === 'Meal' ? '식대 정산' : '휴가'} 신청서</td>
                                     <th>작성자</th>
                                     <td>기타 테스트</td>
                                 </tr>
@@ -57,6 +57,6 @@ const ApplyBasicSetting = ({Selected}) => {
                 </div>
             </div>
         </ApplyBasicSettingMainDivBox>
-    )
-}
+    );
+};
 export default ApplyBasicSetting;
