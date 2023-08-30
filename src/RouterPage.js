@@ -6,6 +6,7 @@ import OvertimeWorkingMainPage from './Components/Body/Overtime_Working/Overtime
 import LoginMainPage from './Components/Body/Login/LoginMainPage';
 import AnnuelLeavePrinter from './Components/Printer/AnnuelLeavePrinter';
 import MealExpenseReimbursementMainPage from './Components/Body/Meal_Expense_Reimbursement/MealExpenseReimbursementMainPage';
+import PaymentMainPage from './Components/Body/Payment/PaymentMainPage';
 const RouterPage = () => {
     return (
         <div>
@@ -17,6 +18,7 @@ const RouterPage = () => {
                     <Route exact path="/Overtime_Working" component={OvertimeWorkingMainPage}></Route>
                     <Route exact path="/Meal_Expense_Reimbursement" component={MealExpenseReimbursementMainPage}></Route>
                     <Route path="/AnnuelLeaveprinter" component={AnnuelLeavePrinter}></Route>
+                    <Route path="/Check_Payment" component={PaymentMainPage}></Route>
                 </Switch>
             </BrowserRouter>
         </div>

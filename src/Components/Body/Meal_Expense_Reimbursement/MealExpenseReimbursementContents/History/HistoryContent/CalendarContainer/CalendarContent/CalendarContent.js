@@ -60,7 +60,7 @@ const CalendarContent = ({ MonthDateData }) => {
                     }}
                 >
                     <div style={{ color: '#fff' }}>
-                        <span>( 식대 ) 석식 {Used_Meal_Charge_State[Find_Data].spending.toLocaleString('ko-KR')}</span>
+                        <span>( 식대 ) 석식 {Used_Meal_Charge_State[Find_Data].spending.toLocaleString('ko-KR')} 원</span>
                     </div>
                 </div>
             );

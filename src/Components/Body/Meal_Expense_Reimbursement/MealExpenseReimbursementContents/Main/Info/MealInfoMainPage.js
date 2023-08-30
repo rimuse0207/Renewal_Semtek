@@ -13,7 +13,7 @@ const MealInfoMainPage = () => {
     const Used_Meal_Charge_State = useSelector(state => state.UsedMealChargeState.Used_Meal_Charge_State.Used_Meal_Charge_Data);
 
     useEffect(() => {
-        dispatch(Used_Meal_Charge_Data_Getting_Redux_Thunk(moment('YYYY-MM'), Login_Info.id));
+        dispatch(Used_Meal_Charge_Data_Getting_Redux_Thunk(moment().format('YYYY-MM'), Login_Info.id));
     }, []);
 
     return (

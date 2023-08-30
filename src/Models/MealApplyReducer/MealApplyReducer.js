@@ -12,7 +12,7 @@ export const Meal_Charge_Apply_State_Func = data => ({
     payload: data,
 });
 const Sort_Data = Data_Array => {
-    const Data_Array_Sort = Data_Array.sort((a, b) => a.dateFormat - b.dateFormat);
+    const Data_Array_Sort = Data_Array.sort((a, b) => a.date - b.date);
     return Data_Array_Sort;
 };
 const MealChargeApplyReducerState = (state = initState, action) => {

@@ -325,8 +325,9 @@ const ApplySelectTableMainDivBox = styled.div`
 const ApplySelectTable = () => {
     const dispatch = useDispatch();
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
-    const Meal_Charge_Date_Data = useSelector(state => state.MealChargeCalendarState.Meal_Charge_Calendar_State.Meal_Charge_Date_Data);
     const MealChargeApplyState = useSelector(state => state.MealChargeApplyReducerState.Meal_Charge_State);
+    const Meal_Charge_Date_Data = useSelector(state => state.MealChargeCalendarState.Meal_Charge_Calendar_State.Meal_Charge_Date_Data);
+
     const [GetData, setGetData] = useState(moment());
     const handleMinusCalendar = () => {
         setGetData(GetData.clone().subtract(5, 'day'));
@@ -336,6 +337,7 @@ const ApplySelectTable = () => {
     };
 
     const Handle_Selected_Menu_Open = (e, Select_Menu, data) => {
+        e.stopPropagation();
         if (Select_Menu === 'Lunch') {
             const Menu_Open_Data = Meal_Charge_Date_Data.map(list =>
                 list.dateFormat === data.dateFormat
@@ -353,6 +355,7 @@ const ApplySelectTable = () => {
         }
     };
     const Add_Meal_Charge_Date_Setting_Func = (e, Select_Menu, data) => {
+        e.stopPropagation();
         const InsertData = {
             key: uuid(),
             date: new Date(data.date),
@@ -381,6 +384,14 @@ const ApplySelectTable = () => {
             );
             dispatch(Meal_Charge_Menu_Select_Checked(Menu_Open_Data));
         }
+    };
+
+    const Handle_Delete_Menus = e => {
+        e.stopPropagation();
+        const Menu_Cloase_Data = Meal_Charge_Date_Data.map(list =>
+            list ? { ...list, Lunch_FoodCharge_Menu_Open_Checking: false, Dinner_FoodCharge_Menu_Open_Checking: false } : ''
+        );
+        dispatch(Meal_Charge_Menu_Select_Checked(Menu_Cloase_Data));
     };
 
     const Food_Charge_Calcul_Func = (data, Select_Menu, Menu_Checking) => {
@@ -461,7 +472,7 @@ const ApplySelectTable = () => {
         }
     };
     return (
-        <ApplySelectTableMainDivBox>
+        <ApplySelectTableMainDivBox onClick={e => Handle_Delete_Menus(e)}>
             <div className="PersonalApplyBodyConent_ApplyContents_CalendarTable">
                 <div>
                     <table>
@@ -530,8 +541,8 @@ const ApplySelectTable = () => {
                                         <td key={list.dayFormat}>
                                             <div className="SelectedCehcking_Container">
                                                 {list.Lunch_FoodCharge.checked ? (
-                                                    <div className="Food_Charge_Data_Already_Container">
-                                                        <div>{list.Lunch_FoodCharge.spending}</div>
+                                                    <div className="Food_Charge_Data_Already_Container" style={{ flexFlow: 'column' }}>
+                                                        <div>{list.Lunch_FoodCharge.spending.toLocaleString('ko-KR')} 원</div>
                                                         <div>{list.Lunch_FoodCharge.place}</div>
                                                         <div>{list.Lunch_FoodCharge.location}</div>
                                                     </div>
@@ -550,8 +561,8 @@ const ApplySelectTable = () => {
                                         <td key={list.dayFormat}>
                                             <div className="SelectedCehcking_Container">
                                                 {list.Dinner_FoodCharge.checked ? (
-                                                    <div className="Food_Charge_Data_Already_Container">
-                                                        <div>{list.Dinner_FoodCharge.spending}</div>
+                                                    <div className="Food_Charge_Data_Already_Container" style={{ flexFlow: 'column' }}>
+                                                        <div>{list.Dinner_FoodCharge.spending.toLocaleString('ko-KR')} 원</div>
                                                         <div>{list.Dinner_FoodCharge.place}</div>
                                                         <div>{list.Dinner_FoodCharge.location}</div>
                                                     </div>
