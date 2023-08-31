@@ -49,12 +49,11 @@ const OvertimeWorkingChecking = () => {
                                 <div>
                                     {' '}
                                     {After_Overtime_Data.reduce(
-                                        (accumulator, currentValue) => accumulator + currentValue.after_overtime_apply_info_basic_sum_time,
+                                        (accumulator, currentValue) => accumulator + currentValue.basic_sum_time,
                                         0
                                     ) -
                                         After_Overtime_Data.reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue.after_overtime_apply_info_basic_rest_time,
+                                            (accumulator, currentValue) => accumulator + currentValue.basic_rest_time,
                                             0
                                         )}{' '}
                                     시간
@@ -64,11 +63,11 @@ const OvertimeWorkingChecking = () => {
                                 <h5>연장근무 합계 시간</h5>
                                 <div>
                                     {After_Overtime_Data.reduce(
-                                        (accumulator, currentValue) => accumulator + currentValue.after_overtime_apply_info_sum_time,
+                                        (accumulator, currentValue) => accumulator + currentValue.real_sum_time,
                                         0
                                     ) -
                                         After_Overtime_Data.reduce(
-                                            (accumulator, currentValue) => accumulator + currentValue.after_overtime_apply_info_rest_time,
+                                            (accumulator, currentValue) => accumulator + currentValue.real_rest_time,
                                             0
                                         )}{' '}
                                     시간
@@ -80,23 +79,6 @@ const OvertimeWorkingChecking = () => {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="Checking_Content_Block">
-                        <div className="Checking_Content_Block_Title">
-                            <RiTimeFill></RiTimeFill>
-                            <h5>근무시간</h5>
-                        </div>
-                        <div className="Checking_Content_Block_Content_Box">
-                            <div className="Checking_Content_Block_Content">
-                                <h5>근무 일수</h5>
-                                <div> 0 일</div>
-                            </div>
-                            <div className="Checking_Content_Block_Content">
-                                <h5>총 근무시간</h5>
-                                <div>0시간</div>
-                            </div>
-
-                        </div>
-                    </div> */}
                 </div>
             </AnnualLeaveCheckingMainDivBox>
         </OvertimeWorkingCheckingMainDivBox>

@@ -4,18 +4,19 @@ import { useEffect } from 'react';
 import Select from 'react-select';
 import { request } from '../../../../../../API';
 const UserSelect = ({ SelectLeftHeaderInfo, setSelectLeftHeaderInfo }) => {
-    const [SelectUserInfoData, setSelectUserInfoData] = useState();
+    const [SelectUserInfoData, setSelectUserInfoData] = useState([{ value: 'ALL', label: 'ALL' }]);
 
     const SelectHandleChange = e => {
         setSelectLeftHeaderInfo(e);
     };
 
     const Select_UserInfoDataGetting = async () => {
+        const ChangeData = [{ value: 'ALL', label: 'ALL' }];
         try {
             const Select_UserInfoDataGetting_Axios = await request.get(`/DepartmentRouter/Select_UserInfoDataGetting`);
             console.log(Select_UserInfoDataGetting_Axios);
             if (Select_UserInfoDataGetting_Axios.data.dataSuccess) {
-                setSelectUserInfoData(Select_UserInfoDataGetting_Axios.data.Select_User_datas);
+                setSelectUserInfoData(ChangeData.concat(Select_UserInfoDataGetting_Axios.data.Select_User_datas));
             }
         } catch (error) {
             console.log(error);

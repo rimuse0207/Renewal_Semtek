@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Used_Overtime_Data_Getting_Redux_Thunk } from '../../../../../../../../../../Models/Redux-Thunk/UsedOvertimeReduce';
 
-const HistoryTableMainDivBox = styled.div`
+export const HistoryTableMainDivBox = styled.div`
     .Create_History_Table {
         td {
             border-left: none !important;
@@ -48,14 +48,8 @@ const HistoryTable = ({ DateData }) => {
                     <div className="SubTextDesc"> </div>
                     <div>
                         총 예정 연장근무 시간:{' '}
-                        {Before_Overtime_Data.reduce(
-                            (accumulator, currentValue) => accumulator + currentValue.before_overtime_apply_info_sum_time,
-                            0
-                        ) -
-                            Before_Overtime_Data.reduce(
-                                (accumulator, currentValue) => accumulator + currentValue.before_overtime_apply_info_rest_time,
-                                0
-                            )}{' '}
+                        {Before_Overtime_Data.reduce((accumulator, currentValue) => accumulator + currentValue.real_sum_time, 0) -
+                            Before_Overtime_Data.reduce((accumulator, currentValue) => accumulator + currentValue.real_rest_time, 0)}{' '}
                         시간
                     </div>
                 </div>
@@ -77,7 +71,7 @@ const HistoryTable = ({ DateData }) => {
                             <tr>
                                 <th style={{ borderLeft: '1px solid lightgrey' }}>시작</th>
                                 <th>종료</th>
-                                {/* <th>휴게</th> */}
+
                                 <th>합계</th>
                                 <th>시작</th>
                                 <th>종료</th>
@@ -88,23 +82,19 @@ const HistoryTable = ({ DateData }) => {
                         <tbody>
                             {Before_Overtime_Data.map((list, j) => {
                                 return (
-                                    <tr key={list.before_overtime_apply_info_apply_keys}>
+                                    <tr key={list.apply_keys}>
                                         <td>{j + 1}</td>
                                         <td>{list.cn}</td>
-                                        <td>{list.before_overtime_apply_info_date}</td>
-                                        <td>{list.before_overtime_apply_info_basic_start_time}</td>
-                                        <td>{list.before_overtime_apply_info_basic_end_time}</td>
-                                        {/* <td>{list.before_overtime_apply_info_basic_rest_time} 시간</td> */}
-                                        <td>
-                                            {list.before_overtime_apply_info_basic_sum_time -
-                                                list.before_overtime_apply_info_basic_rest_time}{' '}
-                                            시간
-                                        </td>
-                                        <td>{list.before_overtime_apply_info_start_time}</td>
-                                        <td>{list.before_overtime_apply_info_end_time}</td>
-                                        <td>{list.before_overtime_apply_info_rest_time} 시간</td>
-                                        <td>{list.before_overtime_apply_info_sum_time - list.before_overtime_apply_info_rest_time} 시간</td>
-                                        <td>{list.before_overtime_apply_info_reason}</td>
+                                        <td>{list.write_date}</td>
+                                        <td>{list.basic_start_time}</td>
+                                        <td>{list.basic_end_time}</td>
+
+                                        <td>{list.basic_sum_time - list.basic_rest_time} 시간</td>
+                                        <td>{list.real_start_time}</td>
+                                        <td>{list.real_end_time}</td>
+                                        <td>{list.real_rest_time} 시간</td>
+                                        <td>{list.real_sum_time - list.real_rest_time} 시간</td>
+                                        <td>{list.reason}</td>
                                         <td>검토중.</td>
                                     </tr>
                                 );
@@ -123,14 +113,8 @@ const HistoryTable = ({ DateData }) => {
                     <div className="SubTextDesc"> </div>
                     <div>
                         총 연장근무 시간:{' '}
-                        {After_Overtime_Data.reduce(
-                            (accumulator, currentValue) => accumulator + currentValue.after_overtime_apply_info_sum_time,
-                            0
-                        ) -
-                            After_Overtime_Data.reduce(
-                                (accumulator, currentValue) => accumulator + currentValue.after_overtime_apply_info_rest_time,
-                                0
-                            )}{' '}
+                        {After_Overtime_Data.reduce((accumulator, currentValue) => accumulator + currentValue.real_sum_time, 0) -
+                            After_Overtime_Data.reduce((accumulator, currentValue) => accumulator + currentValue.real_rest_time, 0)}{' '}
                         시간
                     </div>
                 </div>
@@ -164,21 +148,18 @@ const HistoryTable = ({ DateData }) => {
                         <tbody>
                             {After_Overtime_Data.map((list, j) => {
                                 return (
-                                    <tr key={list.after_overtime_apply_info_apply_keys}>
+                                    <tr key={list.apply_keys}>
                                         <td>{j + 1}</td>
                                         <td>{list.cn}</td>
-                                        <td>{list.after_overtime_apply_info_date}</td>
-                                        <td>{list.after_overtime_apply_info_basic_start_time}</td>
-                                        <td>{list.after_overtime_apply_info_basic_end_time}</td>
-                                        <td>
-                                            {list.after_overtime_apply_info_basic_sum_time - list.after_overtime_apply_info_basic_rest_time}{' '}
-                                            시간
-                                        </td>
-                                        <td>{list.after_overtime_apply_info_start_time}</td>
-                                        <td>{list.after_overtime_apply_info_end_time}</td>
-                                        <td>{list.after_overtime_apply_info_rest_time} 시간</td>
-                                        <td>{list.after_overtime_apply_info_sum_time - list.after_overtime_apply_info_rest_time} 시간</td>
-                                        <td>{list.after_overtime_apply_info_reason}</td>
+                                        <td>{list.write_date}</td>
+                                        <td>{list.basic_start_time}</td>
+                                        <td>{list.basic_end_time}</td>
+                                        <td>{list.basic_sum_time - list.basic_rest_time} 시간</td>
+                                        <td>{list.real_start_time}</td>
+                                        <td>{list.real_end_time}</td>
+                                        <td>{list.real_rest_time} 시간</td>
+                                        <td>{list.real_sum_time - list.real_rest_time} 시간</td>
+                                        <td>{list.reason}</td>
                                         <td>검토중.</td>
                                     </tr>
                                 );

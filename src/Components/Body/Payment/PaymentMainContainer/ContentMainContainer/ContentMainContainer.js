@@ -9,7 +9,7 @@ import UserSelect from './UserSelect/UserSelect';
 const ContentMainContainer = ({ currentPageOn }) => {
     const [DateData, setDateData] = useState(moment().format('YYYY-MM'));
     const [StaticsNaviButton, setStaticsNaviButton] = useState('Table');
-    const [SelectLeftHeaderInfo, setSelectLeftHeaderInfo] = useState(null);
+    const [SelectLeftHeaderInfo, setSelectLeftHeaderInfo] = useState({ value: 'ALL', label: 'ALL' });
     return (
         <div>
             <ContentNavigation
@@ -21,7 +21,15 @@ const ContentMainContainer = ({ currentPageOn }) => {
                 SelectLeftHeaderInfo={SelectLeftHeaderInfo}
                 setSelectLeftHeaderInfo={data => setSelectLeftHeaderInfo(data)}
             ></UserSelect>
-            {currentPageOn === 'BeforeOvertime' ? <BeforeOvertime></BeforeOvertime> : <></>}
+            {currentPageOn === 'BeforeOvertime' ? (
+                <BeforeOvertime
+                    SelectLeftHeaderInfo={SelectLeftHeaderInfo}
+                    DateData={DateData}
+                    StaticsNaviButton={StaticsNaviButton}
+                ></BeforeOvertime>
+            ) : (
+                <></>
+            )}
         </div>
     );
 };
