@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { AnnualLeaveCalendarTableMainDivBox } from '../../../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveSelect/AnnualLeaveSelectContainer/AnnualLeaveSelectContent/AnnualLeaveCalendarContent/AnnualLeaveCalendarTable/AnnualLeaveCalendarTable';
 import { request } from '../../../../../../../API';
 
-const Calendar = ({ SelectLeftHeaderInfo, MonthDateData }) => {
+const Calendar = ({ SelectLeftHeaderInfo, MonthDateData, currentPageOn }) => {
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
     const [Calenar_Search_Data, setCalenar_Search_Data] = useState([]);
 
@@ -14,6 +14,7 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData }) => {
                 params: {
                     SelectLeftHeaderInfo: SelectLeftHeaderInfo.value,
                     MonthDateData,
+                    currentPageOn,
                 },
             });
 
@@ -25,7 +26,7 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData }) => {
 
     useEffect(() => {
         Get_Payment_Overtime_Write_Data();
-    }, [SelectLeftHeaderInfo, MonthDateData]);
+    }, [SelectLeftHeaderInfo, MonthDateData, currentPageOn]);
 
     // chalandar generate logic
 
@@ -33,19 +34,30 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData }) => {
     const firstWeek = today.clone().startOf('month').week();
     const lastWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
 
-    const Before_Overtime_Checking_Func = date => {
-        const Find_Data = Calenar_Search_Data.findIndex(item => item.write_date === moment(date).format('YYYY-MM-DD'));
+    const Before_Overtime_Checking_Func = (date, data) => {
+        // const Find_Data = Calenar_Search_Data.findIndex(item => item.write_date === moment(date).format('YYYY-MM-DD'));
 
-        if (Find_Data !== -1) {
+        if (data.write_date === moment(date).format('YYYY-MM-DD')) {
+            const Checking_Payment = data.Review_Array.some(list => !list.overtime_review_info_accept_check)
+                ? 'X'
+                : data.Accept_Array.some(list => !list.overtime_accept_info_accept_check)
+                ? 'X'
+                : 'O';
             return (
                 <div
                     className="Canlendar_Bar"
-                    style={{ background: ' rgb(255, 255, 153)', color: 'black', fontWeight: 'bolder', fontSize: '0.8em', padding: '2px' }}
+                    style={{
+                        background: `${currentPageOn === 'BeforeOvertime' ? 'rgb(255, 255, 153)' : 'rgb(153, 204, 255)'}`,
+                        color: 'black',
+                        fontWeight: 'bolder',
+                        fontSize: '0.8em',
+                        padding: '2px',
+                    }}
                 >
                     <div>
                         <span>
-                            ( 사전OT ) {Calenar_Search_Data[Find_Data].cn}{' '}
-                            {Calenar_Search_Data[Find_Data].real_sum_time - Calenar_Search_Data[Find_Data].real_rest_time} 시간 X
+                            ( {currentPageOn === 'BeforeOvertime' ? '사전OT' : '사후OT'} ) {data.name}{' '}
+                            {data.real_sum_time - data.real_rest_time} 시간 {Checking_Payment}
                         </span>
                     </div>
                 </div>
@@ -70,7 +82,11 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData }) => {
                                     <td key={index} className="Telecommuting_Table_nextMonth">
                                         <div className="Telecommuting_Table_dayNumber">
                                             <div style={{ paddingLeft: '5px' }}>{days.format('D')}</div>
-                                            <div>{Before_Overtime_Checking_Func(days)}</div>
+                                            <div>
+                                                {Calenar_Search_Data.map(list => {
+                                                    return Before_Overtime_Checking_Func(days, list);
+                                                })}
+                                            </div>
                                         </div>
                                     </td>
                                 );
@@ -90,7 +106,9 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData }) => {
                                     >
                                         <div className="Telecommuting_Table_dayNumber">
                                             <div style={{ paddingLeft: '5px' }}>{days.format('D')}</div>
-                                            <div>{Before_Overtime_Checking_Func(days)}</div>
+                                            {Calenar_Search_Data.map(list => {
+                                                return Before_Overtime_Checking_Func(days, list);
+                                            })}
                                         </div>
                                     </td>
                                 );

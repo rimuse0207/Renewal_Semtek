@@ -95,7 +95,13 @@ const HistoryTable = ({ DateData }) => {
                                         <td>{list.real_rest_time} 시간</td>
                                         <td>{list.real_sum_time - list.real_rest_time} 시간</td>
                                         <td>{list.reason}</td>
-                                        <td>검토중.</td>
+                                        <td>
+                                            {list.Review_Array.some(list => !list.overtime_review_info_accept_check)
+                                                ? '검토중.'
+                                                : list.Accept_Array.some(list => !list.overtime_accept_info_accept_check)
+                                                ? '승인중.'
+                                                : '승인완료'}
+                                        </td>
                                     </tr>
                                 );
                             })}
@@ -160,7 +166,13 @@ const HistoryTable = ({ DateData }) => {
                                         <td>{list.real_rest_time} 시간</td>
                                         <td>{list.real_sum_time - list.real_rest_time} 시간</td>
                                         <td>{list.reason}</td>
-                                        <td>검토중.</td>
+                                        <td>
+                                            {list.Review_Array.some(list => !list.overtime_review_info_accept_check)
+                                                ? '검토중.'
+                                                : list.Accept_Array.some(list => !list.overtime_accept_info_accept_check)
+                                                ? '승인중.'
+                                                : '승인완료'}
+                                        </td>
                                     </tr>
                                 );
                             })}

@@ -20,6 +20,8 @@ import UsedVacationState from './Redux-Thunk/UsedVacationReduce';
 import UsedOvertimeState from './Redux-Thunk/UsedOvertimeReduce';
 import UsedMealChargeState from './Redux-Thunk/UsedMealChargeReduce';
 
+import PaymentUserSelectReducerState from './PaymentUserReducer/PaymentUserSelectReduce';
+
 const rootReducer = combineReducers({
     PaymentUserReducerState,
     VacationApplyReducerState,
@@ -29,6 +31,7 @@ const rootReducer = combineReducers({
     BeforeApplyReducerState,
     AfterApplyReducerState,
     MealChargeApplyReducerState,
+    PaymentUserSelectReducerState,
     VacationCalendarState,
     MealChargeCalendarState,
     UsedVacationState,

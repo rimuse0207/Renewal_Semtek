@@ -6,12 +6,11 @@ import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import Table from './Table/Table';
 import Calendar from './Calendar/Calendar';
-import ListMainPage from './List/ListMainPage';
 
-const BeforeOvertime = ({ DateData, StaticsNaviButton, currentPageOn }) => {
-    const [Data, setData] = useState([]);
+const AfterOvertime = ({ DateData, StaticsNaviButton, currentPageOn }) => {
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
     const SelectLeftHeaderInfo = useSelector(state => state.PaymentUserSelectReducerState.User_Select);
+    const [Data, setData] = useState([]);
 
     const Getting_BeforeOvertime_Table_Data = async () => {
         try {
@@ -24,11 +23,10 @@ const BeforeOvertime = ({ DateData, StaticsNaviButton, currentPageOn }) => {
                         : '',
                     ID: Login_Info.id,
                     DateData,
-                    Teaml_Select_Check: SelectLeftHeaderInfo ? (SelectLeftHeaderInfo.value === 'ALL' ? 'true' : 'false') : '',
+                    Teaml_Select_Check: SelectLeftHeaderInfo ? (SelectLeftHeaderInfo.value === 'ALL' ? true : false) : '',
                     currentPageOn,
                 },
             });
-            console.log(Getting_BeforeOvertime_Table_Data_Axios);
             if (Getting_BeforeOvertime_Table_Data_Axios.data.dataSuccess) {
                 setData(Getting_BeforeOvertime_Table_Data_Axios.data.Team_All_Data_Select_Rows);
             }
@@ -45,6 +43,7 @@ const BeforeOvertime = ({ DateData, StaticsNaviButton, currentPageOn }) => {
         <div>
             {StaticsNaviButton === 'Table' ? (
                 <Table
+                    SelectLeftHeaderInfo={SelectLeftHeaderInfo}
                     Data={Data}
                     currentPageOn={currentPageOn}
                     setData={data => setData(data)}
@@ -58,17 +57,8 @@ const BeforeOvertime = ({ DateData, StaticsNaviButton, currentPageOn }) => {
             ) : (
                 <></>
             )}
-            {StaticsNaviButton === 'Lists' ? (
-                <ListMainPage
-                    SelectLeftHeaderInfo={SelectLeftHeaderInfo}
-                    MonthDateData={DateData}
-                    currentPageOn={currentPageOn}
-                ></ListMainPage>
-            ) : (
-                <></>
-            )}
         </div>
     );
 };
 
-export default BeforeOvertime;
+export default AfterOvertime;

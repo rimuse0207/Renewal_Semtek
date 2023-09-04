@@ -6,28 +6,40 @@ const ContentNavigation = ({ StaticsNaviButton, setStaticsNaviButton }) => {
         <div>
             <AnnualLeaveSelectNavigationMainDivBox>
                 <ul>
-                    <li onClick={() => setStaticsNaviButton('Table')}>
-                        {StaticsNaviButton === 'Table' ? (
+                    {/* <li onClick={() => setStaticsNaviButton('Lists')}>
+                        {StaticsNaviButton === 'Lists' ? (
                             <>
                                 <div className="LineText" style={{ color: '#2985db', fontWeight: 'bold' }}>
-                                    테이블
+                                    리스트
                                 </div>
                                 <div className="LineActions"></div>
                             </>
                         ) : (
-                            <div className="LineText">테이블</div>
+                            <div className="LineText">리스트</div>
+                        )}
+                    </li> */}
+                    <li onClick={() => setStaticsNaviButton('Table')}>
+                        {StaticsNaviButton === 'Table' ? (
+                            <>
+                                <div className="LineText" style={{ color: '#2985db', fontWeight: 'bold' }}>
+                                    연장근무 테이블
+                                </div>
+                                <div className="LineActions"></div>
+                            </>
+                        ) : (
+                            <div className="LineText">연장근무 테이블</div>
                         )}
                     </li>
                     <li onClick={() => setStaticsNaviButton('Calendar')}>
                         {StaticsNaviButton === 'Calendar' ? (
                             <>
                                 <div className="LineText" style={{ color: '#2985db', fontWeight: 'bold' }}>
-                                    캘린더
+                                    연장근무 캘린더
                                 </div>
                                 <div className="LineActions"></div>
                             </>
                         ) : (
-                            <div className="LineText">캘린더</div>
+                            <div className="LineText">연장근무 캘린더</div>
                         )}
                     </li>
                 </ul>
