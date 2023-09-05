@@ -84,7 +84,7 @@ const HistoryTable = ({ DateData }) => {
                                 return (
                                     <tr key={list.apply_keys}>
                                         <td>{j + 1}</td>
-                                        <td>{list.cn}</td>
+                                        <td>{Login_Info.name}</td>
                                         <td>{list.write_date}</td>
                                         <td>{list.basic_start_time}</td>
                                         <td>{list.basic_end_time}</td>
@@ -114,7 +114,7 @@ const HistoryTable = ({ DateData }) => {
             <div style={{ border: '1px solid black' }}></div>
             <AnnualLeaveHistoryTableMainDivBox>
                 <div className="PersonStatusHistoryCreateTableTextFlexBox">
-                    <h4>사전 연장근무 현황</h4>
+                    <h4>사후 연장근무 현황</h4>
                     <div>총 연장근무 일수: {After_Overtime_Data.length} 일</div>
                     <div className="SubTextDesc"> </div>
                     <div>
@@ -156,7 +156,7 @@ const HistoryTable = ({ DateData }) => {
                                 return (
                                     <tr key={list.apply_keys}>
                                         <td>{j + 1}</td>
-                                        <td>{list.cn}</td>
+                                        <td>{Login_Info.name}</td>
                                         <td>{list.write_date}</td>
                                         <td>{list.basic_start_time}</td>
                                         <td>{list.basic_end_time}</td>

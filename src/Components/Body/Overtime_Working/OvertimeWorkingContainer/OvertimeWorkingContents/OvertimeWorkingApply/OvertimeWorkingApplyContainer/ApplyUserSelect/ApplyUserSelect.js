@@ -16,6 +16,7 @@ import { After_Overtime_Apply_State_Func } from '../../../../../../../../Models/
 import { Before_Overtime_Apply_State_Func } from '../../../../../../../../Models/OvertimeApplyReducer/BeforeApplyReducer';
 import { useEffect } from 'react';
 import { request } from '../../../../../../../../API';
+import { TbSquareRoundedMinus } from 'react-icons/tb';
 
 const ApplyedUserSelectMainDivBox = styled.div`
     border-bottom: 2px solid black;
@@ -63,6 +64,21 @@ const ApplyedUserSelectMainDivBox = styled.div`
                 padding: 3px;
 
                 resize: vertical;
+            }
+        }
+    }
+
+    .Before_Table_Content_Container {
+        position: relative;
+        .Delete_Data_Container {
+            position: absolute;
+            top: 50%;
+            left: -20px;
+            font-size: 1.2em;
+            transform: translate(0, -50%);
+            color: red;
+            :hover {
+                cursor: pointer;
             }
         }
     }
@@ -302,6 +318,44 @@ const ApplyUserSelect = () => {
         }
     };
 
+    const Handle_Change_Overtime_Reason = (e, data, select_Menu) => {
+        if (select_Menu === 'Before') {
+            const ChangeData = Before_Apply_State.map(list =>
+                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys
+                    ? { ...list, before_overtime_apply_info_reason: e.target.value }
+                    : list
+            );
+            dispatch(Before_Overtime_Apply_State_Func(ChangeData));
+        } else {
+            const ChangeData = After_Apply_State.map(list =>
+                list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys
+                    ? { ...list, after_overtime_apply_info_reason: e.target.value }
+                    : list
+            );
+            dispatch(After_Overtime_Apply_State_Func(ChangeData));
+        }
+    };
+
+    const Handle_Delete_Apply_Data = (data, select_Menu) => {
+        if (select_Menu === 'before') {
+            dispatch(
+                Before_Overtime_Apply_State_Func(
+                    Before_Apply_State.filter(list =>
+                        list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys ? '' : list
+                    )
+                )
+            );
+        } else {
+            dispatch(
+                After_Overtime_Apply_State_Func(
+                    After_Apply_State.filter(list =>
+                        list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys ? '' : list
+                    )
+                )
+            );
+        }
+    };
+
     const User_Overtime_Applyed_Data_Getting = async () => {
         try {
             const User_Overtime_Applyed_Data_Getting_Axios = await request.get('/semtek/User_Overtime_Applyed_Data_Getting', {
@@ -347,7 +401,9 @@ const ApplyUserSelect = () => {
                             <table className="Before_Overtime_Table_Container">
                                 <thead>
                                     <tr className="testssBefore">
-                                        <th rowSpan={2}>일자</th>
+                                        <th rowSpan={2} colSpan={2}>
+                                            일자
+                                        </th>
                                         <th colSpan={3}>소정 근로</th>
                                         <th colSpan={4}>연장 근무</th>
 
@@ -368,7 +424,13 @@ const ApplyUserSelect = () => {
                                 <tbody>
                                     {Before_Apply_State.map(list => {
                                         return (
-                                            <tr>
+                                            <tr className="Before_Table_Content_Container">
+                                                <div
+                                                    className="Delete_Data_Container"
+                                                    onClick={() => Handle_Delete_Apply_Data(list, 'before')}
+                                                >
+                                                    <TbSquareRoundedMinus></TbSquareRoundedMinus>
+                                                </div>
                                                 <td id="stat_date" width="100px">
                                                     <div className="Date_Pickers_Pickers">
                                                         <DatePicker
@@ -508,7 +570,11 @@ const ApplyUserSelect = () => {
                                                 </td>
 
                                                 <td className="reasontable">
-                                                    <textarea placeholder="사유"></textarea>
+                                                    <textarea
+                                                        placeholder="사유"
+                                                        value={list.before_overtime_apply_info_reason}
+                                                        onChange={e => Handle_Change_Overtime_Reason(e, list, 'Before')}
+                                                    ></textarea>
                                                 </td>
                                             </tr>
                                         );
@@ -544,7 +610,9 @@ const ApplyUserSelect = () => {
                             <table className="Before_Overtime_Table_Container After_Table_Container">
                                 <thead>
                                     <tr className="testssBefore">
-                                        <th rowSpan={2}>일자</th>
+                                        <th rowSpan={2} colSpan={2}>
+                                            일자
+                                        </th>
                                         <th colSpan={3}>소정근로</th>
                                         <th colSpan={4}>연장 근무</th>
 
@@ -565,7 +633,13 @@ const ApplyUserSelect = () => {
                                 <tbody>
                                     {After_Apply_State.map(list => {
                                         return (
-                                            <tr>
+                                            <tr className="Before_Table_Content_Container">
+                                                <div
+                                                    className="Delete_Data_Container"
+                                                    onClick={() => Handle_Delete_Apply_Data(list, 'after')}
+                                                >
+                                                    <TbSquareRoundedMinus></TbSquareRoundedMinus>
+                                                </div>
                                                 <td id="stat_date" width="100px">
                                                     <div className="Date_Pickers_Pickers">
                                                         <DatePicker
@@ -703,7 +777,11 @@ const ApplyUserSelect = () => {
                                                 </td>
 
                                                 <td className="reasontable">
-                                                    <textarea placeholder="사유"></textarea>
+                                                    <textarea
+                                                        placeholder="사유"
+                                                        value={list.after_overtime_apply_info_reason}
+                                                        onChange={e => Handle_Change_Overtime_Reason(e, list, 'After')}
+                                                    ></textarea>
                                                 </td>
                                             </tr>
                                         );

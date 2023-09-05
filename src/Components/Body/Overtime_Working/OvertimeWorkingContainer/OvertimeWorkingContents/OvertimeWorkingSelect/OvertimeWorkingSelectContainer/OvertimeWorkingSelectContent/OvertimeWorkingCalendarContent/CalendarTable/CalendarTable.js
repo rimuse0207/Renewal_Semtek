@@ -19,6 +19,11 @@ const CalnedarTable = ({ MonthDateData }) => {
         const Find_Data = Before_Overtime_Data.findIndex(item => item.write_date === moment(date).format('YYYY-MM-DD'));
 
         if (Find_Data !== -1) {
+            const Checking_Payment = Before_Overtime_Data[Find_Data].Review_Array.some(list => !list.overtime_review_info_accept_check)
+                ? 'X'
+                : Before_Overtime_Data[Find_Data].Accept_Array.some(list => !list.overtime_accept_info_accept_check)
+                ? 'X'
+                : 'O';
             return (
                 <div
                     className="Canlendar_Bar"
@@ -26,7 +31,8 @@ const CalnedarTable = ({ MonthDateData }) => {
                 >
                     <div>
                         <span>
-                            ( 사전OT ) {Before_Overtime_Data[Find_Data].real_sum_time - Before_Overtime_Data[Find_Data].real_rest_time} 시간
+                            ( 사전OT ) {Before_Overtime_Data[Find_Data].real_sum_time - Before_Overtime_Data[Find_Data].real_rest_time} 시간{' '}
+                            {Checking_Payment}
                         </span>
                     </div>
                 </div>
@@ -37,6 +43,11 @@ const CalnedarTable = ({ MonthDateData }) => {
         const Find_Data = After_Overtime_Data.findIndex(item => item.write_date === moment(date).format('YYYY-MM-DD'));
 
         if (Find_Data !== -1) {
+            const Checking_Payment = After_Overtime_Data[Find_Data].Review_Array.some(list => !list.overtime_review_info_accept_check)
+                ? 'X'
+                : After_Overtime_Data[Find_Data].Accept_Array.some(list => !list.overtime_accept_info_accept_check)
+                ? 'X'
+                : 'O';
             return (
                 <div
                     className="Canlendar_Bar"
@@ -44,7 +55,8 @@ const CalnedarTable = ({ MonthDateData }) => {
                 >
                     <div>
                         <span>
-                            ( 사후OT ) {After_Overtime_Data[Find_Data].real_sum_time - After_Overtime_Data[Find_Data].real_rest_time} 시간
+                            ( 사후OT ) {After_Overtime_Data[Find_Data].real_sum_time - After_Overtime_Data[Find_Data].real_rest_time} 시간{' '}
+                            {Checking_Payment}
                         </span>
                     </div>
                 </div>

@@ -77,18 +77,18 @@ const Table = ({ Data, setData, currentPageOn, Getting_BeforeOvertime_Table_Data
         //         epid: 'dikim@dhk.co.kr',
         //     })
         // );
-        // dispatch(
-        //     Login_Info_Apply_State_Func({
-        //         name: '유성재',
-        //         id: 'sjyoo@dhk.co.kr',
-        //         position: '프로',
-        //         team: '제조',
-        //         company: 'DHKS',
-        //         vacation_admin_access: false,
-        //         ot_admin: false,
-        //         epid: 'sjyoo@dhk.co.kr',
-        //     })
-        // );
+        dispatch(
+            Login_Info_Apply_State_Func({
+                name: '유성재',
+                id: 'sjyoo@dhk.co.kr',
+                position: '프로',
+                team: '제조',
+                company: 'DHKS',
+                vacation_admin_access: false,
+                ot_admin: false,
+                epid: 'sjyoo@dhk.co.kr',
+            })
+        );
         // dispatch(
         //     Login_Info_Apply_State_Func({
         //         name: '최홍탁',
@@ -101,18 +101,18 @@ const Table = ({ Data, setData, currentPageOn, Getting_BeforeOvertime_Table_Data
         //         epid: 'htchoi@dhk.co.kr',
         //     })
         // );
-        dispatch(
-            Login_Info_Apply_State_Func({
-                name: '홍용철',
-                id: 'ychong@dhk.co.kr',
-                position: '프로',
-                team: '제조',
-                company: 'DHKS',
-                vacation_admin_access: false,
-                ot_admin: false,
-                epid: 'ychong@dhk.co.kr',
-            })
-        );
+        // dispatch(
+        //     Login_Info_Apply_State_Func({
+        //         name: '차재윤',
+        //         id: 'jycha@dhk.co.kr',
+        //         position: '프로',
+        //         team: '제조',
+        //         company: 'DHKS',
+        //         vacation_admin_access: false,
+        //         ot_admin: false,
+        //         epid: 'jycha@dhk.co.kr',
+        //     })
+        // );
         // dispatch(
         //     Login_Info_Apply_State_Func({
         //         name: '최주용',

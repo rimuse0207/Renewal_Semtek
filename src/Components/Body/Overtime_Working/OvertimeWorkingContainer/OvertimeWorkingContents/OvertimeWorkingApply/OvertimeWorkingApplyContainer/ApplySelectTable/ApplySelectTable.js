@@ -318,13 +318,13 @@ const ApplySelectTableMainDivBox = styled.div`
         font-size: 0.9em;
     }
 `;
-const ApplySelectTable = () => {
+const ApplySelectTable = ({ GetData, setGetData }) => {
     const dispatch = useDispatch();
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
     const Overtime_Date_Data = useSelector(state => state.OvertimeApplyReducerState.Overtime_Calendar_State.Overtime_Date_Data);
     const Before_Apply_State = useSelector(state => state.BeforeApplyReducerState.Before_Overtime_State);
     const After_Apply_State = useSelector(state => state.AfterApplyReducerState.After_Overtime_State);
-    const [GetData, setGetData] = useState(moment());
+
     const handleMinusCalendar = () => {
         setGetData(GetData.clone().subtract(5, 'day'));
     };
@@ -416,6 +416,7 @@ const ApplySelectTable = () => {
     ///// 추가하기 선택
     const Add_Overtime_Date_Setting_Func = (e, select_menu, Click_Data) => {
         e.stopPropagation();
+        console.log(e, select_menu, Click_Data);
         if (select_menu === 'Before_basic_Overtime' || select_menu === 'Before_not_basic_Overtime') {
             const Before_Datas = {
                 before_overtime_apply_info_apply_keys: uuid(),
@@ -430,7 +431,7 @@ const ApplySelectTable = () => {
                 before_overtime_apply_info_night_time: 0,
                 before_overtime_apply_info_sum_time: 0,
                 before_overtime_apply_info_reason: '',
-                before_overtime_apply_info_holiday_check: false,
+                before_overtime_apply_info_holiday_check: Click_Data.datePlan === '공휴일' ? true : false,
             };
             dispatch(Before_Overtime_Apply_State_Func(Before_Apply_State.concat(Before_Datas)));
 
@@ -466,7 +467,7 @@ const ApplySelectTable = () => {
                 after_overtime_apply_info_night_time: 0,
                 after_overtime_apply_info_sum_time: 0,
                 after_overtime_apply_info_reason: '',
-                after_overtime_apply_info_holiday_check: false,
+                after_overtime_apply_info_holiday_check: Click_Data.datePlan === '공휴일' ? true : false,
             };
             dispatch(After_Overtime_Apply_State_Func(After_Apply_State.concat(After_Datas)));
             const Menu_Open_Change_Data = Overtime_Date_Data.map(list => {
