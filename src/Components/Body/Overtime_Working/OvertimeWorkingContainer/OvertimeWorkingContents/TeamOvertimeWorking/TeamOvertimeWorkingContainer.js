@@ -15,12 +15,13 @@ const TeamOvertimeWorkingContainer = () => {
             <ContentNavigation
                 StaticsNaviButton={StaticsNaviButton}
                 setStaticsNaviButton={data => setStaticsNaviButton(data)}
+                Select_Division={'연장 근무 신청'}
             ></ContentNavigation>
-            <HistoryDate DateData={DateData} setDateData={data => setDateData(data)}></HistoryDate>
+            <HistoryDate DateData={DateData} setDateData={data => setDateData(data)} Move_Division="month"></HistoryDate>
             <UserSelect></UserSelect>
 
-            <BeforeOvertime DateData={DateData} StaticsNaviButton={StaticsNaviButton} currentPageOn="BeforeOvertime"></BeforeOvertime>
-            {/* <AfterOvertime DateData={DateData} StaticsNaviButton={StaticsNaviButton} currentPageOn="AfterOvertime"></AfterOvertime> */}
+            {/* <BeforeOvertime DateData={DateData} StaticsNaviButton={StaticsNaviButton} currentPageOn="BeforeOvertime"></BeforeOvertime> */}
+            <AfterOvertime DateData={DateData} StaticsNaviButton={StaticsNaviButton} currentPageOn="AfterOvertime"></AfterOvertime>
         </div>
     );
 };

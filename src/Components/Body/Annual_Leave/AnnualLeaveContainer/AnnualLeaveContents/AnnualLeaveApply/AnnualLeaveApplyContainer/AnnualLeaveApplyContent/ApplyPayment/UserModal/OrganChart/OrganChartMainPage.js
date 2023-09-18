@@ -15,10 +15,24 @@ const OrganChartMainPageMainDivBox = styled.div`
     }
 `;
 
-const OrganChartMainPage = ({ ClickedUser, setUserDetailInfo, setSelectUserInfoData, setSelectUserNames, UserSearchModalOn }) => {
+const OrganChartMainPage = ({
+    ClickedUser,
+    setUserDetailInfo,
+    setSelectUserInfoData,
+    setSelectUserNames,
+    UserSearchModalOn,
+    User_Search_Value,
+}) => {
     const [OrganChartState, setOrganChartState] = useState([]);
     const [ClickItemSelected, setClickItemSelected] = useState(null);
     const [SearchUser, setSearchUser] = useState('');
+    console.log(User_Search_Value);
+
+    useEffect(() => {
+        if (User_Search_Value) {
+            setClickItemSelected(User_Search_Value.department_code);
+        }
+    }, [User_Search_Value]);
 
     const UserClickFunction = () => {
         const data = {
@@ -40,7 +54,7 @@ const OrganChartMainPage = ({ ClickedUser, setUserDetailInfo, setSelectUserInfoD
 
     const Upper_Department_Select_Getting = async departmentCode => {
         try {
-            const Upper_Department_Select_Getting_Axios = await request(`/DepartmentRouter/Upper_Department_Select_Getting_Semtek`, {
+            const Upper_Department_Select_Getting_Axios = await request.get(`/DepartmentRouter/Upper_Department_Select_Getting_Semtek`, {
                 params: {
                     departmentCode,
                 },

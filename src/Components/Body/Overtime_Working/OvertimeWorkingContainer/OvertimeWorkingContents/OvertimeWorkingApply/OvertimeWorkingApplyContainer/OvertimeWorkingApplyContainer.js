@@ -22,7 +22,6 @@ const OvertimeWorkingApplyContainer = () => {
     const dispatch = useDispatch();
     const [GetData, setGetData] = useState(moment());
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
-    const Before_Apply_State = useSelector(state => state.BeforeApplyReducerState.Before_Overtime_State);
     const After_Apply_State = useSelector(state => state.AfterApplyReducerState.After_Overtime_State);
     const Apply_User_State = useSelector(state => state.PaymentUserReducerState.Apply);
     const Review_User_State = useSelector(state => state.PaymentUserReducerState.Review);
@@ -31,34 +30,20 @@ const OvertimeWorkingApplyContainer = () => {
         try {
             const HandleClick_Apply_Overtime_Submit_Axios = await request.post('/semtek/HandleClick_Apply_Overtime_Submit', {
                 ID: Login_Info.id,
-                Before_Apply_State,
                 After_Apply_State,
                 Apply_User_State,
                 Review_User_State,
                 Accept_User_State,
             });
 
-            console.log(HandleClick_Apply_Overtime_Submit_Axios);
-
             if (HandleClick_Apply_Overtime_Submit_Axios.data.dataSuccess) {
-                if (
-                    HandleClick_Apply_Overtime_Submit_Axios.data.Already_Before_Data.length > 0 ||
-                    HandleClick_Apply_Overtime_Submit_Axios.data.Already_After_Data.length > 0
-                ) {
+                if (HandleClick_Apply_Overtime_Submit_Axios.data.Already_After_Data.length > 0) {
                     alert('이미 등록된 데이터가 있습니다.');
-                } else {
                 }
 
-                const Stored_Before_Delete_Data = Before_Apply_State.filter(list =>
-                    HandleClick_Apply_Overtime_Submit_Axios.data.Already_Before_Data.some(item =>
-                        list.before_overtime_apply_info_apply_keys === item.before_overtime_apply_info_apply_keys ? list : ''
-                    )
-                );
-                dispatch(Before_Overtime_Apply_State_Func(Stored_Before_Delete_Data));
-
                 const Stored_After_Delete_Data = After_Apply_State.filter(list =>
-                    HandleClick_Apply_Overtime_Submit_Axios.data.Already_Before_Data.some(item =>
-                        list.before_overtime_apply_info_apply_keys === item.before_overtime_apply_info_apply_keys ? list : ''
+                    HandleClick_Apply_Overtime_Submit_Axios.data.Already_After_Data.some(item =>
+                        list.after_overtime_apply_info_apply_keys === item.after_overtime_apply_info_apply_keys ? list : ''
                     )
                 );
                 dispatch(After_Overtime_Apply_State_Func(Stored_After_Delete_Data));

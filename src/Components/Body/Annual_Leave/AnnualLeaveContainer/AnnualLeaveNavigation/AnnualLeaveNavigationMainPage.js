@@ -1,17 +1,17 @@
-import React,{useState} from "react";
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowUp } from 'react-icons/md';
 import { AiFillCalendar } from 'react-icons/ai';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { BsBarChartFill } from 'react-icons/bs';
-import { useDispatch } from "react-redux";
-import { AnuualLeaveNavStateChange } from "../../../../../Models/AnnualLeaveNavReducer/AnnualLeaveNavReducer";
+import { useDispatch } from 'react-redux';
+import { AnuualLeaveNavStateChange } from '../../../../../Models/AnnualLeaveNavReducer/AnnualLeaveNavReducer';
 
 export const AnnualLeaveNavigationMainPageMainDivBox = styled.div`
-    border-right:1px solid lightgray;
-    min-height:calc(100vh - 60px);
-    background-color:#eff4fc;
+    border-right: 1px solid lightgray;
+    min-height: calc(100vh - 60px);
+    background-color: #eff4fc;
     .PersonalNavigation_Box {
         border-bottom: 2px solid lightgray;
         height: 100px;
@@ -31,7 +31,7 @@ export const AnnualLeaveNavigationMainPageMainDivBox = styled.div`
         background: #2985db;
         font-weight: bolder;
         border-bottom: 1px solid lightgray;
-        color:#fff;
+        color: #fff;
         :hover {
             cursor: pointer;
             background: #056ac9;
@@ -95,22 +95,25 @@ export const AnnualLeaveNavigationMainPageMainDivBox = styled.div`
             }
         }
     }
-`
+`;
 
 const AnnualLeaveNavigationMainPage = ({ AnnualLeaveNavState, currentPageOn }) => {
     const dispatch = useDispatch();
     const [ClicksOnOff, setClicksOnOff] = useState(true);
-    const handleClickMenu = (data) => {
-        const ChangeMenu = AnnualLeaveNavState.map(list => list.menu_name === data ? { ...list, menu_check: true } : { ...list, menu_check: false });
-        dispatch(AnuualLeaveNavStateChange(ChangeMenu))
-    }
+    const [TeamClicksOnOff, setTeamClicksOnOff] = useState(true);
+    const handleClickMenu = data => {
+        const ChangeMenu = AnnualLeaveNavState.map(list =>
+            list.menu_name === data ? { ...list, menu_check: true } : { ...list, menu_check: false }
+        );
+        dispatch(AnuualLeaveNavStateChange(ChangeMenu));
+    };
 
     return (
         <AnnualLeaveNavigationMainPageMainDivBox>
-             <div className="PersonalNavigation_Box">
-                    <div className="PersonalNavigation_ApplyPage" onClick={()=>handleClickMenu('ApplyAnnualLeave')}>
-                        <div>휴가 신청</div>
-                    </div>
+            <div className="PersonalNavigation_Box">
+                <div className="PersonalNavigation_ApplyPage" onClick={() => handleClickMenu('ApplyAnnualLeave')}>
+                    <div>휴가 신청</div>
+                </div>
             </div>
             <div>
                 <div className="PersonalNavigation_WorkStatus">
@@ -128,19 +131,64 @@ const AnnualLeaveNavigationMainPage = ({ AnnualLeaveNavState, currentPageOn }) =
                     </div>
                     {ClicksOnOff ? (
                         <ul className="PersonalNavigation_WorkStatus_ListsShow">
-                            
-                                <li id={currentPageOn === 'MainPage' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''} onClick={()=>handleClickMenu('MainPage')}>
-                                    <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
-                                        <AiFillCalendar></AiFillCalendar>
-                                    </span>
-                                    <span>휴가 / 근무</span>
-                                </li>
-                                <li id={currentPageOn === 'AnnualLeaveSelect' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''} onClick={()=>handleClickMenu('AnnualLeaveSelect')}>
-                                    <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
-                                        <FaCalendarAlt></FaCalendarAlt>
-                                    </span>
-                                    <span>휴가 내역 조회</span>
-                                </li>                            
+                            <li
+                                id={currentPageOn === 'MainPage' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''}
+                                onClick={() => handleClickMenu('MainPage')}
+                            >
+                                <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
+                                    <AiFillCalendar></AiFillCalendar>
+                                </span>
+                                <span>휴가 / 근무</span>
+                            </li>
+                            <li
+                                id={currentPageOn === 'AnnualLeaveSelect' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''}
+                                onClick={() => handleClickMenu('AnnualLeaveSelect')}
+                            >
+                                <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
+                                    <FaCalendarAlt></FaCalendarAlt>
+                                </span>
+                                <span>휴가 내역 조회</span>
+                            </li>
+                        </ul>
+                    ) : (
+                        <div></div>
+                    )}
+                </div>
+            </div>
+            <div>
+                <div className="PersonalNavigation_WorkStatus">
+                    <div className="PersonalNavigation_WorkStatus_HiddenShowDiv" onClick={e => setTeamClicksOnOff(!TeamClicksOnOff)}>
+                        <span
+                            className={
+                                TeamClicksOnOff
+                                    ? 'PersonalNavigation_WorkStatus_HiddenShowDiv_iconsUp'
+                                    : 'PersonalNavigation_WorkStatus_HiddenShowDiv_iconsDown'
+                            }
+                        >
+                            <MdKeyboardArrowUp></MdKeyboardArrowUp>{' '}
+                        </span>
+                        <span> 휴가 관리자 </span>
+                    </div>
+                    {TeamClicksOnOff ? (
+                        <ul className="PersonalNavigation_WorkStatus_ListsShow">
+                            <li
+                                id={currentPageOn === 'Team_MainPage' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''}
+                                onClick={() => handleClickMenu('Team_MainPage')}
+                            >
+                                <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
+                                    <AiFillCalendar></AiFillCalendar>
+                                </span>
+                                <span>임직원 휴가 내역 조회</span>
+                            </li>
+                            <li
+                                id={currentPageOn === 'Team_AnnualLeaveSelect' ? 'PersonalNavigation_WorkStatus_CurrentPage' : ''}
+                                onClick={() => handleClickMenu('Team_AnnualLeaveSelect')}
+                            >
+                                <span className="PersonalNavigation_WorkStatus_ListsShow_Icons">
+                                    <FaCalendarAlt></FaCalendarAlt>
+                                </span>
+                                <span>휴가 지급</span>
+                            </li>
                         </ul>
                     ) : (
                         <div></div>
@@ -148,6 +196,6 @@ const AnnualLeaveNavigationMainPage = ({ AnnualLeaveNavState, currentPageOn }) =
                 </div>
             </div>
         </AnnualLeaveNavigationMainPageMainDivBox>
-    )
-}
+    );
+};
 export default AnnualLeaveNavigationMainPage;

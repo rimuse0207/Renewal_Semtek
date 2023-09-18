@@ -15,30 +15,6 @@ const CalnedarTable = ({ MonthDateData }) => {
     const firstWeek = today.clone().startOf('month').week();
     const lastWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
 
-    const Before_Overtime_Checking_Func = date => {
-        const Find_Data = Before_Overtime_Data.findIndex(item => item.write_date === moment(date).format('YYYY-MM-DD'));
-
-        if (Find_Data !== -1) {
-            const Checking_Payment = Before_Overtime_Data[Find_Data].Review_Array.some(list => !list.overtime_review_info_accept_check)
-                ? 'X'
-                : Before_Overtime_Data[Find_Data].Accept_Array.some(list => !list.overtime_accept_info_accept_check)
-                ? 'X'
-                : 'O';
-            return (
-                <div
-                    className="Canlendar_Bar"
-                    style={{ background: ' rgb(255, 255, 153)', color: 'black', fontWeight: 'bolder', fontSize: '0.8em', padding: '2px' }}
-                >
-                    <div>
-                        <span>
-                            ( 사전OT ) {Before_Overtime_Data[Find_Data].real_sum_time - Before_Overtime_Data[Find_Data].real_rest_time} 시간{' '}
-                            {Checking_Payment}
-                        </span>
-                    </div>
-                </div>
-            );
-        }
-    };
     const After_Overtime_Checking_Func = date => {
         const Find_Data = After_Overtime_Data.findIndex(item => item.write_date === moment(date).format('YYYY-MM-DD'));
 
@@ -81,7 +57,6 @@ const CalnedarTable = ({ MonthDateData }) => {
                                     <td key={index} className="Telecommuting_Table_nextMonth">
                                         <div className="Telecommuting_Table_dayNumber">
                                             <div style={{ paddingLeft: '5px' }}>{days.format('D')}</div>
-                                            <div>{Before_Overtime_Checking_Func(days)}</div>
                                             <div>{After_Overtime_Checking_Func(days)}</div>
                                         </div>
                                     </td>
@@ -102,7 +77,6 @@ const CalnedarTable = ({ MonthDateData }) => {
                                     >
                                         <div className="Telecommuting_Table_dayNumber">
                                             <div style={{ paddingLeft: '5px' }}>{days.format('D')}</div>
-                                            <div>{Before_Overtime_Checking_Func(days)}</div>
                                             <div>{After_Overtime_Checking_Func(days)}</div>
                                         </div>
                                     </td>

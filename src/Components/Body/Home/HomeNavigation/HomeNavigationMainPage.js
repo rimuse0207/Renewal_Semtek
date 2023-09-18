@@ -119,14 +119,6 @@ const HomeNavigationMainPage = () => {
                                 <div className="BodyContentText">연장 근무</div>
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/Meal_Expense_Reimbursement">
-                                <div className="BodyContentIcons">
-                                    <GiMeal></GiMeal>
-                                </div>
-                                <div className="BodyContentText">식대 정산</div>
-                            </Link>
-                        </li>
 
                         <li>
                             <Link to="/Annual_Leave">

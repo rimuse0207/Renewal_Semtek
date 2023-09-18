@@ -1,9 +1,9 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { ApplyPaymentMainDivBox } from '../../../../../../Annual_Leave/AnnualLeaveContainer/AnnualLeaveContents/AnnualLeaveApply/AnnualLeaveApplyContainer/AnnualLeaveApplyContent/ApplyPayment/ApplyPayment';
-import { BsPlusCircle } from "react-icons/bs";
+import { BsPlusCircle } from 'react-icons/bs';
 
 const ApplyPayment = () => {
-     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const [ApplyMainModalOpen, setApplyMainModalOpen] = useState(false);
     const [ApplyModalOpen, setApplyModalOpen] = useState(false);
     const [AcceptModalOpen, setAcceptModalOpen] = useState(false);
@@ -21,7 +21,6 @@ const ApplyPayment = () => {
             id: 3,
             text: '유성재',
         },
-        
     ]);
     const [SelectApplyNames, setSelectApplyNames] = useState([
         {
@@ -95,92 +94,92 @@ const ApplyPayment = () => {
     return (
         <div>
             <ApplyPaymentMainDivBox>
-               <div className="PersonalApplyBodyConent_ApplyContents_Sign">
-                <div>
+                <div className="PersonalApplyBodyConent_ApplyContents_Sign">
                     <div>
-                        <div className="PayMentFlexDivBox">
-                            <h4>결재선</h4>
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        setModalIsOpen(true);
-                                        setApplyMainModalOpen(true);
-                                    }}
-                                >
-                                    결재선 설정
-                                </button>
+                        <div>
+                            <div className="PayMentFlexDivBox">
+                                <h4>결재선</h4>
+                                <div>
+                                    <button
+                                        onClick={() => {
+                                            setModalIsOpen(true);
+                                            setApplyMainModalOpen(true);
+                                        }}
+                                    >
+                                        결재선 설정
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th rowSpan={3} className="ClicksButtonMainTh">
-                                        <div>신청</div>
-                                        {/* <div className="ClicksButtonMainIcon" onClick={e => ApplyModalhandleClicks(e)}>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th rowSpan={3} className="ClicksButtonMainTh">
+                                            <div>신청</div>
+                                            {/* <div className="ClicksButtonMainIcon" onClick={e => ApplyModalhandleClicks(e)}>
                                             <BsPlusCircle></BsPlusCircle>
                                         </div> */}
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th rowSpan={3} className="ClicksButtonMainTh">
-                                        <div>처리</div>
-                                        <div className="ClicksButtonMainIcon" onClick={e => AcceptModalhandleClicks(e)}>
-                                            <BsPlusCircle></BsPlusCircle>
-                                        </div>
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                <tr className="PersonalApplyBodyCotent_ApplyContentsTable">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    {SendSelectApplyNames.map((list, i) => {
-                                        return <td>{list.text}</td>;
-                                    })}
-                                    {Array(4 - SendSelectApplyNames.length)
-                                        .fill(0)
-                                        .map((list, i) => {
-                                            return <td></td>;
+                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th rowSpan={3} className="ClicksButtonMainTh">
+                                            <div>처리</div>
+                                            <div className="ClicksButtonMainIcon" onClick={e => AcceptModalhandleClicks(e)}>
+                                                <BsPlusCircle></BsPlusCircle>
+                                            </div>
+                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    <tr className="PersonalApplyBodyCotent_ApplyContentsTable">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        {SendSelectApplyNames.map((list, i) => {
+                                            return <td>{list.text}</td>;
+                                        })}
+                                        {Array(4 - SendSelectApplyNames.length)
+                                            .fill(0)
+                                            .map((list, i) => {
+                                                return <td></td>;
+                                            })}
+
+                                        {SendSelectAcceptNames.map((list, i) => {
+                                            return <td>{list.text}</td>;
                                         })}
 
-                                    {SendSelectAcceptNames.map((list, i) => {
-                                        return <td>{list.text}</td>;
-                                    })}
-
-                                    {Array(4 - SendSelectAcceptNames.length)
-                                        .fill(0)
-                                        .map((list, i) => {
-                                            return <td></td>;
-                                        })}
-                                </tr>
-                                <tr>
-                                    <th>참조</th>
-                                    <td colSpan="9" style={{ textAlign: 'left', paddingLeft: '20px' }}>
-                                        <input
-                                            style={{ height: '30px', border: '1px solid lightgray', paddingLeft: '10px' }}
-                                            placeholder="클릭후 입력하세요"
-                                        ></input>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        {Array(4 - SendSelectAcceptNames.length)
+                                            .fill(0)
+                                            .map((list, i) => {
+                                                return <td></td>;
+                                            })}
+                                    </tr>
+                                    <tr>
+                                        <th>참조</th>
+                                        <td colSpan="9" style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                                            <input
+                                                style={{ height: '30px', border: '1px solid lightgray', paddingLeft: '10px' }}
+                                                placeholder="클릭후 입력하세요"
+                                            ></input>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {/* <Modal isOpen={modalIsOpen} style={customStyles}>
+                {/* <Modal isOpen={modalIsOpen} style={customStyles}>
                 <div>
                     {ApplyMainModalOpen ? <PersonApplyContentSignModal></PersonApplyContentSignModal> : <div></div>}
                     {ApplyModalOpen ? (
@@ -225,9 +224,9 @@ const ApplyPayment = () => {
                     </div>
                 </div>
             </Modal> */}
-     </ApplyPaymentMainDivBox>   
+            </ApplyPaymentMainDivBox>
         </div>
-    )
-}
+    );
+};
 
 export default ApplyPayment;

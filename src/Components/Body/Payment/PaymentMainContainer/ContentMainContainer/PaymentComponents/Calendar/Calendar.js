@@ -18,7 +18,7 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData, currentPageOn }) => {
                     ID: Login_Info.id,
                 },
             });
-
+            console.log(Get_Payment_Overtime_Write_Data_Axios);
             setCalenar_Search_Data(Get_Payment_Overtime_Write_Data_Axios.data.Get_Payment_Overtime_Write_Data_Rows);
         } catch (error) {
             console.log(error);
@@ -57,7 +57,7 @@ const Calendar = ({ SelectLeftHeaderInfo, MonthDateData, currentPageOn }) => {
                 >
                     <div>
                         <span>
-                            ( {currentPageOn === 'BeforeOvertime' ? '사전OT' : '사후OT'} ) {data.name}{' '}
+                            ( {currentPageOn === 'BeforeOvertime' ? '사전OT' : '사후OT'} ) {data.cn}{' '}
                             {data.real_sum_time - data.real_rest_time} 시간 {Checking_Payment}
                         </span>
                     </div>

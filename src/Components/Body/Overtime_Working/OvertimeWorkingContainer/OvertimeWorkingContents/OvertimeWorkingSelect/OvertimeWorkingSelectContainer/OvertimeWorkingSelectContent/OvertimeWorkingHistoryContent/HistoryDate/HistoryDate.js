@@ -3,21 +3,35 @@ import { AnnualLeaveSelectDateMainDivBox } from '../../../../../../../../Annual_
 import moment from 'moment';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 
-const HistoryDate = ({ DateData, setDateData }) => {
+const HistoryDate = ({ DateData, setDateData, Move_Division }) => {
     return (
         <div>
             <AnnualLeaveSelectDateMainDivBox>
                 <div className="HistoryMianNaviFlexBox">
                     <div
                         className="ReactIcons_ArrowIcon"
-                        onClick={() => setDateData(moment(DateData).clone().subtract(1, 'month').format('YYYY-MM'))}
+                        onClick={() =>
+                            setDateData(
+                                moment(DateData)
+                                    .clone()
+                                    .subtract(1, Move_Division)
+                                    .format(Move_Division === 'year' ? 'YYYY' : 'YYYY-MM')
+                            )
+                        }
                     >
                         <MdArrowBackIos></MdArrowBackIos>
                     </div>
-                    <h2>{moment(DateData).format('YYYY년 MM월')}</h2>
+                    <h2>{moment(DateData).format(Move_Division === 'year' ? 'YYYY년' : 'YYYY년 MM월')}</h2>
                     <div
                         className="ReactIcons_ArrowIcon"
-                        onClick={() => setDateData(moment(DateData).clone().add(1, 'month').format('YYYY-MM'))}
+                        onClick={() =>
+                            setDateData(
+                                moment(DateData)
+                                    .clone()
+                                    .add(1, Move_Division)
+                                    .format(Move_Division === 'year' ? 'YYYY' : 'YYYY-MM')
+                            )
+                        }
                     >
                         <MdArrowForwardIos></MdArrowForwardIos>
                     </div>

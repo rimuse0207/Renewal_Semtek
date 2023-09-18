@@ -87,29 +87,8 @@ const ApplyedUserSelectMainDivBox = styled.div`
 const ApplyUserSelect = () => {
     const dispatch = useDispatch();
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
-    const Before_Apply_State = useSelector(state => state.BeforeApplyReducerState.Before_Overtime_State);
     const After_Apply_State = useSelector(state => state.AfterApplyReducerState.After_Overtime_State);
-    const [Before_Except_Date, setBefore_Except_Date] = useState([]);
     const [After_Except_Date, setAfter_Except_Date] = useState([]);
-
-    const Handle_Add_Before_Overtime = () => {
-        const Before_Datas = {
-            before_overtime_apply_info_apply_keys: uuid(),
-            before_overtime_apply_info_date: new Date(),
-            before_overtime_apply_info_basic_start_time: '09:00',
-            before_overtime_apply_info_basic_end_time: '18:00',
-            before_overtime_apply_info_basic_rest_time: 1,
-            before_overtime_apply_info_basic_sum_time: 9,
-            before_overtime_apply_info_start_time: '18:00',
-            before_overtime_apply_info_end_time: '18:00',
-            before_overtime_apply_info_rest_time: 0,
-            before_overtime_apply_info_night_time: 0,
-            before_overtime_apply_info_sum_time: 0,
-            before_overtime_apply_info_reason: '',
-            before_overtime_apply_info_holiday_check: false,
-        };
-        dispatch(Before_Overtime_Apply_State_Func(Before_Apply_State.concat(Before_Datas)));
-    };
 
     const Handle_Add_After_Overtime = () => {
         const After_Datas = {
@@ -163,75 +142,7 @@ const ApplyUserSelect = () => {
     };
 
     const Before_Overtime_Time_Change = (e, data, Select_Menu) => {
-        if (Select_Menu === 'basic_start_time') {
-            const Sum_Hour_Count = Hour_Checking_Data(e.target.value, data.before_overtime_apply_info_basic_end_time);
-            const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
-            const Change_Data = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
-                list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? {
-                          ...list,
-                          before_overtime_apply_info_basic_start_time: e.target.value,
-                          before_overtime_apply_info_basic_sum_time: Sum_Hour_Count,
-                          before_overtime_apply_info_basic_rest_time: rest_Hour_Count,
-                      }
-                    : list
-            );
-
-            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
-        } else if (Select_Menu === 'basic_end_time') {
-            const Sum_Hour_Count = Hour_Checking_Data(data.before_overtime_apply_info_basic_start_time, e.target.value);
-            const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
-            const Change_Data = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
-                list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? {
-                          ...list,
-                          before_overtime_apply_info_basic_end_time: e.target.value,
-                          before_overtime_apply_info_basic_sum_time: Sum_Hour_Count,
-                          before_overtime_apply_info_basic_rest_time: rest_Hour_Count,
-                      }
-                    : list
-            );
-
-            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
-        } else if (Select_Menu === 'overtime_start_time') {
-            const Overtime_Sum_Hour_Count = Overtime_NightChecking_Data(e.target.value, data.before_overtime_apply_info_end_time);
-            const Change_Data = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
-                list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? {
-                          ...list,
-                          before_overtime_apply_info_start_time: e.target.value,
-                          before_overtime_apply_info_night_time: Overtime_Sum_Hour_Count.nightTime,
-                          before_overtime_apply_info_sum_time: Overtime_Sum_Hour_Count.nightTime + Overtime_Sum_Hour_Count.originTime,
-                      }
-                    : list
-            );
-            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
-        } else if (Select_Menu === 'overtime_end_time') {
-            const Overtime_Sum_Hour_Count = Overtime_NightChecking_Data(data.before_overtime_apply_info_start_time, e.target.value);
-            const Change_Data = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
-                list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? {
-                          ...list,
-                          before_overtime_apply_info_end_time: e.target.value,
-                          before_overtime_apply_info_night_time: Overtime_Sum_Hour_Count.nightTime,
-                          before_overtime_apply_info_sum_time: Overtime_Sum_Hour_Count.nightTime + Overtime_Sum_Hour_Count.originTime,
-                      }
-                    : list
-            );
-            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
-        } else if (Select_Menu === 'overtime_rest_time') {
-            const Change_Data = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys &&
-                list.before_overtime_apply_info_date === data.before_overtime_apply_info_date
-                    ? { ...list, before_overtime_apply_info_rest_time: e.target.value }
-                    : list
-            );
-            dispatch(Before_Overtime_Apply_State_Func(Change_Data));
-        } else if (Select_Menu === 'After_start_time') {
+        if (Select_Menu === 'After_start_time') {
             const Sum_Hour_Count = Hour_Checking_Data(e.target.value, data.after_overtime_apply_info_basic_end_time);
             const rest_Hour_Count = Sum_Hour_Count >= 8 ? 1 : 0;
             const Change_Data = After_Apply_State.map(list =>
@@ -301,59 +212,31 @@ const ApplyUserSelect = () => {
     };
 
     const handleChangesClickDates = (date, data, select_Menu) => {
-        if (select_Menu === 'before') {
-            const ChangeData = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys
-                    ? { ...list, before_overtime_apply_info_date: new Date(date) }
-                    : list
-            );
-            dispatch(Before_Overtime_Apply_State_Func(ChangeData));
-        } else {
-            const ChangeData = After_Apply_State.map(list =>
-                list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys
-                    ? { ...list, after_overtime_apply_info_date: new Date(date) }
-                    : list
-            );
-            dispatch(After_Overtime_Apply_State_Func(ChangeData));
-        }
+        const ChangeData = After_Apply_State.map(list =>
+            list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys
+                ? { ...list, after_overtime_apply_info_date: new Date(date) }
+                : list
+        );
+        dispatch(After_Overtime_Apply_State_Func(ChangeData));
     };
 
     const Handle_Change_Overtime_Reason = (e, data, select_Menu) => {
-        if (select_Menu === 'Before') {
-            const ChangeData = Before_Apply_State.map(list =>
-                list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys
-                    ? { ...list, before_overtime_apply_info_reason: e.target.value }
-                    : list
-            );
-            dispatch(Before_Overtime_Apply_State_Func(ChangeData));
-        } else {
-            const ChangeData = After_Apply_State.map(list =>
-                list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys
-                    ? { ...list, after_overtime_apply_info_reason: e.target.value }
-                    : list
-            );
-            dispatch(After_Overtime_Apply_State_Func(ChangeData));
-        }
+        const ChangeData = After_Apply_State.map(list =>
+            list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys
+                ? { ...list, after_overtime_apply_info_reason: e.target.value }
+                : list
+        );
+        dispatch(After_Overtime_Apply_State_Func(ChangeData));
     };
 
     const Handle_Delete_Apply_Data = (data, select_Menu) => {
-        if (select_Menu === 'before') {
-            dispatch(
-                Before_Overtime_Apply_State_Func(
-                    Before_Apply_State.filter(list =>
-                        list.before_overtime_apply_info_apply_keys === data.before_overtime_apply_info_apply_keys ? '' : list
-                    )
+        dispatch(
+            After_Overtime_Apply_State_Func(
+                After_Apply_State.filter(list =>
+                    list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys ? '' : list
                 )
-            );
-        } else {
-            dispatch(
-                After_Overtime_Apply_State_Func(
-                    After_Apply_State.filter(list =>
-                        list.after_overtime_apply_info_apply_keys === data.after_overtime_apply_info_apply_keys ? '' : list
-                    )
-                )
-            );
-        }
+            )
+        );
     };
 
     const User_Overtime_Applyed_Data_Getting = async () => {
@@ -365,17 +248,12 @@ const ApplyUserSelect = () => {
             });
 
             if (User_Overtime_Applyed_Data_Getting_Axios.data.dataSuccess) {
-                const Before_ChangeData = [];
                 const After_ChangeData = [];
-
-                User_Overtime_Applyed_Data_Getting_Axios.data.Before_User_Overtime_Applyed_Date_Data_Getting_Rows.map(list => {
-                    Before_ChangeData.push(new Date(list.before_overtime_apply_info_date));
-                });
 
                 User_Overtime_Applyed_Data_Getting_Axios.data.After_User_Overtime_Applyed_Date_Data_Getting_Rows.map(list => {
                     After_ChangeData.push(new Date(list.after_overtime_apply_info_date));
                 });
-                setBefore_Except_Date(Before_ChangeData);
+
                 setAfter_Except_Date(After_ChangeData);
             }
         } catch (error) {
@@ -393,216 +271,7 @@ const ApplyUserSelect = () => {
                 <div className="PersonApplyContentUserSelectPageMain_UserSelectBox">
                     <div>
                         <div>
-                            <h4>사전 신청</h4>
-                        </div>
-                    </div>
-                    <div>
-                        {Before_Apply_State.length > 0 ? (
-                            <table className="Before_Overtime_Table_Container">
-                                <thead>
-                                    <tr className="testssBefore">
-                                        <th rowSpan={2} colSpan={2}>
-                                            일자
-                                        </th>
-                                        <th colSpan={3}>소정 근로</th>
-                                        <th colSpan={4}>연장 근무</th>
-
-                                        <th rowSpan={2} className="OTSpace_OTReason_th">
-                                            사유
-                                        </th>
-                                    </tr>
-                                    <tr className="testssBefore">
-                                        <td>시작시간</td>
-                                        <td>종료시간</td>
-                                        <td>합계</td>
-                                        <td>시작시간</td>
-                                        <td>종료시간</td>
-                                        <td>휴게시간</td>
-                                        <td>합계</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {Before_Apply_State.map(list => {
-                                        return (
-                                            <tr className="Before_Table_Content_Container">
-                                                <div
-                                                    className="Delete_Data_Container"
-                                                    onClick={() => Handle_Delete_Apply_Data(list, 'before')}
-                                                >
-                                                    <TbSquareRoundedMinus></TbSquareRoundedMinus>
-                                                </div>
-                                                <td id="stat_date" width="100px">
-                                                    <div className="Date_Pickers_Pickers">
-                                                        <DatePicker
-                                                            selected={
-                                                                new Date(moment(list.before_overtime_apply_info_date).format('YYYY-MM-DD'))
-                                                            }
-                                                            onChange={date => handleChangesClickDates(date, list, 'before')}
-                                                            dateFormat={'yyyy-MM-dd'}
-                                                            locale={ko}
-                                                            excludeDates={Before_Except_Date}
-
-                                                            // minDate={new Date(clickedDateData.Start_Date)}
-                                                        ></DatePicker>
-                                                    </div>
-                                                </td>
-
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">시작시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.before_overtime_apply_info_basic_start_time}
-                                                            label="시작시간"
-                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'basic_start_time')}
-                                                        >
-                                                            {TimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">종료시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.before_overtime_apply_info_basic_end_time}
-                                                            label="종료시간"
-                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'basic_end_time')}
-                                                        >
-                                                            {TimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="50px">
-                                                    <span className="sum_time" id="sum_time_mon">
-                                                        {list.before_overtime_apply_info_basic_sum_time -
-                                                            list.before_overtime_apply_info_basic_rest_time}{' '}
-                                                    </span>
-                                                    <span>시간</span>
-                                                </td>
-
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">시작시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.before_overtime_apply_info_start_time}
-                                                            label="시작시간"
-                                                            onChange={event =>
-                                                                Before_Overtime_Time_Change(event, list, 'overtime_start_time')
-                                                            }
-                                                        >
-                                                            {TimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">종료시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.before_overtime_apply_info_end_time}
-                                                            label="종료시간"
-                                                            onChange={event =>
-                                                                Before_Overtime_Time_Change(event, list, 'overtime_end_time')
-                                                            }
-                                                        >
-                                                            {TimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">휴게시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.before_overtime_apply_info_rest_time}
-                                                            label="휴게시간"
-                                                            onChange={event =>
-                                                                Before_Overtime_Time_Change(event, list, 'overtime_rest_time')
-                                                            }
-                                                        >
-                                                            {RestTimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="50px">
-                                                    <span className="sum_over_time" id="sum_over_time_monOver">
-                                                        {list.before_overtime_apply_info_sum_time -
-                                                            list.before_overtime_apply_info_rest_time}{' '}
-                                                    </span>
-                                                    <span>시간</span>
-                                                </td>
-
-                                                <td className="reasontable">
-                                                    <textarea
-                                                        placeholder="사유"
-                                                        value={list.before_overtime_apply_info_reason}
-                                                        onChange={e => Handle_Change_Overtime_Reason(e, list, 'Before')}
-                                                    ></textarea>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                    <tr>
-                                        <td colSpan={9} style={{ textAlign: 'center' }}>
-                                            <div>
-                                                <button onClick={() => Handle_Add_Before_Overtime()}>추가하기</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        ) : (
-                            <div>
-                                <div>
-                                    <button onClick={() => Handle_Add_Before_Overtime()}>추가하기</button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </ApplyUserSelectMainDivBox>
-            <ApplyUserSelectMainDivBox>
-                <div className="PersonApplyContentUserSelectPageMain_UserSelectBox">
-                    <div>
-                        <div>
-                            <h4>사후 신청</h4>
+                            <h4>연장근무 신청</h4>
                         </div>
                     </div>
                     <div>
@@ -613,7 +282,7 @@ const ApplyUserSelect = () => {
                                         <th rowSpan={2} colSpan={2}>
                                             일자
                                         </th>
-                                        <th colSpan={3}>소정근로</th>
+
                                         <th colSpan={4}>연장 근무</th>
 
                                         <th rowSpan={2} className="OTSpace_OTReason_th">
@@ -621,9 +290,6 @@ const ApplyUserSelect = () => {
                                         </th>
                                     </tr>
                                     <tr className="testssBefore">
-                                        <td>시작시간</td>
-                                        <td>종료시간</td>
-                                        <td>합계</td>
                                         <td>시작시간</td>
                                         <td>종료시간</td>
                                         <td>휴게시간</td>
@@ -653,54 +319,6 @@ const ApplyUserSelect = () => {
                                                             // minDate={new Date(clickedDateData.Start_Date)}
                                                         ></DatePicker>
                                                     </div>
-                                                </td>
-
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">시작시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.after_overtime_apply_info_basic_start_time}
-                                                            label="시작시간"
-                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'After_start_time')}
-                                                        >
-                                                            {TimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="100px">
-                                                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                                                        <InputLabel id="demo-select-small">종료시간</InputLabel>
-                                                        <Select
-                                                            labelId="demo-select-small"
-                                                            id="demo-select-small"
-                                                            value={list.after_overtime_apply_info_basic_end_time}
-                                                            label="종료시간"
-                                                            onChange={event => Before_Overtime_Time_Change(event, list, 'After_end_time')}
-                                                        >
-                                                            {TimeClicksOptions.map(list => {
-                                                                return (
-                                                                    <MenuItem value={list.value} key={list.value}>
-                                                                        {list.label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </td>
-                                                <td width="50px">
-                                                    <span className="sum_time" id="sum_time_mon">
-                                                        {list.after_overtime_apply_info_basic_sum_time -
-                                                            list.after_overtime_apply_info_basic_rest_time}{' '}
-                                                    </span>
-                                                    <span>시간</span>
                                                 </td>
 
                                                 <td width="100px">

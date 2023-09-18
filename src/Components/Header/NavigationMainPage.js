@@ -66,17 +66,9 @@ const NavigationMainPage = () => {
             value: '/Annual_Leave',
             label: '휴가',
         },
-        {
-            value: '/Meal_Expense_Reimbursement',
-            label: '식대정산',
-        },
     ]);
     const [Now_Select, setNow_Select] = useState({ value: location.pathname });
-
-    console.log(Now_Select);
     const Handle_Change_Move_To_Go = e => {
-        console.log(e);
-        console.log(e.target);
         history.push(`${e.target.value}`);
     };
 

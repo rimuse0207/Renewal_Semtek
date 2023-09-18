@@ -6,26 +6,35 @@ import { request } from '../../../../../../API';
 import { useDispatch, useSelector } from 'react-redux';
 import { Payment_User_Select_Change_Func } from '../../../../../../Models/PaymentUserReducer/PaymentUserSelectReduce';
 
+import styled from 'styled-components';
+
+const UserSelectMainDivBox = styled.div``;
+
 const UserSelect = () => {
     const dispatch = useDispatch();
-    const [SelectUserInfoData, setSelectUserInfoData] = useState([]);
+    const [Select_Team_User_List, setSelect_Team_User_List] = useState([]);
+    const [Now_Selected_User, setNow_Selected_User] = useState({
+        value: 'ALL',
+        label: '전 인원 || 전체 || ALL',
+    });
     const SelectLeftHeaderInfo = useSelector(state => state.PaymentUserSelectReducerState.User_Select);
     const Login_Info = useSelector(state => state.Login_Info_Reducer_State.Login_Info);
 
     const SelectHandleChange = e => {
         dispatch(Payment_User_Select_Change_Func(e));
+        setNow_Selected_User(e);
     };
 
-    const Select_UserInfoDataGetting = async () => {
-        const ChangeData = [];
+    const Selected_User_Change_Func = async () => {
         try {
-            const Select_UserInfoDataGetting_Axios = await request.get(`/semtek/PayMent_User_Select_Info`, {
-                params: {
-                    ID: Login_Info.id,
-                },
+            const Selected_User_Change_Func_Axios = await request.post('/semtek/Selected_User_Change_Func', {
+                Now_Selected_User,
+                ID: Login_Info.id,
+                Include_Menu: 'overtime',
             });
-            if (Select_UserInfoDataGetting_Axios.data.dataSuccess) {
-                setSelectUserInfoData(ChangeData.concat(Select_UserInfoDataGetting_Axios.data.User_Select_Data));
+
+            if (Selected_User_Change_Func_Axios.data.dataSuccess) {
+                setSelect_Team_User_List(Selected_User_Change_Func_Axios.data.User_Select_Options);
             }
         } catch (error) {
             console.log(error);
@@ -33,10 +42,11 @@ const UserSelect = () => {
     };
 
     useEffect(() => {
-        Select_UserInfoDataGetting();
+        Selected_User_Change_Func();
     }, []);
+
     return (
-        <div>
+        <UserSelectMainDivBox>
             <Select
                 className="basic-single"
                 classNamePrefix="이름 또는 이메일 검색..."
@@ -45,10 +55,10 @@ const UserSelect = () => {
                 isClearable={true}
                 isSearchable={true}
                 name="User_Search"
-                options={SelectUserInfoData}
+                options={Select_Team_User_List}
                 onChange={e => SelectHandleChange(e)}
             />
-        </div>
+        </UserSelectMainDivBox>
     );
 };
 
